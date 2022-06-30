@@ -13,6 +13,7 @@ use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use html\im_registro_patronal_html;
 use html\org_empresa_html;
+use links\secciones\link_org_empresa;
 use models\im_registro_patronal;
 use PDO;
 use stdClass;
@@ -22,7 +23,7 @@ class controlador_im_registro_patronal extends system {
     public function __construct(PDO $link, stdClass $paths_conf = new stdClass()){
         $modelo = new im_registro_patronal(link: $link);
         $html = new im_registro_patronal_html();
-        $obj_link = new links_menu($this->registro_id);
+        $obj_link = new link_org_empresa($this->registro_id);
 
         parent::__construct(html:$html, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
 
@@ -37,7 +38,6 @@ class controlador_im_registro_patronal extends system {
             return $this->retorno_error(mensaje: 'Error al generar template',data:  $r_alta, header: $header,ws:$ws);
         }
 
-
         $select = (new org_empresa_html())->select_org_empresa_id(id_selected:-1, link: $this->link);
         if(errores::$error){
             $error = $this->errores->error(mensaje: 'Error al generar select',data:  $select);
@@ -46,7 +46,7 @@ class controlador_im_registro_patronal extends system {
         }
 
         $this->inputs->select = new stdClass();
-        $this->inputs->select->cat_sat_regimen_fiscal_id = $select;
+        $this->inputs->select->org_empresa_id = $select;
 
         return $r_alta;
 
@@ -68,7 +68,7 @@ class controlador_im_registro_patronal extends system {
         }
 
         $this->inputs->select = new stdClass();
-        $this->inputs->select->cat_sat_regimen_fiscal_id = $select;
+        $this->inputs->select->org_empresa_id = $select;
 
         return $r_modifica;
     }
