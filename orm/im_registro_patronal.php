@@ -6,7 +6,8 @@ use PDO;
 class im_registro_patronal extends modelo{
     public function __construct(PDO $link){
         $tabla = __CLASS__;
-        $columnas = array($tabla=>false, 'fc_cfd' => $tabla, 'org_sucursal' => 'fc_cfd','im_clase_riesgo' => $tabla);
+        $columnas = array($tabla=>false, 'fc_cfd' => $tabla, 'org_sucursal' => 'fc_cfd',
+            'org_empresa' => 'org_sucursal','im_clase_riesgo' => $tabla);
         $campos_obligatorios = array();
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
