@@ -48,4 +48,21 @@ class controlador_im_registro_patronal extends system {
         return $r_alta;
     }
 
+    public function modifica(bool $header, bool $ws = false, string $breadcrumbs = '', bool $aplica_form = true, bool $muestra_btn = true): array|string
+    {
+        $r_modifica = parent::modifica($header, $ws, $breadcrumbs, $aplica_form, $muestra_btn);
+        if(errores::$error){
+            return $this->retorno_error(mensaje: 'Error al generar template',data:  $r_modifica, header: $header,ws:$ws);
+        }
+
+        $inputs = (new im_registro_patronal_html(html: $this->html_base))->genera_inputs_modifica(controler: $this, link: $this->link);
+        if(errores::$error){
+            $error = $this->errores->error(mensaje: 'Error al generar inputs',data:  $inputs);
+            print_r($error);
+            die('Error');
+        }
+
+        return $r_modifica;
+    }
+
 }
