@@ -5,7 +5,7 @@ use gamboamartin\errores\errores;
 use gamboamartin\im_registro_patronal\controllers\controlador_im_registro_patronal;
 use gamboamartin\system\html_controler;
 use gamboamartin\system\system;
-use models\im_clase_riesgo;
+use gamboamartin\template\directivas;
 use models\im_registro_patronal;
 use PDO;
 use stdClass;
@@ -13,8 +13,27 @@ use stdClass;
 
 class im_registro_patronal_html extends html_controler {
 
-    public function select_im_registro_patronal_id(int $cols,bool $con_registros,int $id_selected, PDO $link): array|string
+    /**
+     * Genera un select de tipo im registro patronal
+     * @param int $cols No de columnas css
+     * @param bool $con_registros si con registros muestra todos los registros
+     * @param int|null $id_selected id para selected
+     * @param PDO $link conexion a la base de datos
+     * @return array|string
+     * @version 0.9.2
+     */
+    public function select_im_registro_patronal_id(
+        int $cols,bool $con_registros,int|null $id_selected, PDO $link): array|string
     {
+        $valida = (new directivas(html:$this->html_base))->valida_cols(cols:$cols);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar cols', data: $valida);
+        }
+
+        if(is_null($id_selected)){
+            $id_selected = -1;
+        }
+
         $modelo = new im_registro_patronal($link);
 
         $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected,
