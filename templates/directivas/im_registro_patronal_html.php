@@ -29,7 +29,7 @@ class im_registro_patronal_html extends html_controler {
     {
         $controler->inputs->select = new stdClass();
 
-        $controler->inputs->select->fc_cfd_id = $inputs->selects->fc_cfd_id;
+        $controler->inputs->select->fc_csd_id = $inputs->selects->fc_csd_id;
         $controler->inputs->select->im_clase_riesgo_id = $inputs->selects->im_clase_riesgo_id;
 
         return $controler->inputs;
@@ -98,15 +98,15 @@ class im_registro_patronal_html extends html_controler {
     {
         $selects = new stdClass();
 
-        $fc_cfd_html = new fc_cfd_html(html:$this->html_base);
+        $fc_csd_html = new fc_csd_html(html:$this->html_base);
 
-        $select = $fc_cfd_html->select_fc_cfd_id(cols: 12, con_registros:true,
+        $select = $fc_csd_html->select_fc_csd_id(cols: 12, con_registros:true,
             id_selected:-1,link: $link);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select',data:  $select);
         }
 
-        $selects->fc_cfd_id = $select;
+        $selects->fc_csd_id = $select;
 
         $select = (new im_clase_riesgo_html($this->html_base))->select_im_clase_riesgo_id(cols: 12, con_registros:true,
             id_selected:-1,link: $link);
@@ -123,12 +123,12 @@ class im_registro_patronal_html extends html_controler {
     {
         $selects = new stdClass();
 
-        $select = (new fc_cfd_html(html:$this->html_base))->select_fc_cfd_id(
-            cols: 12, con_registros:true, id_selected:$row_upd->fc_cfd_id,link: $link);
+        $select = (new fc_csd_html(html:$this->html_base))->select_fc_csd_id(
+            cols: 12, con_registros:true, id_selected:$row_upd->fc_csd_id,link: $link);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select',data:  $select);
         }
-        $selects->fc_cfd_id = $select;
+        $selects->fc_csd_id = $select;
 
         $select = (new im_clase_riesgo_html($this->html_base))->select_im_clase_riesgo_id(cols: 12, con_registros:true,
             id_selected: $row_upd->im_clase_riesgo_id,link: $link);
