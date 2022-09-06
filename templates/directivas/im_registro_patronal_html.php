@@ -22,8 +22,8 @@ class im_registro_patronal_html extends html_controler {
      * @return array|string
      * @version 0.9.2
      */
-    public function select_im_registro_patronal_id(
-        int $cols,bool $con_registros,int|null $id_selected, PDO $link): array|string
+    public function select_im_registro_patronal_id(int $cols,bool $con_registros,int|null $id_selected, PDO $link,
+                                                   bool $required = false): array|string
     {
         $valida = (new directivas(html:$this->html_base))->valida_cols(cols:$cols);
         if(errores::$error){
@@ -37,7 +37,7 @@ class im_registro_patronal_html extends html_controler {
         $modelo = new im_registro_patronal($link);
 
         $select = $this->select_catalogo(cols:$cols,con_registros:$con_registros,id_selected:$id_selected,
-            modelo: $modelo,label: 'Registro Patronal',required: true);
+            modelo: $modelo,label: 'Registro Patronal',required: $required);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select', data: $select);
         }
