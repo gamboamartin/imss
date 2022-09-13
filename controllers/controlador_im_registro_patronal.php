@@ -38,7 +38,15 @@ class controlador_im_registro_patronal extends system {
             return $this->retorno_error(mensaje: 'Error al generar template',data:  $r_alta, header: $header,ws:$ws);
         }
 
-        $inputs = (new im_registro_patronal_html(html: $this->html_base))->genera_inputs_alta(controler: $this, link: $this->link);
+        $keys_selects = array();
+        $keys_selects['fc_csd'] = new stdClass();
+        $keys_selects['fc_csd']->label = 'CSD';
+
+        $keys_selects['im_clase_riesgo'] = new stdClass();
+        $keys_selects['im_clase_riesgo']->label = 'Clase de Riesgo IMSS';
+
+        $inputs = (new im_registro_patronal_html(html: $this->html_base))->genera_inputs_alta(controler: $this,
+            keys_selects: $keys_selects, link: $this->link);
         if(errores::$error){
             $error = $this->errores->error(mensaje: 'Error al generar inputs',data:  $inputs);
             print_r($error);

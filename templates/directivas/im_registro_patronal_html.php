@@ -19,6 +19,7 @@ class im_registro_patronal_html extends html_controler {
      * @param bool $con_registros si con registros muestra todos los registros
      * @param int|null $id_selected id para selected
      * @param PDO $link conexion a la base de datos
+     * @param bool $required
      * @return array|string
      * @version 0.9.2
      */
@@ -54,9 +55,9 @@ class im_registro_patronal_html extends html_controler {
         return $controler->inputs;
     }
 
-    public function genera_inputs_alta(controlador_im_registro_patronal $controler,PDO $link): array|stdClass
+    public function genera_inputs_alta(controlador_im_registro_patronal $controler, array $keys_selects,PDO $link): array|stdClass
     {
-        $inputs = $this->init_alta(link: $link);
+        $inputs = $this->init_alta(keys_selects: $keys_selects, link: $link);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar inputs',data:  $inputs);
 
@@ -85,9 +86,9 @@ class im_registro_patronal_html extends html_controler {
         return $inputs_asignados;
     }
 
-    private function init_alta(PDO $link): array|stdClass
+    private function init_alta(array $keys_selects, PDO $link): array|stdClass
     {
-        $selects = $this->selects_alta(link: $link);
+        $selects = $this->selects_alta(keys_selects: $keys_selects,link: $link);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar selects',data:  $selects);
         }
@@ -113,30 +114,6 @@ class im_registro_patronal_html extends html_controler {
         return $alta_inputs;
     }
 
-    protected function selects_alta(PDO $link): array|stdClass
-    {
-        $selects = new stdClass();
-
-        $fc_csd_html = new fc_csd_html(html:$this->html_base);
-
-        $select = $fc_csd_html->select_fc_csd_id(cols: 12, con_registros:true,
-            id_selected:-1,link: $link);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar select',data:  $select);
-        }
-
-        $selects->fc_csd_id = $select;
-
-        $select = (new im_clase_riesgo_html($this->html_base))->select_im_clase_riesgo_id(cols: 12, con_registros:true,
-            id_selected:-1,link: $link);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al generar select',data:  $select);
-        }
-
-        $selects->im_clase_riesgo_id = $select;
-        
-        return $selects;
-    }
 
     private function selects_modifica(PDO $link, stdClass $row_upd): array|stdClass
     {
