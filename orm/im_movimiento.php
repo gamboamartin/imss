@@ -26,17 +26,20 @@ class im_movimiento extends modelo{
             return $this->error->error(mensaje: 'Error id del empleado no puede ser menor a uno', data: $em_empleado_id);
         }
 
-        $Sql = "SELECT * FROM im_movimiento WHERE em_empleado_id = {$em_empleado_id} ORDER BY fecha DESC LIMIT 1";
-        $r_im_movimiento = $this->ejecuta_consulta(consulta: $Sql);
+
+        $filtro['em_empleado.id'] = $em_empleado_id;
+        $order['im_movimiento.fecha'] = 'DESC';
+        $im_movimiento = $this->obten_datos_ultimo_registro(filtro: $filtro, order: $order);
+
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al obtener el movimiento del empleado', data: $r_im_movimiento);
+            return $this->error->error(mensaje: 'Error al obtener el movimiento del empleado', data: $im_movimiento);
         }
 
-        if ($r_im_movimiento->n_registros === 0) {
+        if (count($im_movimiento) === 0) {
             return $this->error->error(mensaje: 'Error no hay registros para el empleado', data: $em_empleado_id);
         }
 
-        return $r_im_movimiento->registros[0];
+        return $im_movimiento;
     }
 
 
