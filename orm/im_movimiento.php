@@ -3,6 +3,7 @@ namespace models;
 use base\orm\modelo;
 use DateTime;
 use gamboamartin\errores\errores;
+use gamboamartin\xml_cfdi_4\validacion;
 use PDO;
 use stdClass;
 
@@ -10,7 +11,7 @@ class im_movimiento extends modelo{
     public function __construct(PDO $link){
         $tabla = __CLASS__;
         $columnas = array($tabla=>false,'em_empleado' => $tabla);
-        $campos_obligatorios = array();
+        $campos_obligatorios = array('im_registro_patronal_id','im_tipo_movimiento_id','em_empleado_id','fecha');
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas);
@@ -22,9 +23,12 @@ class im_movimiento extends modelo{
             return $this->error->error(mensaje: 'Error id del empleado no puede ser menor a uno', data: $em_empleado_id);
         }
 
-        if (!$this->validateDate($fecha, 'Y-m-d')) {
-            return $this->error->error(mensaje: 'Error: ingrese una fecha valida', data: $fecha);
+
+        $valida = (new validacion())->valida_fecha(fecha: $fecha,tipo_val: 'fecha');
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error: ingrese una fecha valida', data: $valida);
         }
+
 
         $filtro['em_empleado.id'] = $em_empleado_id;
         $order['im_movimiento.fecha'] = 'DESC';
@@ -64,10 +68,6 @@ class im_movimiento extends modelo{
         return $im_movimiento;
     }
 
-    public function validateDate($date, $format = 'Y-m-d H:i:s'): bool
-    {
-        $d = DateTime::createFromFormat($format, $date);
-        return $d && $d->format($format) == $date;
-    }
+
 
 }
