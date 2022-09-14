@@ -70,84 +70,84 @@ class im_movimientoTest extends test {
         $this->assertStringContainsStringIgnoringCase('Error: ingrese una fecha valida', $resultado['mensaje']);
         errores::$error = false;
 
-        $del = (new base_test())->del($this->link, 'em_cuenta_bancaria');
+        $del = (new base_test())->del($this->link, 'gamboamartin\\empleado\\models\\em_cuenta_bancaria');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'im_movimiento');
+        $del = (new base_test())->del($this->link, 'models\\im_movimiento');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'em_empleado');
+        $del = (new base_test())->del($this->link, 'gamboamartin\\empleado\\models\\em_empleado');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'org_puesto');
+        $del = (new base_test())->del($this->link, 'models\\org_puesto');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'org_porcentaje_act_economica');
+        $del = (new base_test())->del($this->link, 'models\\org_porcentaje_act_economica');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'fc_partida');
+        $del = (new base_test())->del($this->link, 'models\\fc_partida');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'fc_factura');
+        $del = (new base_test())->del($this->link, 'models\\fc_factura');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'im_registro_patronal');
+        $del = (new base_test())->del($this->link, 'models\\im_registro_patronal');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'fc_csd');
+        $del = (new base_test())->del($this->link, 'models\\fc_csd');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'org_sucursal');
+        $del = (new base_test())->del($this->link, 'models\\org_sucursal');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'org_empresa');
+        $del = (new base_test())->del($this->link, 'models\\org_empresa');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'org_tipo_sucursal');
+        $del = (new base_test())->del($this->link, 'models\\org_tipo_sucursal');
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);

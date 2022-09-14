@@ -1,17 +1,12 @@
 <?php
 namespace tests;
 use base\orm\modelo_base;
+use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\errores\errores;
-use models\em_cuenta_bancaria;
-use models\em_empleado;
 use models\fc_csd;
 use models\im_movimiento;
 use models\im_registro_patronal;
 use models\im_tipo_movimiento;
-use models\nom_conf_empleado;
-use models\nom_nomina;
-use models\nom_periodo;
-use models\nom_rel_empleado_sucursal;
 use models\org_empresa;
 use models\org_puesto;
 use models\org_sucursal;
