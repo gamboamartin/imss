@@ -79,7 +79,7 @@ class im_movimiento_html extends html_controler {
         return $inputs_asignados;
     }
 
-    private function init_alta(array $keys_selects, PDO $link): array|stdClass
+    protected function init_alta(array $keys_selects, PDO $link): array|stdClass
     {
         $texts = new stdClass();
 

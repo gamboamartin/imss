@@ -34,7 +34,8 @@ class im_clase_riesgo_html extends html_controler {
 
     public function genera_inputs_alta(controlador_im_clase_riesgo $controler,PDO $link): array|stdClass
     {
-        $inputs = $this->init_alta(link: $link);
+        $keys_selects =array();
+        $inputs = $this->init_alta(keys_selects: $keys_selects, link: $link);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar inputs',data:  $inputs);
 
@@ -63,7 +64,7 @@ class im_clase_riesgo_html extends html_controler {
         return $inputs_asignados;
     }
 
-    private function init_alta(PDO $link): array|stdClass
+    protected function init_alta(array $keys_selects, PDO $link): array|stdClass
     {
         $texts = new stdClass();
 
