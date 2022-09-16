@@ -48,6 +48,7 @@ class controlador_im_movimiento extends system {
 
         $keys_selects['em_empleado'] = new stdClass();
         $keys_selects['em_empleado']->label = 'Empleado';
+        $keys_selects['em_empleado']->name_model = 'gamboamartin\\empleado\\models\\em_empleado';
 
         $inputs = (new im_movimiento_html(html: $this->html_base))->genera_inputs_alta(controler: $this,
             keys_selects: $keys_selects, link: $this->link);
