@@ -10,7 +10,8 @@ use stdClass;
 class im_movimiento extends modelo{
     public function __construct(PDO $link){
         $tabla = __CLASS__;
-        $columnas = array($tabla=>false,'em_empleado' => $tabla);
+        $columnas = array($tabla=>false,'em_empleado' => $tabla, 'im_registro_patrona'=>$tabla,
+            'im_tipo_movimiento'=>$tabla);
         $campos_obligatorios = array('im_registro_patronal_id','im_tipo_movimiento_id','em_empleado_id','fecha');
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
