@@ -18,6 +18,20 @@ class im_movimiento extends modelo{
             columnas: $columnas);
     }
 
+    public function alta_bd(): array|stdClass
+    {
+        if(!isset($this->registro['salario_diario'])){
+            $this->registro['salario_diario'] = 0.0;
+        }
+
+        $alta_bd = parent::alta_bd();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al insertar movimiento', data: $alta_bd);
+        }
+        
+        return $alta_bd;
+    }
+
     public function filtro_movimiento_fecha(int $em_empleado_id,string $fecha): stdClass|array
     {
         if ($em_empleado_id <= -1) {

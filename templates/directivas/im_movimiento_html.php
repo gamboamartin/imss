@@ -156,15 +156,15 @@ class im_movimiento_html extends html_controler {
         return $div;
     }
 
-    public function input_salario_diario(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false): array|string
+    public function input_salario_diario(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false, bool $required = false): array|string
     {
         $valida = $this->directivas->valida_cols(cols: $cols);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text_required(disable: $disabled,name: 'salario_diario',place_holder: 'Salario diario',
-            row_upd: $row_upd, value_vacio: $value_vacio);
+        $html =$this->directivas->input_text(disable: $disabled, name: 'salario_diario', place_holder: 'Salario diario',
+            required: $required, row_upd: $row_upd, value_vacio: $value_vacio);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar input', data: $html);
         }
