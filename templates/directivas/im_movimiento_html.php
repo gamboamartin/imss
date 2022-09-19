@@ -44,6 +44,7 @@ class im_movimiento_html extends html_controler {
         $controler->inputs->select->im_registro_patronal_id = $inputs->selects->im_registro_patronal_id;
         $controler->inputs->select->em_empleado_id = $inputs->selects->em_empleado_id;
         $controler->inputs->fecha = $inputs->texts->fecha;
+        $controler->inputs->salario_diario = $inputs->texts->salario_diario;
 
         return $controler->inputs;
     }
@@ -89,6 +90,12 @@ class im_movimiento_html extends html_controler {
         }
         $texts->fecha = $in_fecha;
 
+        $in_salario_diario = $this->input_salario_diario(cols: 4,row_upd:  new stdClass(),value_vacio:  false);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar input',data:  $in_salario_diario);
+        }
+        $texts->salario_diario = $in_salario_diario;
+
         $selects = $this->selects_alta(keys_selects: $keys_selects,link: $link);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar selects',data:  $selects);
@@ -111,6 +118,12 @@ class im_movimiento_html extends html_controler {
         }
         $texts->fecha = $in_fecha;
 
+        $in_salario_diario = $this->input_salario_diario(cols: 4,row_upd:  $row_upd,value_vacio:  false);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar input',data:  $in_salario_diario);
+        }
+        $texts->salario_diario = $in_salario_diario;
+
         $selects = $this->selects_modifica(link: $link, row_upd: $row_upd);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar selects',data:  $selects);
@@ -130,6 +143,27 @@ class im_movimiento_html extends html_controler {
         }
 
         $html =$this->directivas->fecha_required(disable: $disabled,name: 'fecha',place_holder: 'Fecha',
+            row_upd: $row_upd, value_vacio: $value_vacio);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar input', data: $html);
+        }
+
+        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al integrar div', data: $div);
+        }
+
+        return $div;
+    }
+
+    public function input_salario_diario(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false): array|string
+    {
+        $valida = $this->directivas->valida_cols(cols: $cols);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
+        }
+
+        $html =$this->directivas->input_text_required(disable: $disabled,name: 'salario_diario',place_holder: 'Salario diario',
             row_upd: $row_upd, value_vacio: $value_vacio);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar input', data: $html);
