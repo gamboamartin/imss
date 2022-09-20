@@ -32,6 +32,32 @@ class im_movimiento extends modelo{
         return $alta_bd;
     }
 
+    private function data_filtro_movto(int $em_empleado_id, string $fecha): array|stdClass
+    {
+        $filtro['em_empleado.id'] = $em_empleado_id;
+        $order['im_movimiento.fecha'] = 'DESC';
+
+        $filtro_extra = $this->filtro_extra_fecha(fecha: $fecha);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener filtro', data: $filtro_extra);
+        }
+
+        $data = new stdClass();
+        $data->filtro = $filtro;
+        $data->order = $order;
+        $data->filtro_extra = $filtro_extra;
+        return $data;
+    }
+
+    private function filtro_extra_fecha(string $fecha): array
+    {
+        $filtro_extra[0]['im_movimiento.fecha']['valor'] = $fecha;
+        $filtro_extra[0]['im_movimiento.fecha']['operador'] = '>=';
+        $filtro_extra[0]['im_movimiento.fecha']['comparacion'] = 'AND';
+
+        return $filtro_extra;
+    }
+
     public function filtro_movimiento_fecha(int $em_empleado_id,string $fecha): stdClass|array
     {
         if ($em_empleado_id <= -1) {
@@ -45,13 +71,13 @@ class im_movimiento extends modelo{
         }
 
 
-        $filtro['em_empleado.id'] = $em_empleado_id;
-        $order['im_movimiento.fecha'] = 'DESC';
-        $filtro_extra[0]['im_movimiento.fecha']['valor'] = $fecha;
-        $filtro_extra[0]['im_movimiento.fecha']['operador'] = '>=';
-        $filtro_extra[0]['im_movimiento.fecha']['comparacion'] = 'AND';
-        $im_movimiento = $this->obten_datos_ultimo_registro(filtro: $filtro, filtro_extra: $filtro_extra,
-            order: $order);
+        $data = $this->data_filtro_movto(em_empleado_id:  $em_empleado_id,fecha: $fecha);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener datos para filtro', data: $data);
+        }
+
+        $im_movimiento = $this->obten_datos_ultimo_registro(filtro: $data->filtro, filtro_extra: $data->filtro_extra,
+            order: $data->order);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al obtener el movimiento del empleado', data: $im_movimiento);
         }
