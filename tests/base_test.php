@@ -47,6 +47,7 @@ class base_test{
         $em_empleado['telefono'] = 1;
         $em_empleado['dp_calle_pertenece_id'] = 1;
         $em_empleado['cat_sat_regimen_fiscal_id'] = 1;
+        $em_empleado['cat_sat_tipo_regimen_nom_id'] = 1;
         $em_empleado['im_registro_patronal_id'] = 1;
         $em_empleado['curp'] = 1;
         $em_empleado['nss'] = 1;
