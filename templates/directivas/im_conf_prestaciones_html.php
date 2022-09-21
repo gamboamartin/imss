@@ -10,7 +10,7 @@ use stdClass;
 
 class im_conf_prestaciones_html extends html_controler {
 
-    public function select_im_tipo_movimiento_id(int $cols,bool $con_registros,int $id_selected, PDO $link): array|string
+    public function select_im_conf_prestaciones_id(int $cols,bool $con_registros,int $id_selected, PDO $link): array|string
     {
         $modelo = new im_conf_prestaciones($link);
 
