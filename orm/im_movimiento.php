@@ -1,7 +1,6 @@
 <?php
 namespace models;
 use base\orm\modelo;
-use DateTime;
 use gamboamartin\errores\errores;
 use gamboamartin\xml_cfdi_4\validacion;
 use PDO;
@@ -49,8 +48,18 @@ class im_movimiento extends modelo{
         return $data;
     }
 
+    /**
+     * Genera un filtro fecha para movimiento
+     * @param string $fecha Fecha de movimiento
+     * @return array
+     * @version 0.28.4
+     */
     private function filtro_extra_fecha(string $fecha): array
     {
+        $valida = $this->validacion->valida_fecha(fecha: $fecha);
+        if(errores::$error){
+            return $this->error->error(mensaje:'Error al validar fecha',data: $valida);
+        }
         $filtro_extra[0]['im_movimiento.fecha']['valor'] = $fecha;
         $filtro_extra[0]['im_movimiento.fecha']['operador'] = '>=';
         $filtro_extra[0]['im_movimiento.fecha']['comparacion'] = 'AND';
@@ -64,8 +73,7 @@ class im_movimiento extends modelo{
             return $this->error->error(mensaje: 'Error id del empleado no puede ser menor a uno', data: $em_empleado_id);
         }
 
-
-        $valida = (new validacion())->valida_fecha(fecha: $fecha,tipo_val: 'fecha');
+        $valida = (new validacion())->valida_fecha(fecha: $fecha);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error: ingrese una fecha valida', data: $valida);
         }

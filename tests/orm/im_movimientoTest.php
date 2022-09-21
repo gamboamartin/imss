@@ -23,6 +23,26 @@ class im_movimientoTest extends test {
         $this->errores = new errores();
     }
 
+    public function test_filtro_extra_fecha(): void
+    {
+        errores::$error = false;
+
+        $_GET['seccion'] = 'cat_sat_tipo_persona';
+        $_GET['accion'] = 'lista';
+        $_SESSION['grupo_id'] = 1;
+        $_SESSION['usuario_id'] = 2;
+        $_GET['session_id'] = '1';
+        $html = new im_movimiento($this->link);
+        $html = new liberator($html);
+
+        $fecha = '2020-01-01';
+        $resultado = $html->filtro_extra_fecha($fecha);
+        $this->assertIsArray($resultado);
+        $this->assertNotTrue(errores::$error);
+        $this->assertEquals('>=', $resultado[0]['im_movimiento.fecha']['operador']);
+        errores::$error = false;
+    }
+
     /**
      */
     public function test_filtro_movimiento_fecha(): void
