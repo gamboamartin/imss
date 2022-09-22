@@ -35,4 +35,21 @@ class im_uma extends modelo{
         }
         return $r_alta_bd;
     }
+
+    public function get_uma(string $fecha): array|stdClass
+    {
+        $filtro_rango[$fecha]['valor1'] = 'im_uma.fecha_inicio';
+        $filtro_rango[$fecha]['valor2'] = 'im_uma.fecha_fin';
+        $filtro_rango[$fecha]['valor_campo'] = true;
+
+        $order = array('im_uma.fecha_inicio'=>'DESC');
+
+        $uma = ($this)->filtro_and(filtro_rango: $filtro_rango, limit: 1, order: $order);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al obtener uma', data: $uma);
+        }
+        print_r($uma);
+
+        return $uma;
+    }
 }
