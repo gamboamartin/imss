@@ -45,6 +45,7 @@ class im_movimiento_html extends html_controler {
         $controler->inputs->select->em_empleado_id = $inputs->selects->em_empleado_id;
         $controler->inputs->fecha = $inputs->texts->fecha;
         $controler->inputs->salario_diario = $inputs->texts->salario_diario;
+        $controler->inputs->salario_diario_integrado = $inputs->texts->salario_diario_integrado;
 
         return $controler->inputs;
     }
@@ -94,7 +95,13 @@ class im_movimiento_html extends html_controler {
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar input',data:  $in_salario_diario);
         }
-        $texts->salario_diario = $in_salario_diario;
+        $texts->salario_diario = $in_salario_diario; 
+        
+        $in_salario_diario_integrado = $this->input_salario_diario_integrado(cols: 4,row_upd:  new stdClass(),value_vacio:  false);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar input',data:  $in_salario_diario_integrado);
+        }
+        $texts->salario_diario_integrado = $in_salario_diario_integrado;
 
         $selects = $this->selects_alta(keys_selects: $keys_selects,link: $link);
         if(errores::$error){
@@ -122,7 +129,13 @@ class im_movimiento_html extends html_controler {
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar input',data:  $in_salario_diario);
         }
-        $texts->salario_diario = $in_salario_diario;
+        $texts->salario_diario = $in_salario_diario; 
+        
+        $in_salario_diario_integrado = $this->input_salario_diario_integrado(cols: 4,row_upd:  $row_upd,value_vacio:  false);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar input',data:  $in_salario_diario_integrado);
+        }
+        $texts->salario_diario_integrado = $in_salario_diario_integrado;
 
         $selects = $this->selects_modifica(link: $link, row_upd: $row_upd);
         if(errores::$error){
@@ -176,6 +189,29 @@ class im_movimiento_html extends html_controler {
 
         return $div;
     }
+
+    public function input_salario_diario_integrado(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false, bool $required = false): array|string
+    {
+        $valida = $this->directivas->valida_cols(cols: $cols);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
+        }
+
+        $html =$this->directivas->input_text(disable: $disabled, name: 'salario_diario_integrado',
+            place_holder: 'Salario Diario Integrado', required: $required, row_upd: $row_upd,
+            value_vacio: $value_vacio);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al generar input', data: $html);
+        }
+
+        $div = $this->directivas->html->div_group(cols: $cols,html:  $html);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al integrar div', data: $div);
+        }
+
+        return $div;
+    }
+
 
     private function selects_modifica(PDO $link, stdClass $row_upd): array|stdClass
     {
