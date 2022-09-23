@@ -160,8 +160,9 @@ class im_movimiento extends modelo{
                 $n_dias_trabajados);
         }
 
-        $cuota_diaria = $im_clase_riesgo_factor * $salario_base_cotizacion;
-        $total_cuota = $cuota_diaria * $n_dias_trabajados;
+        $cuota_diaria = $salario_base_cotizacion * $n_dias_trabajados;
+        $res = $cuota_diaria * $im_clase_riesgo_factor;
+        $total_cuota = $res/100;
 
         return round($total_cuota,2);
     }
