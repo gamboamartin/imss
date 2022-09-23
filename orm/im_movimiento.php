@@ -117,6 +117,25 @@ class im_movimiento extends modelo{
         return $im_movimiento;
     }
 
+    public function calcula_riesgo_de_trabajo(float $im_clase_riesgo_factor, float $salario_base_cotizacion,
+                                              float $n_dias_trabajados): float|array
+    {
+        if($im_clase_riesgo_factor <= 0.0){
+            return $this->error->error("Error el factor debe ser menor a 0", $im_clase_riesgo_factor);
+        }
+        if($salario_base_cotizacion <= 0.0){
+            return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
+                $salario_base_cotizacion);
+        }
+        if($n_dias_trabajados <= 0.0){
+            return $this->error->error("Error los dias trabajados no debe ser menor a 0",
+                $n_dias_trabajados);
+        }
 
+        $cuota_diaria = $im_clase_riesgo_factor * $salario_base_cotizacion;
+        $total_cuota = $cuota_diaria * $n_dias_trabajados;
+
+        return round($total_cuota,2);
+    }
 
 }
