@@ -15,10 +15,37 @@ class im_movimiento extends modelo{
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas);
+
+        $this->NAMESPACE = __NAMESPACE__;
     }
 
     public function alta_bd(): array|stdClass
     {
+        if(!isset($this->registro['codigo'])){
+            $this->registro['codigo'] = $this->registro['em_empleado_id'];
+            $this->registro['codigo'] .= $this->registro['im_registro_patronal_id'];
+            $this->registro['codigo'] .= $this->registro['im_tipo_movimiento_id'];
+        }
+
+        if(!isset($this->registro['codigo_bis'])){
+            $this->registro['codigo_bis'] = $this->registro['codigo'];
+        }
+
+        if(!isset($this->registro['descripcion'])){
+            $this->registro['descripcion'] = $this->registro['em_empleado_id'];
+            $this->registro['descripcion'] .= $this->registro['im_registro_patronal_id'];
+            $this->registro['descripcion'] .= $this->registro['im_tipo_movimiento_id'];
+        }
+
+        if(!isset($this->registro['descripcion_select'])){
+            $this->registro['descripcion_select'] = $this->registro['descripcion'];
+        }
+
+        if(!isset($this->registro['alias'])){
+            $this->registro['alias'] = $this->registro['codigo'];
+            $this->registro['alias'] .= $this->registro['descripcion'];
+        }
+
         if(!isset($this->registro['salario_diario'])){
             $this->registro['salario_diario'] = 0.0;
         }
