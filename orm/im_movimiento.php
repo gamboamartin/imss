@@ -1,6 +1,7 @@
 <?php
 namespace models;
 use base\orm\modelo;
+use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\errores\errores;
 use gamboamartin\xml_cfdi_4\validacion;
 use PDO;
@@ -256,5 +257,34 @@ class im_movimiento extends modelo{
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
         return round($total_cuota,2);
+    }
+
+    public function modifica_bd(array $registro, int $id, bool $reactiva = false): array|stdClass
+    {
+        $em_empleado = $this->registro_por_id(entidad: new em_empleado($this->link),
+            id: $registro['em_empleado_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al generar registros de empleado ', data: $em_empleado);
+        }
+
+        if ($em_empleado->em_empleado_salario_diario !== $registro['salario_diario'] &&
+            $em_empleado->em_empleado_salario_diario_integrado !== $registro['salario_diario_integrado']) {
+
+            $registros['salario_diario'] = $registro['salario_diario'];
+            $registros['salario_diario_integrado'] = $registro['salario_diario_integrado'];
+
+            $r_modifica_empleado = (new em_empleado($this->link))->modifica_bd(registro: $registros,id:
+                $registro['em_empleado_id']);
+            if (errores::$error) {
+                return $this->error->error(mensaje: 'Error al dar de modificar empleado', data: $r_modifica_empleado);
+            }
+        }
+
+        $modifica_bd = parent::modifica_bd($registro, $id, $reactiva);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al insertar movimiento', data: $modifica_bd);
+        }
+
+        return $modifica_bd;
     }
 }
