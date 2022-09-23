@@ -215,4 +215,25 @@ class im_movimiento extends modelo{
 
         return round($total_cuota,2);
     }
+
+    public function calcula_enf_mat_gastos_medicos(float $factor_gastos_medicos, float $n_dias_trabajados,
+                                               float $salario_base_cotizacion): float|array
+    {
+        if($factor_gastos_medicos <= 0.0){
+            return $this->error->error("Error el factor debe ser menor a 0", $factor_gastos_medicos);
+        }
+        if($salario_base_cotizacion <= 0.0){
+            return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
+                $salario_base_cotizacion);
+        }
+        if($n_dias_trabajados <= 0.0){
+            return $this->error->error("Error los dias trabajados no debe ser menor a 0",
+                $n_dias_trabajados);
+        }
+
+        $cuota_diaria = $factor_gastos_medicos * $salario_base_cotizacion;
+        $total_cuota = $cuota_diaria * $n_dias_trabajados;
+
+        return round($total_cuota,2);
+    }
 }
