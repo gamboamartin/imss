@@ -117,8 +117,8 @@ class im_movimiento extends modelo{
         return $im_movimiento;
     }
 
-    public function calcula_riesgo_de_trabajo(float $im_clase_riesgo_factor, float $salario_base_cotizacion,
-                                              float $n_dias_trabajados): float|array
+    public function calcula_riesgo_de_trabajo(float $im_clase_riesgo_factor, float $n_dias_trabajados,
+                                              float $salario_base_cotizacion): float|array
     {
         if($im_clase_riesgo_factor <= 0.0){
             return $this->error->error("Error el factor debe ser menor a 0", $im_clase_riesgo_factor);
@@ -138,4 +138,54 @@ class im_movimiento extends modelo{
         return round($total_cuota,2);
     }
 
+    public function calcula_enf_mat_cuota_fija(float $factor_cuota_fija, float $n_dias_trabajados,
+                                               float $uma): float|array
+    {
+        if($factor_cuota_fija <= 0.0){
+            return $this->error->error("Error el factor debe ser menor a 0", $factor_cuota_fija);
+        }
+        if($uma <= 0.0){
+            return $this->error->error("Error uma debe ser menor a 0",
+                $uma);
+        }
+        if($n_dias_trabajados <= 0.0){
+            return $this->error->error("Error los dias trabajados no debe ser menor a 0",
+                $n_dias_trabajados);
+        }
+
+        $cuota_diaria = $factor_cuota_fija * $uma;
+        $total_cuota = $cuota_diaria * $n_dias_trabajados;
+
+        return round($total_cuota,2);
+    }
+
+    public function calcula_enf_mat_cuota_adicional(float $factor_cuota_adicional, float $n_dias_trabajados,
+                                               float $salario_base_cotizacion, float $uma): float|array
+    {
+
+        if($salario_base_cotizacion <= 0.0){
+            return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
+                $salario_base_cotizacion);
+        }
+        if($uma <= 0.0){
+            return $this->error->error("Error uma debe ser menor a 0", $uma);
+        }
+        if ($factor_cuota_adicional <= 0.0) {
+            return $this->error->error("Error el factor debe ser menor a 0", $factor_cuota_adicional);
+        }
+        if($n_dias_trabajados <= 0.0){
+            return $this->error->error("Error los dias trabajados no debe ser menor a 0", $n_dias_trabajados);
+        }
+
+        $excedente = 0;
+        $tres_umas = $uma * 3;
+        if($salario_base_cotizacion > $tres_umas){
+            $excedente = $salario_base_cotizacion - $tres_umas;
+        }
+
+        $cuota_diaria = $factor_cuota_adicional * $excedente;
+        $total_cuota = $cuota_diaria * $n_dias_trabajados;
+
+        return round($total_cuota,2);
+    }
 }
