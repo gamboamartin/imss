@@ -184,6 +184,7 @@ class im_movimiento extends modelo{
 
         $cuota_diaria = $factor_cuota_fija * $uma;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
+        $total_cuota = $total_cuota/100;
 
         return round($total_cuota,2);
     }
@@ -213,6 +214,7 @@ class im_movimiento extends modelo{
         }
 
         $cuota_diaria = $factor_cuota_adicional * $excedente;
+        $cuota_diaria = $cuota_diaria/100;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
         return round($total_cuota,2);
@@ -234,6 +236,7 @@ class im_movimiento extends modelo{
         }
 
         $cuota_diaria = $factor_gastos_medicos * $salario_base_cotizacion;
+        $cuota_diaria = $cuota_diaria/100;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
         return round($total_cuota,2);
@@ -255,6 +258,7 @@ class im_movimiento extends modelo{
         }
 
         $cuota_diaria = $factor_pres_dineros * $salario_base_cotizacion;
+        $cuota_diaria = $cuota_diaria/100;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
         return round($total_cuota,2);
