@@ -1,16 +1,17 @@
 <?php
 namespace tests;
 use base\orm\modelo_base;
+use gamboamartin\empleado\models\em_cuenta_bancaria;
 use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\errores\errores;
-use models\fc_csd;
+use gamboamartin\facturacion\models\fc_csd;
+use gamboamartin\organigrama\models\org_empresa;
+use gamboamartin\organigrama\models\org_puesto;
+use gamboamartin\organigrama\models\org_sucursal;
+use gamboamartin\organigrama\models\org_tipo_sucursal;
 use models\im_movimiento;
 use models\im_registro_patronal;
 use models\im_tipo_movimiento;
-use models\org_empresa;
-use models\org_puesto;
-use models\org_sucursal;
-use models\org_tipo_sucursal;
 use PDO;
 
 class base_test{
@@ -143,6 +144,13 @@ class base_test{
 
     public function alta_org_empresa(PDO $link): array|\stdClass
     {
+
+        $alta = (new \gamboamartin\cat_sat\tests\base_test())->alta_cat_sat_tipo_nomina($link);
+        if(errores::$error){
+            return (new errores())->error('Error al dar de alta ', $alta);
+
+        }
+
         $org_empresa = array();
         $org_empresa['id'] = 1;
         $org_empresa['codigo'] = 1;
@@ -160,22 +168,7 @@ class base_test{
         return $alta;
     }
 
-    public function alta_org_puesto(PDO $link): array|\stdClass
-    {
-        $org_puesto = array();
-        $org_puesto['id'] = 1;
-        $org_puesto['codigo'] = 1;
-        $org_puesto['descripcion'] = 1;
-        $org_puesto['org_empresa_id'] = 1;
-        $org_puesto['org_tipo_puesto_id'] = 1;
 
-        $alta = (new org_puesto($link))->alta_registro($org_puesto);
-        if(errores::$error){
-            return (new errores())->error('Error al dar de alta ', $alta);
-
-        }
-        return $alta;
-    }
 
     public function alta_org_sucursal(PDO $link): array|\stdClass
     {
