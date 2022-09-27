@@ -352,6 +352,28 @@ class im_movimiento extends modelo{
         return round($total_cuota,2);
     }
 
+    public function calcula_credito_vivienda(float $factor_credito_vivienda, float $n_dias_trabajados,
+                                               float $salario_base_aportacion): float|array
+    {
+        if($factor_credito_vivienda <= 0.0){
+            return $this->error->error("Error el factor debe ser menor a 0", $factor_credito_vivienda);
+        }
+        if($salario_base_aportacion <= 0.0){
+            return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
+                $salario_base_aportacion);
+        }
+        if($n_dias_trabajados <= 0.0){
+            return $this->error->error("Error los dias trabajados no debe ser menor a 0",
+                $n_dias_trabajados);
+        }
+
+        $cuota_diaria = $factor_credito_vivienda * $salario_base_aportacion;
+        $cuota_diaria = $cuota_diaria/100;
+        $total_cuota = $cuota_diaria * $n_dias_trabajados;
+
+        return round($total_cuota,2);
+    }
+
     public function modifica_bd(array $registro, int $id, bool $reactiva = false): array|stdClass
     {
         $em_empleado = $this->registro_por_id(entidad: new em_empleado($this->link),
