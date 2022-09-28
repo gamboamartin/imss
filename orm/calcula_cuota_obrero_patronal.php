@@ -78,6 +78,11 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al obtener enf_mat_cuota_adicional', $enf_mat_cuota_adicional);
         }
 
+        $enf_mat_gastos_medicos = $this->enf_mat_gastos_medicos();
+        if(errores::$error){
+            return $this->error->error('Error al obtener enf_mat_gastos_medicos', $enf_mat_gastos_medicos);
+        }
+
         return true;
     }
 
@@ -101,9 +106,9 @@ class calcula_cuota_obrero_patronal{
         }
 
         $excedente = 0;
-        $tres_umas = $this->monto_uma * 3;
+        $tres_umas = round($this->monto_uma * 3,2);
         if($this->sbc > $tres_umas){
-            $excedente = $this->sbc - $tres_umas;
+            $excedente = round($this->sbc - $tres_umas,2);
         }
 
         $cuota_diaria = round($this->porc_enf_mat_cuota_adicional * $excedente,2);
@@ -111,6 +116,19 @@ class calcula_cuota_obrero_patronal{
         $this->cuota_enf_mat_cuota_adicional = round($cuota_diaria * $this->n_dias,2);
 
         return $this->cuota_enf_mat_cuota_adicional;
+    }
+
+    private function enf_mat_gastos_medicos(){
+        $valida = $this->valida_parametros();
+        if(errores::$error){
+            return $this->error->error('Error al validar exedente', $valida);
+        }
+
+        $cuota_diaria = round($this->porc_enf_mat_gastos_medicos * $this->sbc,2);
+        $cuota_diaria = round($cuota_diaria/100,2);
+        $this->cuota_enf_mat_gastos_medicos = round($cuota_diaria * $this->n_dias,2);
+
+        return $this->cuota_enf_mat_gastos_medicos;
     }
 
     private function riesgo_de_trabajo(){
