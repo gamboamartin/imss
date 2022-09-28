@@ -286,6 +286,9 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error(mensaje: 'Error al validar fecha', data: $valida);
         }
 
+        if($porc_riesgo_trabajo<=0.0){
+            return $this->error->error(mensaje: 'Error al validar porc_riesgo_trabajo', data: $porc_riesgo_trabajo);
+        }
         if($n_dias<=0.0){
             return $this->error->error(mensaje: 'Error al validar n_dias', data: $n_dias);
         }
