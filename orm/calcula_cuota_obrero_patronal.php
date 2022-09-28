@@ -292,10 +292,6 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error cuota_enf_mat_cuota_fija debe ser mayor a 0',
                 $this->cuota_enf_mat_cuota_fija);
         }
-        if($this->cuota_enf_mat_cuota_adicional<=0.0){
-            return $this->error->error('Error cuota_enf_mat_cuota_adicional debe ser mayor a 0',
-                $this->cuota_enf_mat_cuota_adicional);
-        }
         if($this->cuota_enf_mat_gastos_medicos<=0.0){
             return $this->error->error('Error cuota_enf_mat_gastos_medicos debe ser mayor a 0',
                 $this->cuota_enf_mat_gastos_medicos);
