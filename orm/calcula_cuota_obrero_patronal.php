@@ -68,9 +68,14 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al obtener riesgo_de_trabajo', $riesgo_de_trabajo);
         }
 
-        $riesgo_de_trabajo = $this->enf_mat_cuota_fija();
+        $enf_mat_cuota_fija = $this->enf_mat_cuota_fija();
         if(errores::$error){
-            return $this->error->error('Error al obtener riesgo_de_trabajo', $riesgo_de_trabajo);
+            return $this->error->error('Error al obtener enf_mat_cuota_fija', $enf_mat_cuota_fija);
+        }
+
+        $enf_mat_cuota_adicional = $this->enf_mat_cuota_adicional();
+        if(errores::$error){
+            return $this->error->error('Error al obtener enf_mat_cuota_adicional', $enf_mat_cuota_adicional);
         }
 
         return true;
@@ -87,6 +92,25 @@ class calcula_cuota_obrero_patronal{
         $this->cuota_enf_mat_cuota_fija = round($total_cuota/100,2);
 
         return $this->cuota_enf_mat_cuota_fija;
+    }
+
+    private function enf_mat_cuota_adicional(){
+        $valida = $this->valida_parametros();
+        if(errores::$error){
+            return $this->error->error('Error al validar exedente', $valida);
+        }
+
+        $excedente = 0;
+        $tres_umas = $this->monto_uma * 3;
+        if($this->sbc > $tres_umas){
+            $excedente = $this->sbc - $tres_umas;
+        }
+
+        $cuota_diaria = round($this->porc_enf_mat_cuota_adicional * $excedente,2);
+        $cuota_diaria = round($cuota_diaria/100,2);
+        $this->cuota_enf_mat_cuota_adicional = round($cuota_diaria * $this->n_dias,2);
+
+        return $this->cuota_enf_mat_cuota_adicional;
     }
 
     private function riesgo_de_trabajo(){
