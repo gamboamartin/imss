@@ -109,6 +109,11 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al obtener ceav', $ceav);
         }
 
+        $credito_vivienda = $this->credito_vivienda();
+        if(errores::$error){
+            return $this->error->error('Error al obtener credito_vivienda', $credito_vivienda);
+        }
+
         return true;
     }
 
@@ -123,6 +128,19 @@ class calcula_cuota_obrero_patronal{
         $this->cuota_ceav = round($cuota_diaria * $this->n_dias,2);
 
         return $this->cuota_ceav;
+    }
+
+    private function credito_vivienda(){
+        $valida = $this->valida_parametros();
+        if(errores::$error){
+            return $this->error->error('Error al validar exedente', $valida);
+        }
+
+        $cuota_diaria = round($this->porc_credito_vivienda * $this->sbc,2);
+        $cuota_diaria = round($cuota_diaria/100,2);
+        $this->cuota_credito_vivienda = round($cuota_diaria * $this->n_dias,2);
+
+        return $this->cuota_credito_vivienda;
     }
 
     private function enf_mat_cuota_fija(){
