@@ -8,7 +8,6 @@ use stdClass;
 class calcula_cuota_obrero_patronal{
 
     private errores $error;
-    private validacion $validacion;
     public float $porc_riesgo_trabajo = 0;
     public float $porc_enf_mat_cuota_fija = 20.4;
     public float $porc_enf_mat_cuota_adicional = 1.1;
@@ -20,7 +19,6 @@ class calcula_cuota_obrero_patronal{
     public float $porc_ceav = 3.15;
     public float $porc_credito_vivienda = 5;
 
-    public array $salario_minimo = array(2020=>123.22,2021=>141.70,2022=>172.87);
     public array $uma = array(2020=>86.88,2021=>89.62,2022=>96.22);
 
     public string $fecha = '';
@@ -29,9 +27,6 @@ class calcula_cuota_obrero_patronal{
     public float $monto_uma = 0.0;
     public float $n_dias = 0.0;
     public float $sbc = 0.0;
-    public float $sd= 0.0;
-    public float $uma_3v = 0.0;
-    public float $dif_uma_sbc = 0.0;
 
     public float $cuota_riesgo_trabajo = 0.0;
     public float $cuota_enf_mat_cuota_fija = 0.0;
@@ -49,10 +44,7 @@ class calcula_cuota_obrero_patronal{
 
     public function __construct(){
         $this->error = new errores();
-        $this->validacion = new validacion();
-
     }
-
 
     private function calcula(): bool|array
     {
@@ -115,6 +107,26 @@ class calcula_cuota_obrero_patronal{
         }
 
         return true;
+    }
+
+    public function cuota_obrero_patronal(float $porc_riesgo_trabajo, string $fecha, float $n_dias, float $sbc){
+        $valida = $this->valida_cuota(fecha: $fecha,n_dias:  $n_dias, porc_riesgo_trabajo: $porc_riesgo_trabajo,
+            sbc: $sbc);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar', data: $valida);
+        }
+
+        $this->porc_riesgo_trabajo = $porc_riesgo_trabajo;
+        $this->fecha = $fecha;
+        $this->n_dias = $n_dias;
+        $this->sbc = $sbc;
+
+        $calculo = $this->calcula();
+        if(errores::$error){
+            return $this->error->error('Error al obtener calcular', $calculo);
+        }
+
+        return $calculo;
     }
 
     private function ceav(){
@@ -264,6 +276,22 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error n_dias debe ser mayor a 0', $this->n_dias);
         }
 
+        return true;
+    }
+
+    private function valida_cuota(string $fecha, float $n_dias, float $porc_riesgo_trabajo, float $sbc): bool|array
+    {
+        $valida = (new validacion())->valida_fecha(fecha: $fecha);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar fecha', data: $valida);
+        }
+
+        if($n_dias<=0.0){
+            return $this->error->error(mensaje: 'Error al validar n_dias', data: $n_dias);
+        }
+        if($sbc<=0.0){
+            return $this->error->error(mensaje: 'Error al validar sbc', data: $sbc);
+        }
         return true;
     }
 }
