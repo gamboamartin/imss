@@ -153,9 +153,9 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al validar exedente', $valida);
         }
 
-        $cuota_diaria = round($this->porc_ceav * $this->sbc,2);
-        $cuota_diaria = round($cuota_diaria/100,2);
-        $this->cuota_ceav = round($cuota_diaria * $this->n_dias,2);
+        $cuota_diaria = round($this->porc_ceav * $this->sbc,6);
+        $cuota_diaria = round($cuota_diaria/100,6);
+        $this->cuota_ceav = round($cuota_diaria * $this->n_dias,6);
 
         return $this->cuota_ceav;
     }
@@ -166,9 +166,9 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al validar exedente', $valida);
         }
 
-        $cuota_diaria = round($this->porc_credito_vivienda * $this->sbc,2);
-        $cuota_diaria = round($cuota_diaria/100,2);
-        $this->cuota_credito_vivienda = round($cuota_diaria * $this->n_dias,2);
+        $cuota_diaria = round($this->porc_credito_vivienda * $this->sbc,6);
+        $cuota_diaria = round($cuota_diaria/100,6);
+        $this->cuota_credito_vivienda = round($cuota_diaria * $this->n_dias,6);
 
         return $this->cuota_credito_vivienda;
     }
@@ -179,9 +179,9 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al validar exedente', $valida);
         }
 
-        $cuota_diaria = round($this->porc_enf_mat_cuota_fija * $this->monto_uma,2);
-        $total_cuota = round($cuota_diaria * $this->n_dias,2);
-        $this->cuota_enf_mat_cuota_fija = round($total_cuota/100,2);
+        $cuota_diaria = round($this->porc_enf_mat_cuota_fija * $this->monto_uma,6);
+        $total_cuota = round($cuota_diaria * $this->n_dias,6);
+        $this->cuota_enf_mat_cuota_fija = round($total_cuota/100,6);
 
         return $this->cuota_enf_mat_cuota_fija;
     }
@@ -198,9 +198,9 @@ class calcula_cuota_obrero_patronal{
             $excedente = round($this->sbc - $tres_umas,2);
         }
 
-        $cuota_diaria = round($this->porc_enf_mat_cuota_adicional * $excedente,2);
-        $cuota_diaria = round($cuota_diaria/100,2);
-        $this->cuota_enf_mat_cuota_adicional = round($cuota_diaria * $this->n_dias,2);
+        $cuota_diaria = round($this->porc_enf_mat_cuota_adicional * $excedente,6);
+        $cuota_diaria = round($cuota_diaria/100,6);
+        $this->cuota_enf_mat_cuota_adicional = round($cuota_diaria * $this->n_dias,6);
 
         return $this->cuota_enf_mat_cuota_adicional;
     }
@@ -211,9 +211,9 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al validar exedente', $valida);
         }
 
-        $cuota_diaria = round($this->porc_enf_mat_gastos_medicos * $this->sbc,2);
-        $cuota_diaria = round($cuota_diaria/100,2);
-        $this->cuota_enf_mat_gastos_medicos = round($cuota_diaria * $this->n_dias,2);
+        $cuota_diaria = round($this->porc_enf_mat_gastos_medicos * $this->sbc,6);
+        $cuota_diaria = round($cuota_diaria/100,6);
+        $this->cuota_enf_mat_gastos_medicos = round($cuota_diaria * $this->n_dias,6);
 
         return $this->cuota_enf_mat_gastos_medicos;
     }
@@ -224,9 +224,9 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al validar exedente', $valida);
         }
 
-        $cuota_diaria = round($this->porc_enf_mat_pres_dinero * $this->sbc,2);
-        $cuota_diaria = round($cuota_diaria/100,2);
-        $this->cuota_enf_mat_pres_dinero = round($cuota_diaria * $this->n_dias,2);
+        $cuota_diaria = round($this->porc_enf_mat_pres_dinero * $this->sbc,6);
+        $cuota_diaria = round($cuota_diaria/100,6);
+        $this->cuota_enf_mat_pres_dinero = round($cuota_diaria * $this->n_dias,6);
 
         return $this->cuota_enf_mat_pres_dinero;
     }
@@ -237,9 +237,9 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al validar exedente', $valida);
         }
 
-        $cuota_diaria = round($this->porc_guarderia_prestaciones_sociales * $this->sbc,2);
-        $cuota_diaria = round($cuota_diaria/100,2);
-        $this->cuota_guarderia_prestaciones_sociales = round($cuota_diaria * $this->n_dias,2);
+        $cuota_diaria = round($this->porc_guarderia_prestaciones_sociales * $this->sbc,6);
+        $cuota_diaria = round($cuota_diaria/100,6);
+        $this->cuota_guarderia_prestaciones_sociales = round($cuota_diaria * $this->n_dias,6);
 
         return $this->cuota_guarderia_prestaciones_sociales;
     }
@@ -250,9 +250,9 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al validar exedente', $valida);
         }
 
-        $cuota_diaria = round($this->porc_invalidez_vida * $this->sbc,2);
-        $cuota_diaria = round($cuota_diaria/100,2);
-        $this->cuota_invalidez_vida = round($cuota_diaria * $this->n_dias,2);
+        $cuota_diaria = round($this->porc_invalidez_vida * $this->sbc,6);
+        $cuota_diaria = round($cuota_diaria/100,6);
+        $this->cuota_invalidez_vida = round($cuota_diaria * $this->n_dias,6);
 
         return $this->cuota_invalidez_vida;
     }
@@ -263,9 +263,9 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al validar exedente', $valida);
         }
 
-        $cuota_diaria = round($this->porc_retiro * $this->sbc,2);
-        $cuota_diaria = round($cuota_diaria/100,2);
-        $this->cuota_retiro = round($cuota_diaria * $this->n_dias,2);
+        $cuota_diaria = round($this->porc_retiro * $this->sbc,6);
+        $cuota_diaria = round($cuota_diaria/100,6);
+        $this->cuota_retiro = round($cuota_diaria * $this->n_dias,6);
 
         return $this->cuota_retiro;
     }
@@ -276,9 +276,9 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al validar exedente', $valida);
         }
 
-        $cuota_diaria =  round($this->sbc * $this->n_dias ,2);
-        $res = round($cuota_diaria * $this->porc_riesgo_trabajo,2);
-        $this->cuota_riesgo_trabajo = round($res/100,2);
+        $cuota_diaria =  round($this->sbc * $this->n_dias ,6);
+        $res = round($cuota_diaria * $this->porc_riesgo_trabajo,6);
+        $this->cuota_riesgo_trabajo = round($res/100,6);
 
         return $this->cuota_riesgo_trabajo;
     }
