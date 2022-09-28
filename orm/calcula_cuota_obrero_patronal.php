@@ -83,9 +83,14 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al obtener enf_mat_gastos_medicos', $enf_mat_gastos_medicos);
         }
 
-        $enf_mat_gastos_medicos = $this->enf_mat_pres_dinero();
+        $enf_mat_pres_dinero = $this->enf_mat_pres_dinero();
         if(errores::$error){
-            return $this->error->error('Error al obtener enf_mat_gastos_medicos', $enf_mat_gastos_medicos);
+            return $this->error->error('Error al obtener enf_mat_pres_dinero', $enf_mat_pres_dinero);
+        }
+
+        $invalidez_vida = $this->invalidez_vida();
+        if(errores::$error){
+            return $this->error->error('Error al obtener invalidez_vida', $invalidez_vida);
         }
 
         return true;
@@ -147,6 +152,19 @@ class calcula_cuota_obrero_patronal{
         $this->cuota_enf_mat_pres_dinero = round($cuota_diaria * $this->n_dias,2);
 
         return $this->cuota_enf_mat_pres_dinero;
+    }
+
+    private function invalidez_vida(){
+        $valida = $this->valida_parametros();
+        if(errores::$error){
+            return $this->error->error('Error al validar exedente', $valida);
+        }
+
+        $cuota_diaria = round($this->porc_invalidez_vida * $this->sbc,2);
+        $cuota_diaria = round($cuota_diaria/100,2);
+        $this->cuota_invalidez_vida = round($cuota_diaria * $this->n_dias,2);
+
+        return $this->cuota_invalidez_vida;
     }
 
     private function riesgo_de_trabajo(){
