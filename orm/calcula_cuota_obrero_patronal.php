@@ -93,6 +93,12 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al obtener invalidez_vida', $invalidez_vida);
         }
 
+        $guarderia_prestaciones_sociales = $this->guarderia_prestaciones_sociales();
+        if(errores::$error){
+            return $this->error->error('Error al obtener guarderia_prestaciones_sociales',
+                $guarderia_prestaciones_sociales);
+        }
+
         return true;
     }
 
@@ -152,6 +158,19 @@ class calcula_cuota_obrero_patronal{
         $this->cuota_enf_mat_pres_dinero = round($cuota_diaria * $this->n_dias,2);
 
         return $this->cuota_enf_mat_pres_dinero;
+    }
+
+    private function guarderia_prestaciones_sociales(){
+        $valida = $this->valida_parametros();
+        if(errores::$error){
+            return $this->error->error('Error al validar exedente', $valida);
+        }
+
+        $cuota_diaria = round($this->porc_guarderia_prestaciones_sociales * $this->sbc,2);
+        $cuota_diaria = round($cuota_diaria/100,2);
+        $this->cuota_guarderia_prestaciones_sociales = round($cuota_diaria * $this->n_dias,2);
+
+        return $this->cuota_guarderia_prestaciones_sociales;
     }
 
     private function invalidez_vida(){
