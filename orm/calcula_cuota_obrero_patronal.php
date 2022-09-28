@@ -119,6 +119,11 @@ class calcula_cuota_obrero_patronal{
         }
         $this->cuotas->credito_vivienda = $credito_vivienda;
 
+        $total = $this->total();
+        if(errores::$error){
+            return $this->error->error('Error al obtener total', $total);
+        }
+
         return true;
     }
 
@@ -276,6 +281,57 @@ class calcula_cuota_obrero_patronal{
         $this->cuota_riesgo_trabajo = round($res/100,2);
 
         return $this->cuota_riesgo_trabajo;
+    }
+
+    private function total(){
+        if($this->cuota_riesgo_trabajo<=0.0){
+            return $this->error->error('Error cuota_riesgo_trabajo debe ser mayor a 0',
+                $this->cuota_riesgo_trabajo);
+        }
+        if($this->cuota_enf_mat_cuota_fija<=0.0){
+            return $this->error->error('Error cuota_enf_mat_cuota_fija debe ser mayor a 0',
+                $this->cuota_enf_mat_cuota_fija);
+        }
+        if($this->cuota_enf_mat_cuota_adicional<=0.0){
+            return $this->error->error('Error cuota_enf_mat_cuota_adicional debe ser mayor a 0',
+                $this->cuota_enf_mat_cuota_adicional);
+        }
+        if($this->cuota_enf_mat_gastos_medicos<=0.0){
+            return $this->error->error('Error cuota_enf_mat_gastos_medicos debe ser mayor a 0',
+                $this->cuota_enf_mat_gastos_medicos);
+        }
+        if($this->cuota_enf_mat_pres_dinero<0.0){
+            return $this->error->error('Error cuota_enf_mat_pres_dinero debe ser mayor a 0',
+                $this->cuota_enf_mat_pres_dinero);
+        }
+        if($this->cuota_invalidez_vida<=0.0){
+            return $this->error->error('Error cuota_invalidez_vida debe ser mayor a 0',
+                $this->cuota_invalidez_vida);
+        }
+        if($this->cuota_guarderia_prestaciones_sociales<0.0){
+            return $this->error->error('Error cuota_guarderia_prestaciones_sociales debe ser mayor a 0',
+                $this->cuota_guarderia_prestaciones_sociales);
+        }
+        if($this->cuota_retiro<0.0){
+            return $this->error->error('Error cuota_retiro debe ser mayor a 0', $this->cuota_retiro);
+        }
+        if($this->cuota_ceav<0.0){
+            return $this->error->error('Error cuota_ceav debe ser mayor a 0', $this->cuota_ceav);
+        }
+        if($this->cuota_credito_vivienda<0.0){
+            return $this->error->error('Error cuota_credito_vivienda debe ser mayor a 0',
+                $this->cuota_credito_vivienda);
+        }
+
+        $this->total = $this->cuota_riesgo_trabajo + $this->cuota_enf_mat_cuota_fija +
+            $this->cuota_enf_mat_cuota_adicional + $this->cuota_enf_mat_gastos_medicos +
+            $this->cuota_enf_mat_pres_dinero + $this->cuota_invalidez_vida +
+            $this->cuota_guarderia_prestaciones_sociales + $this->cuota_retiro + $this->cuota_ceav +
+            $this->cuota_credito_vivienda;
+
+        $this->total = round($this->total,2);
+
+        return $this->total;
     }
 
     private function valida_parametros(){
