@@ -28,6 +28,8 @@ class calcula_cuota_obrero_patronal{
     public float $n_dias = 0.0;
     public float $sbc = 0.0;
 
+    public stdClass $cuotas;
+
     public float $cuota_riesgo_trabajo = 0.0;
     public float $cuota_enf_mat_cuota_fija = 0.0;
     public float $cuota_enf_mat_cuota_adicional = 0.0;
@@ -44,6 +46,7 @@ class calcula_cuota_obrero_patronal{
 
     public function __construct(){
         $this->error = new errores();
+        $this->cuotas = new stdClass();
     }
 
     private function calcula(): bool|array
@@ -59,52 +62,62 @@ class calcula_cuota_obrero_patronal{
         if(errores::$error){
             return $this->error->error('Error al obtener riesgo_de_trabajo', $riesgo_de_trabajo);
         }
+        $this->cuotas->riesgo_de_trabajo = $riesgo_de_trabajo;
 
         $enf_mat_cuota_fija = $this->enf_mat_cuota_fija();
         if(errores::$error){
             return $this->error->error('Error al obtener enf_mat_cuota_fija', $enf_mat_cuota_fija);
         }
+        $this->cuotas->enf_mat_cuota_fija = $enf_mat_cuota_fija;
 
         $enf_mat_cuota_adicional = $this->enf_mat_cuota_adicional();
         if(errores::$error){
             return $this->error->error('Error al obtener enf_mat_cuota_adicional', $enf_mat_cuota_adicional);
         }
+        $this->cuotas->enf_mat_cuota_adicional = $enf_mat_cuota_adicional;
 
         $enf_mat_gastos_medicos = $this->enf_mat_gastos_medicos();
         if(errores::$error){
             return $this->error->error('Error al obtener enf_mat_gastos_medicos', $enf_mat_gastos_medicos);
         }
+        $this->cuotas->enf_mat_gastos_medicos = $enf_mat_gastos_medicos;
 
         $enf_mat_pres_dinero = $this->enf_mat_pres_dinero();
         if(errores::$error){
             return $this->error->error('Error al obtener enf_mat_pres_dinero', $enf_mat_pres_dinero);
         }
+        $this->cuotas->enf_mat_pres_dinero = $enf_mat_pres_dinero;
 
         $invalidez_vida = $this->invalidez_vida();
         if(errores::$error){
             return $this->error->error('Error al obtener invalidez_vida', $invalidez_vida);
         }
+        $this->cuotas->invalidez_vida = $invalidez_vida;
 
         $guarderia_prestaciones_sociales = $this->guarderia_prestaciones_sociales();
         if(errores::$error){
             return $this->error->error('Error al obtener guarderia_prestaciones_sociales',
                 $guarderia_prestaciones_sociales);
         }
+        $this->cuotas->guarderia_prestaciones_sociales = $guarderia_prestaciones_sociales;
 
         $retiro = $this->retiro();
         if(errores::$error){
             return $this->error->error('Error al obtener retiro', $retiro);
         }
+        $this->cuotas->retiro = $retiro;
 
         $ceav = $this->ceav();
         if(errores::$error){
             return $this->error->error('Error al obtener ceav', $ceav);
         }
+        $this->cuotas->ceav = $ceav;
 
         $credito_vivienda = $this->credito_vivienda();
         if(errores::$error){
             return $this->error->error('Error al obtener credito_vivienda', $credito_vivienda);
         }
+        $this->cuotas->credito_vivienda = $credito_vivienda;
 
         return true;
     }
