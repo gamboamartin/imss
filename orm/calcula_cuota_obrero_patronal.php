@@ -99,6 +99,11 @@ class calcula_cuota_obrero_patronal{
                 $guarderia_prestaciones_sociales);
         }
 
+        $retiro = $this->retiro();
+        if(errores::$error){
+            return $this->error->error('Error al obtener retiro', $retiro);
+        }
+
         return true;
     }
 
@@ -184,6 +189,19 @@ class calcula_cuota_obrero_patronal{
         $this->cuota_invalidez_vida = round($cuota_diaria * $this->n_dias,2);
 
         return $this->cuota_invalidez_vida;
+    }
+
+    private function retiro(){
+        $valida = $this->valida_parametros();
+        if(errores::$error){
+            return $this->error->error('Error al validar exedente', $valida);
+        }
+
+        $cuota_diaria = round($this->porc_retiro * $this->sbc,2);
+        $cuota_diaria = round($cuota_diaria/100,2);
+        $this->cuota_retiro = round($cuota_diaria * $this->n_dias,2);
+
+        return $this->cuota_retiro;
     }
 
     private function riesgo_de_trabajo(){
