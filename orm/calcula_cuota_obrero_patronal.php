@@ -104,7 +104,25 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error al obtener retiro', $retiro);
         }
 
+        $ceav = $this->ceav();
+        if(errores::$error){
+            return $this->error->error('Error al obtener ceav', $ceav);
+        }
+
         return true;
+    }
+
+    private function ceav(){
+        $valida = $this->valida_parametros();
+        if(errores::$error){
+            return $this->error->error('Error al validar exedente', $valida);
+        }
+
+        $cuota_diaria = round($this->porc_ceav * $this->sbc,2);
+        $cuota_diaria = round($cuota_diaria/100,2);
+        $this->cuota_ceav = round($cuota_diaria * $this->n_dias,2);
+
+        return $this->cuota_ceav;
     }
 
     private function enf_mat_cuota_fija(){
