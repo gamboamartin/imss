@@ -57,7 +57,8 @@ class im_registro_patronal_html extends html_controler {
 
     public function genera_inputs_alta(controlador_im_registro_patronal $controler, array $keys_selects,PDO $link): array|stdClass
     {
-        $inputs = $this->init_alta(keys_selects: $keys_selects, link: $link);
+        $inputs = $this->init_alta2(
+            row_upd: $controler->row_upd,modelo: $controler->modelo,link: $link,keys_selects:  $keys_selects);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar inputs',data:  $inputs);
 
