@@ -80,4 +80,13 @@ class base_test{
         return $del;
     }
 
+    public function del_im_registro_patronal(PDO $link): array
+    {
+        $del = $this->del($link, 'im_registro_patronal');
+        if(errores::$error){
+            return (new errores())->error('Error al eliminar', $del);
+        }
+        return $del;
+    }
+
 }
