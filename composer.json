@@ -15,7 +15,7 @@
       "gamboamartin\\im_registro_patronal\\controllers\\": "controllers",
       "config\\": "config/",
       "models\\": "orm",
-      "tests\\": "tests/",
+      "gamboamartin\\im_registro_patronal\\test\\": "tests",
       "links\\": "links/",
       "html\\": "templates/directivas/"
 

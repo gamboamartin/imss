@@ -1,16 +1,14 @@
 <?php
-namespace tests\links\secciones;
+namespace gamboamartin\im_registro_patronal\test\orm;
 
 use gamboamartin\errores\errores;
-use gamboamartin\template_1\html;
+use gamboamartin\im_registro_patronal\test\base_test;
 use gamboamartin\test\liberator;
 use gamboamartin\test\test;
 
-use html\im_registro_patronal_html;
-use html\org_empresa_html;
+
 use models\im_movimiento;
 use stdClass;
-use tests\base_test;
 
 
 class im_movimientoTest extends test {
@@ -195,21 +193,28 @@ class im_movimientoTest extends test {
             exit;
         }
 
-        $alta = (new base_test())->alta_org_tipo_sucursal($this->link);
+        $alta = (new \gamboamartin\organigrama\tests\base_test())->alta_org_tipo_sucursal($this->link);
         if(errores::$error){
             $error = (new errores())->error('Error al dar de alta', $alta);
             print_r($error);
             exit;
         }
 
-        $alta = (new base_test())->alta_org_empresa($this->link);
+        $alta = (new \gamboamartin\organigrama\tests\base_test())->alta_org_empresa($this->link);
         if(errores::$error){
             $error = (new errores())->error('Error al dar de alta', $alta);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'gamboamartin\\organigrama\\models\\org_sucursal');
+        $del = (new \gamboamartin\organigrama\tests\base_test())->del_org_sucursal($this->link);
+        if(errores::$error){
+            $error = (new errores())->error('Error al eliminar', $del);
+            print_r($error);
+            exit;
+        }
+
+        $del = (new \gamboamartin\organigrama\tests\base_test())->del_org_empresa($this->link);
         if(errores::$error){
             $error = (new errores())->error('Error al eliminar', $del);
             print_r($error);
@@ -223,14 +228,14 @@ class im_movimientoTest extends test {
             exit;
         }
 
-        $alta = (new base_test())->alta_org_sucursal($this->link);
+        $alta = (new \gamboamartin\organigrama\tests\base_test())->alta_org_sucursal($this->link);
         if(errores::$error){
             $error = (new errores())->error('Error al dar de alta', $alta);
             print_r($error);
             exit;
         }
 
-        $alta = (new base_test())->alta_fc_csd($this->link);
+        $alta = (new \gamboamartin\facturacion\tests\base_test())->alta_fc_csd($this->link);
         if(errores::$error){
             $error = (new errores())->error('Error al dar de alta', $alta);
             print_r($error);
@@ -253,7 +258,7 @@ class im_movimientoTest extends test {
 
 
 
-        $alta = (new base_test())->alta_em_empleado($this->link);
+        $alta = (new \gamboamartin\empleado\test\base_test())->alta_em_empleado($this->link);
         if(errores::$error){
             $error = (new errores())->error('Error al dar de alta', $alta);
             print_r($error);
