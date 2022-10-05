@@ -55,6 +55,11 @@ class im_movimiento extends modelo{
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al insertar movimiento', data: $alta_bd);
         }
+
+        $modifica = $this->modifica_empleado();
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
+        }
         
         return $alta_bd;
     }
@@ -385,13 +390,9 @@ class im_movimiento extends modelo{
         if ($em_empleado->em_empleado_salario_diario !== $registro['salario_diario'] &&
             $em_empleado->em_empleado_salario_diario_integrado !== $registro['salario_diario_integrado']) {
 
-            $registros['salario_diario'] = $registro['salario_diario'];
-            $registros['salario_diario_integrado'] = $registro['salario_diario_integrado'];
-
-            $r_modifica_empleado = (new em_empleado($this->link))->modifica_bd(registro: $registros,id:
-                $registro['em_empleado_id']);
+            $modifica = $this->modifica_empleado();
             if (errores::$error) {
-                return $this->error->error(mensaje: 'Error al dar de modificar empleado', data: $r_modifica_empleado);
+                return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
             }
         }
 
@@ -401,5 +402,18 @@ class im_movimiento extends modelo{
         }
 
         return $modifica_bd;
+    }
+
+    private function modifica_empleado(): array|stdClass
+    {
+        $registro['fecha_inicio_rel_laboral'] = $this->registro['fecha'];
+        $registro['salario_diario'] = $this->registro['salario_diario'];
+        $registro['salario_diario_integrado'] = $this->registro['salario_diario_integrado'];
+
+        $modifica = (new em_empleado($this->link))->modifica_bd(registro: $registro,id: $this->registro['em_empleado_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
+        }
+        return $modifica;
     }
 }
