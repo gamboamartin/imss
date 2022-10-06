@@ -8,6 +8,7 @@
  */
 namespace gamboamartin\im_registro_patronal\controllers;
 
+use gamboamartin\direccion_postal\models\dp_colonia_postal;
 use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
 use gamboamartin\organigrama\models\org_empresa;
@@ -17,6 +18,7 @@ use gamboamartin\system\system;
 use html\im_registro_patronal_html;
 use html\org_empresa_html;
 use links\secciones\link_org_empresa;
+use models\im_clase_riesgo;
 use models\im_registro_patronal;
 use gamboamartin\template\html;
 use PDO;
@@ -29,7 +31,12 @@ class controlador_im_registro_patronal extends system {
         $modelo = new im_registro_patronal(link: $link);
         $html_ = new im_registro_patronal_html(html: $html);
         $obj_link = new links_menu($this->registro_id);
+
+        $this->rows_lista[] = 'im_clase_riesgo_id';
+        $this->rows_lista[] = 'fc_csd_id';
+
         parent::__construct(html:$html_, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
+
 
         $this->titulo_lista = 'Registro Patronal';
     }
@@ -71,12 +78,66 @@ class controlador_im_registro_patronal extends system {
         if(errores::$error){
             return $this->errores->error(mensaje: 'Error al genera modelo',data:  $fc_csd);
         }
-        $r_fc_csd = $fc_csd->registro(registro_id: $row->im_registro_patronal_id);
+        $r_fc_csd = $fc_csd->registro(registro_id: $row->im_registro_patronal_fc_csd_id);
         if(errores::$error){
             return $this->errores->error(mensaje: 'Error al obtener el registro',data:  $r_fc_csd);
         }
 
         $row->cat_sat_regimen_fiscal_descripcion = $r_fc_csd['cat_sat_regimen_fiscal_descripcion'];
+
+        return $row;
+    }
+
+    private function dp_estado_descripcion_row(stdClass $row): array|stdClass
+    {
+        $keys = array('im_registro_patronal_id');
+        $valida = $this->validacion->valida_ids(keys: $keys,registro:  $row);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al validar row',data:  $valida);
+        }
+
+        $fc_csd = new fc_csd($this->link);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al genera modelo',data:  $fc_csd);
+        }
+        $r_fc_csd = $fc_csd->registro(registro_id: $row->im_registro_patronal_fc_csd_id);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener el registro',data:  $r_fc_csd);
+        }
+
+
+        $dp_colonia_postal = new dp_colonia_postal($this->link);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al genera modelo',data:  $dp_colonia_postal);
+        }
+        $r_dp_colonia_postal = $dp_colonia_postal->registro(registro_id: $r_fc_csd['dp_calle_pertenece_dp_colonia_postal_id']);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener el registro',data:  $r_dp_colonia_postal);
+        }
+
+        $row->dp_estado_descripcion = $r_dp_colonia_postal['dp_estado_descripcion'];
+
+        return $row;
+    }
+
+    private function im_clase_riesgo_factor_row(stdClass $row): array|stdClass
+    {
+        $keys = array('im_registro_patronal_id');
+        $valida = $this->validacion->valida_ids(keys: $keys,registro:  $row);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al validar row',data:  $valida);
+        }
+
+        $im_clase_riesgo = new im_clase_riesgo($this->link);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al genera modelo',data:  $im_clase_riesgo);
+        }
+        $r_im_clase_riesgo = $im_clase_riesgo->registro(registro_id: $row->im_registro_patronal_im_clase_riesgo_id);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener el registro',data:  $r_im_clase_riesgo);
+        }
+
+        $row->im_clase_riesgo_factor = $r_im_clase_riesgo['im_clase_riesgo_factor'];
 
         return $row;
     }
@@ -107,6 +168,24 @@ class controlador_im_registro_patronal extends system {
             $registros[$indice] = $row;
 
             $row = $this->cat_sat_regimen_fiscal_descripcion_row(row: $row);
+            if(errores::$error){
+                return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
+            }
+            $registros[$indice] = $row;
+
+            $row = $this->org_empresa_rfc_row(row: $row);
+            if(errores::$error){
+                return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
+            }
+            $registros[$indice] = $row;
+
+            $row = $this->im_clase_riesgo_factor_row(row: $row);
+            if(errores::$error){
+                return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
+            }
+            $registros[$indice] = $row;
+
+            $row = $this->dp_estado_descripcion_row(row: $row);
             if(errores::$error){
                 return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
             }
@@ -147,12 +226,34 @@ class controlador_im_registro_patronal extends system {
         if(errores::$error){
             return $this->errores->error(mensaje: 'Error al genera modelo',data:  $fc_csd);
         }
-        $r_fc_csd = $fc_csd->registro(registro_id: $row->im_registro_patronal_id);
+        $r_fc_csd = $fc_csd->registro(registro_id: $row->im_registro_patronal_fc_csd_id);
         if(errores::$error){
             return $this->errores->error(mensaje: 'Error al obtener el registro',data:  $r_fc_csd);
         }
 
         $row->org_empresa_descripcion = $r_fc_csd['org_empresa_descripcion'];
+
+        return $row;
+    }
+
+    private function org_empresa_rfc_row(stdClass $row): array|stdClass
+    {
+        $keys = array('im_registro_patronal_id');
+        $valida = $this->validacion->valida_ids(keys: $keys,registro:  $row);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al validar row',data:  $valida);
+        }
+
+        $fc_csd = new fc_csd($this->link);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al genera modelo',data:  $fc_csd);
+        }
+        $r_fc_csd = $fc_csd->registro(registro_id: $row->im_registro_patronal_fc_csd_id);
+        if(errores::$error){
+            return $this->errores->error(mensaje: 'Error al obtener el registro',data:  $r_fc_csd);
+        }
+
+        $row->org_empresa_rfc = $r_fc_csd['org_empresa_rfc'];
 
         return $row;
     }
