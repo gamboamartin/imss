@@ -45,12 +45,12 @@ class im_registro_patronal_html extends html_controler {
         return $select;
     }
 
-    protected function asigna_inputs(system $controler, stdClass $inputs): array|stdClass
+    protected function asigna_inputs(system $controler, array|stdClass $inputs): array|stdClass
     {
         $controler->inputs->select = new stdClass();
 
-        $controler->inputs->select->fc_csd_id = $inputs->selects->fc_csd_id;
-        $controler->inputs->select->im_clase_riesgo_id = $inputs->selects->im_clase_riesgo_id;
+        $controler->inputs->select->fc_csd_id = $inputs['selects']->fc_csd_id;
+        $controler->inputs->select->im_clase_riesgo_id = $inputs['selects']->im_clase_riesgo_id;
 
         return $controler->inputs;
     }
