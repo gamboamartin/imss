@@ -1,8 +1,11 @@
 <?php
 namespace models;
 use base\orm\modelo;
+use gamboamartin\direccion_postal\models\dp_colonia_postal;
+use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
 use PDO;
+use stdClass;
 
 class im_registro_patronal extends modelo{
     public function __construct(PDO $link){
@@ -24,5 +27,59 @@ class im_registro_patronal extends modelo{
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas,campos_view:  $campos_view );
+    }
+
+    public function alta_bd(): array|stdClass
+    {
+
+
+        $fc_csd = new fc_csd(link: $this->link);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al genera modelo',data:  $fc_csd);
+        }
+        $r_fc_csd = $fc_csd->registro(registro_id: $this->registro['fc_csd_id']);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al obtener el registro',data:  $r_fc_csd);
+        }
+
+
+        $dp_colonia_postal = new dp_colonia_postal($this->link);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al genera modelo',data:  $dp_colonia_postal);
+        }
+        $r_dp_colonia_postal = $dp_colonia_postal->registro(registro_id: $r_fc_csd['dp_calle_pertenece_dp_colonia_postal_id']);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al obtener el registro',data:  $r_dp_colonia_postal);
+        }
+
+        $im_clase_riesgo = new im_clase_riesgo($this->link);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al genera modelo',data:  $im_clase_riesgo);
+        }
+        $r_im_clase_riesgo = $im_clase_riesgo->registro(registro_id: $this->registro['im_clase_riesgo_id']);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al obtener el registro',data:  $r_im_clase_riesgo);
+        }
+
+        if(!isset($this->registro['codigo']))
+            $this->registro['codigo'] = $this->registro['descripcion'];
+
+        if(!isset($this->registro['codigo_bis']))
+            $this->registro['codigo_bis'] = $this->registro['codigo']. ' ' .$r_fc_csd['org_empresa_rfc'];
+
+        if(!isset($this->registro['alias']))
+            $this->registro['alias'] =  $this->registro['codigo_bis'];
+
+        if(!isset($this->registro['descripcion_select']))
+            $this->registro['descripcion_select'] = $this->registro['descripcion']. ' ' .
+                $r_im_clase_riesgo['im_clase_riesgo_factor']. ' ' . $r_fc_csd['org_empresa_rfc']. ' '.
+                $r_dp_colonia_postal['dp_estado_descripcion'];
+
+        $r_alta_bd = parent::alta_bd();
+        if(errores::$error){
+            return $this->error->error('Error al dar de alta registro',$r_alta_bd);
+        }
+
+        return $r_alta_bd;
     }
 }
