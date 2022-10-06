@@ -45,12 +45,22 @@ class im_registro_patronal_html extends html_controler {
         return $select;
     }
 
-    protected function asigna_inputs(system $controler, array|stdClass $inputs): array|stdClass
+    protected function asigna_inputs_alta(system $controler, array|stdClass $inputs): array|stdClass
     {
         $controler->inputs->select = new stdClass();
 
         $controler->inputs->select->fc_csd_id = $inputs['selects']->fc_csd_id;
         $controler->inputs->select->im_clase_riesgo_id = $inputs['selects']->im_clase_riesgo_id;
+
+        return $controler->inputs;
+    }
+
+    protected function asigna_inputs_modifica(system $controler, array|stdClass $inputs): array|stdClass
+    {
+        $controler->inputs->select = new stdClass();
+
+        $controler->inputs->select->fc_csd_id = $inputs->selects->fc_csd_id;
+        $controler->inputs->select->im_clase_riesgo_id = $inputs->selects->im_clase_riesgo_id;
 
         return $controler->inputs;
     }
@@ -63,7 +73,7 @@ class im_registro_patronal_html extends html_controler {
             return $this->error->error(mensaje: 'Error al generar inputs',data:  $inputs);
 
         }
-        $inputs_asignados = $this->asigna_inputs(controler:$controler, inputs: $inputs);
+        $inputs_asignados = $this->asigna_inputs_alta(controler:$controler, inputs: $inputs);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al asignar inputs',data:  $inputs_asignados);
         }
@@ -79,7 +89,7 @@ class im_registro_patronal_html extends html_controler {
             return $this->error->error(mensaje: 'Error al generar inputs',data:  $inputs);
 
         }
-        $inputs_asignados = $this->asigna_inputs(controler:$controler, inputs: $inputs);
+        $inputs_asignados = $this->asigna_inputs_modifica(controler:$controler, inputs: $inputs);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al asignar inputs',data:  $inputs_asignados);
         }
