@@ -28,6 +28,8 @@ class im_salario_minimo extends modelo{
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas,campos_view: $campos_view);
+
+        $this->NAMESPACE = __NAMESPACE__;
     }
 
     public function alta_bd(): array|stdClass
