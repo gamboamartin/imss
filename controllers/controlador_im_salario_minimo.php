@@ -50,6 +50,15 @@ class controlador_im_salario_minimo extends system {
         $keys_selects['dp_cp_id'] = new stdClass();
         $keys_selects['dp_cp_id']->label = 'CP';
 
+        $keys_selects['fecha_inicio'] = new stdClass();
+        $keys_selects['fecha_inicio']->place_holder = 'Fecha Inicio';
+
+        $keys_selects['fecha_fin'] = new stdClass();
+        $keys_selects['fecha_fin']->place_holder = 'Fecha Fin';
+
+        $keys_selects['monto'] = new stdClass();
+        $keys_selects['monto']->place_holder = 'Monto';
+
 
         $inputs = (new im_salario_minimo_html(html: $this->html_base))->genera_inputs_alta(controler: $this,
             modelo: $this->modelo, link: $this->link,keys_selects: $keys_selects);

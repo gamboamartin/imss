@@ -19,7 +19,20 @@ use stdClass;
 
 class im_salario_minimo_html extends html_controler {
 
-    private function asigna_inputs(controlador_im_salario_minimo $controler, stdClass $inputs): array|stdClass
+    private function asigna_inputs_alta(controlador_im_salario_minimo $controler, array|stdClass $inputs): array|stdClass
+    {
+        $controler->inputs->select = new stdClass();
+        $controler->inputs->select->im_tipo_salario_minimo_id = $inputs['selects']->im_tipo_salario_minimo_id;
+        $controler->inputs->select->dp_cp_id = $inputs['selects']->dp_cp_id;
+
+        $controler->inputs->fecha_inicio = $inputs['inputs']->fecha_inicio;
+        $controler->inputs->fecha_fin = $inputs['inputs']->fecha_fin;
+        $controler->inputs->monto = $inputs['inputs']->monto;
+
+        return $controler->inputs;
+    }
+
+    private function asigna_inputs_modifica(controlador_im_salario_minimo $controler, stdClass $inputs): array|stdClass
     {
         $controler->inputs->select = new stdClass();
         $controler->inputs->select->im_tipo_salario_minimo_id = $inputs->selects->im_tipo_salario_minimo_id;
@@ -33,12 +46,12 @@ class im_salario_minimo_html extends html_controler {
 
     public function genera_inputs_alta(controlador_im_salario_minimo $controler, modelo $modelo, PDO $link, array $keys_selects = array()): array|stdClass
     {
-        $inputs = $this->init_alta2(modelo: $modelo,link: $link,keys_selects: $keys_selects);
+        $inputs = $this->init_alta2(row_upd: $controler->row_upd,modelo: $controler->modelo,link: $link,keys_selects:  $keys_selects);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar inputs',data:  $inputs);
 
         }
-        $inputs_asignados = $this->asigna_inputs(controler:$controler, inputs: $inputs);
+        $inputs_asignados = $this->asigna_inputs_alta(controler:$controler, inputs: $inputs);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al asignar inputs',data:  $inputs_asignados);
         }
@@ -54,7 +67,7 @@ class im_salario_minimo_html extends html_controler {
             return $this->error->error(mensaje: 'Error al generar inputs',data:  $inputs);
 
         }
-        $inputs_asignados = $this->asigna_inputs(controler:$controler, inputs: $inputs);
+        $inputs_asignados = $this->asigna_inputs_modifica(controler:$controler, inputs: $inputs);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al asignar inputs',data:  $inputs_asignados);
         }

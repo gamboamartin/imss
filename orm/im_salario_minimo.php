@@ -18,6 +18,13 @@ class im_salario_minimo extends modelo{
         $campos_view['dp_cp_id']['type'] = 'selects';
         $campos_view['dp_cp_id']['model'] = (new dp_cp($link));
 
+        $campos_view['im_tipo_salario_minimo_id']['type'] = 'selects';
+        $campos_view['im_tipo_salario_minimo_id']['model'] = (new im_tipo_salario_minimo($link));
+
+        $campos_view['fecha_inicio']['type'] = 'inputs';
+        $campos_view['fecha_fin']['type'] = 'inputs';
+        $campos_view['monto']['type'] = 'inputs';
+
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas,campos_view: $campos_view);
