@@ -34,6 +34,7 @@ class im_salario_minimo_html extends html_controler {
 
     private function asigna_inputs_modifica(controlador_im_salario_minimo $controler, stdClass $inputs): array|stdClass
     {
+        
         $controler->inputs->select = new stdClass();
         $controler->inputs->select->im_tipo_salario_minimo_id = $inputs->selects->im_tipo_salario_minimo_id;
         $controler->inputs->select->dp_cp_id = $inputs->selects->dp_cp_id;
@@ -82,7 +83,7 @@ class im_salario_minimo_html extends html_controler {
             return $this->error->error(mensaje: 'Error al generar selects',data:  $selects);
         }
 
-        $texts = $this->texts_alta(row_upd: $row_upd, value_vacio: false, params: $params);
+        $texts = $this->texts_modifica(row_upd: $row_upd, value_vacio: false, params: $params);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar texts',data:  $texts);
         }
@@ -228,6 +229,32 @@ class im_salario_minimo_html extends html_controler {
         $texts->fecha_inicio = $in_fecha_inicio;
 
         $row_upd->fecha_fin = date('Y-m-d');
+
+        $in_fecha_fin = $this->input_fecha_fin(cols: 6, row_upd: $row_upd, value_vacio: false);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al generar input', data: $in_fecha_fin);
+        }
+        $texts->fecha_fin = $in_fecha_fin;
+
+
+        return $texts;
+    }
+
+    protected function texts_modifica(stdClass $row_upd, bool $value_vacio, stdClass $params = new stdClass()): array|stdClass
+    {
+        $texts = new stdClass();
+
+        $in_monto = $this->input_monto(cols: 6, row_upd: $row_upd, value_vacio: false);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al generar input', data: $in_monto);
+        }
+        $texts->monto = $in_monto;
+
+        $in_fecha_inicio = $this->input_fecha_inicio(cols: 6, row_upd: $row_upd, value_vacio: false);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al generar input', data: $in_fecha_inicio);
+        }
+        $texts->fecha_inicio = $in_fecha_inicio;
 
         $in_fecha_fin = $this->input_fecha_fin(cols: 6, row_upd: $row_upd, value_vacio: false);
         if (errores::$error) {
