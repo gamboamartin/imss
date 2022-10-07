@@ -1,6 +1,7 @@
 <?php
 namespace models;
 use base\orm\modelo;
+use gamboamartin\direccion_postal\models\dp_cp;
 use gamboamartin\errores\errores;
 use PDO;
 use stdClass;
@@ -12,6 +13,11 @@ class im_salario_minimo extends modelo{
         $campos_obligatorios = array("im_tipo_salario_minimo_id","dp_cp_id","fecha_inicio","fecha_fin","monto");
         $campos_view = array("im_tipo_salario_minimo_id" => array("type" => "selects", "model" => new im_tipo_salario_minimo(link: $link)),
             "dp_cp_id" => array("type" => "selects", "model" => new dp_cp(link: $link)));
+
+        $campos_view = array();
+        $campos_view['dp_cp_id']['type'] = 'selects';
+        $campos_view['dp_cp_id']['model'] = (new dp_cp($link));
+
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas,campos_view: $campos_view);
