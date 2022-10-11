@@ -56,7 +56,7 @@ class im_movimiento extends modelo{
             return $this->error->error(mensaje: 'Error al insertar movimiento', data: $alta_bd);
         }
 
-        $modifica = $this->modifica_empleado();
+        $modifica = $this->modifica_empleado(registro_emp: $this->registro);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
         }
@@ -390,7 +390,7 @@ class im_movimiento extends modelo{
         if ($em_empleado->em_empleado_salario_diario !== $registro['salario_diario'] &&
             $em_empleado->em_empleado_salario_diario_integrado !== $registro['salario_diario_integrado']) {
 
-            $modifica = $this->modifica_empleado();
+            $modifica = $this->modifica_empleado(registro_emp: $registro);
             if (errores::$error) {
                 return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
             }
@@ -404,13 +404,13 @@ class im_movimiento extends modelo{
         return $modifica_bd;
     }
 
-    private function modifica_empleado(): array|stdClass
+    private function modifica_empleado(array $registro_emp): array|stdClass
     {
-        $registro['fecha_inicio_rel_laboral'] = $this->registro['fecha'];
-        $registro['salario_diario'] = $this->registro['salario_diario'];
-        $registro['salario_diario_integrado'] = $this->registro['salario_diario_integrado'];
+        $registro['fecha_inicio_rel_laboral'] = $registro_emp['fecha'];
+        $registro['salario_diario'] = $registro_emp['salario_diario'];
+        $registro['salario_diario_integrado'] = $registro_emp['salario_diario_integrado'];
 
-        $modifica = (new em_empleado($this->link))->modifica_bd(registro: $registro,id: $this->registro['em_empleado_id']);
+        $modifica = (new em_empleado($this->link))->modifica_bd(registro: $registro,id: $registro_emp['em_empleado_id']);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
         }
