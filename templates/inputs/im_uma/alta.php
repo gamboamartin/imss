@@ -7,5 +7,6 @@
 <?php echo $controlador->inputs->alias; ?>
 <?php echo $controlador->inputs->fecha_inicio; ?>
 <?php echo $controlador->inputs->fecha_fin; ?>
+<?php echo $controlador->inputs->monto; ?>
 <?php include (new views())->ruta_templates.'botons/submit/alta_bd_otro.php';?>
 
