@@ -9,7 +9,7 @@ class im_uma extends modelo{
     public function __construct(PDO $link){
         $tabla = __CLASS__;
         $columnas = array($tabla=>false);
-        $campos_obligatorios = array("fecha_inicio","fecha_fin");
+        $campos_obligatorios = array("fecha_inicio","fecha_fin",'monto');
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas);
