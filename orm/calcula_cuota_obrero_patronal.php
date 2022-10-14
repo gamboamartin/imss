@@ -51,11 +51,20 @@ class calcula_cuota_obrero_patronal{
 
     private function calcula(): bool|array
     {
+        /**
+         * UMA PARA DATABASE AJUSTAR
+         */
         $valida = $this->valida_parametros();
         if(errores::$error){
             return $this->error->error('Error al validar exedente', $valida);
         }
         $this->year = date('Y', strtotime($this->fecha));
+
+
+        if(!isset($this->uma[$this->year])){
+            return $this->error->error('Error no existe UMA para este año', $this->uma);
+        }
+
         $this->monto_uma = $this->uma[$this->year];
 
         $riesgo_de_trabajo = $this->riesgo_de_trabajo();
