@@ -3,7 +3,9 @@
 namespace models;
 use gamboamartin\errores\errores;
 use gamboamartin\validacion\validacion;
+use PDO;
 use stdClass;
+use models\im_uma;
 
 class calcula_cuota_obrero_patronal{
 
@@ -49,7 +51,7 @@ class calcula_cuota_obrero_patronal{
         $this->cuotas = new stdClass();
     }
 
-    private function calcula(): bool|array
+    private function calcula(PDO $link): bool|array
     {
         /**
          * UMA PARA DATABASE AJUSTAR
@@ -58,14 +60,15 @@ class calcula_cuota_obrero_patronal{
         if(errores::$error){
             return $this->error->error('Error al validar exedente', $valida);
         }
-        $this->year = date('Y', strtotime($this->fecha));
 
-
-        if(!isset($this->uma[$this->year])){
-            return $this->error->error('Error no existe UMA para este año', $this->uma);
+        $im_uma = (new im_uma($link))->get_uma(fecha: $this->fecha);
+        if(errores::$error){
+            return $this->error->error('Error al obtener registros de UMA', $im_uma);
         }
-
-        $this->monto_uma = $this->uma[$this->year];
+        if($im_uma->n_registros <= 0){
+            return $this->error->error('Error no exsite registro de UMA', $im_uma);
+        }
+        $this->monto_uma = $im_uma->registros[0]->im_uma_monto;
 
         $riesgo_de_trabajo = $this->riesgo_de_trabajo();
         if(errores::$error){
@@ -136,7 +139,8 @@ class calcula_cuota_obrero_patronal{
         return true;
     }
 
-    public function cuota_obrero_patronal(float $porc_riesgo_trabajo, string $fecha, float $n_dias, float $sbc){
+    public function cuota_obrero_patronal(float $porc_riesgo_trabajo, string $fecha, float $n_dias, float $sbc,
+                                          PDO $link){
         $valida = $this->valida_cuota(fecha: $fecha,n_dias:  $n_dias, porc_riesgo_trabajo: $porc_riesgo_trabajo,
             sbc: $sbc);
         if(errores::$error){
@@ -148,7 +152,7 @@ class calcula_cuota_obrero_patronal{
         $this->n_dias = $n_dias;
         $this->sbc = $sbc;
 
-        $calculo = $this->calcula();
+        $calculo = $this->calcula(link: $link);
         if(errores::$error){
             return $this->error->error('Error al obtener calcular', $calculo);
         }

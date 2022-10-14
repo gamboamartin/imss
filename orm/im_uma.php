@@ -48,7 +48,6 @@ class im_uma extends modelo{
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al obtener uma', data: $uma);
         }
-        print_r($uma);
 
         return $uma;
     }
