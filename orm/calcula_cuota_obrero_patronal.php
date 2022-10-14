@@ -68,6 +68,14 @@ class calcula_cuota_obrero_patronal{
         if($im_uma->n_registros <= 0){
             return $this->error->error('Error no exsite registro de UMA', $im_uma);
         }
+
+        if(!isset($im_uma->registros[0]->im_uma_monto)){
+            return $this->error->error('Error el uma no tiene monto asignado', $im_uma);
+        }
+        if(is_null($im_uma->registros[0]->im_uma_monto)){
+            return $this->error->error('Error el uma no tiene monto asignado', $im_uma);
+        }
+
         $this->monto_uma = $im_uma->registros[0]->im_uma_monto;
 
         $riesgo_de_trabajo = $this->riesgo_de_trabajo();
