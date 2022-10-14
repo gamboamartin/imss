@@ -1,6 +1,7 @@
 <?php
 namespace gamboamartin\im_registro_patronal\test\orm;
 
+use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\errores\errores;
 use gamboamartin\im_registro_patronal\test\base_test;
 use gamboamartin\test\liberator;
@@ -228,6 +229,14 @@ class im_movimientoTest extends test {
             exit;
         }
 
+        $del = (new base_test())->del_org_clasificacion_dep($this->link);
+        if(errores::$error){
+            $error = (new errores())->error('Error al eliminar', $del);
+            print_r($error);
+            exit;
+        }
+
+        /*
         $alta = (new \gamboamartin\organigrama\tests\base_test())->alta_org_sucursal($this->link);
         if(errores::$error){
             $error = (new errores())->error('Error al dar de alta', $alta);
@@ -242,7 +251,7 @@ class im_movimientoTest extends test {
             exit;
         }
 
-        $alta = (new \gamboamartin\organigrama\tests\base_test())->alta_org_puesto($this->link);
+        $alta = (new base_test())->alta_org_puesto($this->link);
         if(errores::$error){
             $error = (new errores())->error('Error al dar de alta', $alta);
             print_r($error);
@@ -254,11 +263,11 @@ class im_movimientoTest extends test {
             $error = (new errores())->error('Error al dar de alta', $alta);
             print_r($error);
             exit;
-        }
+        }*/
 
 
 
-        $alta = (new \gamboamartin\empleado\test\base_test())->alta_em_empleado($this->link);
+        $alta = (new base_test())->alta_em_empleado($this->link);
         if(errores::$error){
             $error = (new errores())->error('Error al dar de alta', $alta);
             print_r($error);
@@ -291,7 +300,7 @@ class im_movimientoTest extends test {
         errores::$error = false;
     }
 
-    public function test_select_im_registro_patronal_id(): void
+    public function test_get_ultimo_movimiento_empleado(): void
     {
         errores::$error = false;
 
@@ -321,6 +330,82 @@ class im_movimientoTest extends test {
         $resultado = $html->get_ultimo_movimiento_empleado(em_empleado_id: $em_empleado_id);
         $this->assertIsArray($resultado);
         $this->assertNotTrue(errores::$error);
+
+        errores::$error = false;
+    }
+
+    public function test_modifica_empleado(): void
+    {
+        errores::$error = false;
+
+        $_GET['seccion'] = 'cat_sat_tipo_persona';
+        $_GET['accion'] = 'lista';
+        $_SESSION['grupo_id'] = 1;
+        $_SESSION['usuario_id'] = 2;
+        $_GET['session_id'] = '1';
+        $html = new im_movimiento($this->link);
+        $html = new liberator($html);
+
+        $del = (new base_test())->del_im_tipo_movimiento($this->link);
+        if(errores::$error){
+            $error = (new errores())->error('Error al eliminar', $del);
+            print_r($error);
+            exit;
+        }
+
+
+        $alta = (new base_test())->alta_im_tipo_movimiento($this->link);
+        if(errores::$error){
+            $error = (new errores())->error('Error al dar de alta', $alta);
+            print_r($error);
+            exit;
+        }
+
+        $registro_emp = array();
+        $registro_emp['im_tipo_movimiento_id'] = 1;
+        $registro_emp['em_empleado_id'] = 1;
+        $resultado = $html->modifica_empleado($registro_emp);
+        $this->assertIsObject($resultado);
+        $this->assertNotTrue(errores::$error);
+        $this->assertObjectNotHasAttribute('sql',$resultado);
+
+        errores::$error = false;
+
+
+        $alta = (new base_test())->alta_im_tipo_movimiento(
+            link: $this->link,codigo: 2, codigo_bis: 2,descripcion: 2,es_alta: 'activo',id: 2);
+        if(errores::$error){
+            $error = (new errores())->error('Error al dar de alta', $alta);
+            print_r($error);
+            exit;
+        }
+
+        $registro_emp = array();
+        $registro_emp['im_tipo_movimiento_id'] = 2;
+        $registro_emp['em_empleado_id'] = 1;
+        $resultado = $html->modifica_empleado($registro_emp);
+        $this->assertIsArray($resultado);
+        $this->assertTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase('Error al integrar registro',$resultado['mensaje']);
+
+        errores::$error = false;
+
+        $registro['fecha_inicio_rel_laboral'] = '2020-01-01';
+        $r_empleado = (new em_empleado($this->link))->modifica_bd($registro, 1);
+        if(errores::$error){
+            $error = (new errores())->error('Error al modificar empleado', $r_empleado);
+            print_r($error);
+            exit;
+        }
+
+        $registro_emp = array();
+        $registro_emp['im_tipo_movimiento_id'] = 2;
+        $registro_emp['em_empleado_id'] = 1;
+        $registro_emp['fecha'] = '2021-01-01';
+        $resultado = $html->modifica_empleado($registro_emp);
+        $this->assertIsObject($resultado);
+        $this->assertNotTrue(errores::$error);
+        $this->assertStringContainsStringIgnoringCase("UPDATE em_empleado SET fecha_inicio_rel_laboral = '2021-01-01'",$resultado->sql);
 
         errores::$error = false;
     }

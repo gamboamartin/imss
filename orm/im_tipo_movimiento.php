@@ -1,6 +1,7 @@
 <?php
 namespace models;
 use base\orm\modelo;
+use gamboamartin\errores\errores;
 use PDO;
 
 class im_tipo_movimiento extends modelo{
@@ -13,5 +14,19 @@ class im_tipo_movimiento extends modelo{
             columnas: $columnas);
 
         $this->NAMESPACE = __NAMESPACE__;
+    }
+
+    public function es_alta(int $im_tipo_movimiento_id): bool|array
+    {
+        $im_tipo_movimiento = $this->registro(registro_id: $im_tipo_movimiento_id, columnas_en_bruto: true, retorno_obj: true);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al obtener tipo de movimiento', data: $im_tipo_movimiento);
+        }
+        $es_alta = false;
+        if($im_tipo_movimiento->es_alta === 'activo'){
+            $es_alta = true;
+        }
+        return $es_alta;
+
     }
 }

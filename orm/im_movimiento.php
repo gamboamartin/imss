@@ -50,6 +50,9 @@ class im_movimiento extends modelo{
         if(!isset($this->registro['salario_diario'])){
             $this->registro['salario_diario'] = 0.0;
         }
+        if(!isset($this->registro['salario_diario_integrado'])){
+            $this->registro['salario_diario_integrado'] = 0.0;
+        }
 
         $alta_bd = parent::alta_bd();
         if (errores::$error) {
@@ -379,6 +382,18 @@ class im_movimiento extends modelo{
         return round($total_cuota,2);
     }
 
+    private function maqueta_row_upd_empleado(array $registro_emp): array
+    {
+        $registro = array();
+        $keys = array('salario_diario_integrado','salario_diario');
+        foreach ($keys as $key){
+            if(isset($registro_emp[$key])){
+                $registro[$key] = $registro_emp[$key];
+            }
+        }
+        return $registro;
+    }
+
     public function modifica_bd(array $registro, int $id, bool $reactiva = false): array|stdClass
     {
         $em_empleado = $this->registro_por_id(entidad: new em_empleado($this->link),
@@ -406,13 +421,71 @@ class im_movimiento extends modelo{
 
     private function modifica_empleado(array $registro_emp): array|stdClass
     {
-        $registro['fecha_inicio_rel_laboral'] = $registro_emp['fecha'];
-        $registro['salario_diario'] = $registro_emp['salario_diario'];
-        $registro['salario_diario_integrado'] = $registro_emp['salario_diario_integrado'];
 
-        $modifica = (new em_empleado($this->link))->modifica_bd(registro: $registro,id: $registro_emp['em_empleado_id']);
+        $keys = array('im_tipo_movimiento_id','em_empleado_id');
+        $valida = $this->validacion->valida_ids(keys: $keys,registro:  $registro_emp);
+        if(errores::$error){
+            return $this->error->error(mensaje: 'Error al validar registro_emp', data: $valida);
+        }
+
+        $registro = $this->row_upd_empleado(registro_emp:$registro_emp);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al integrar registro', data: $registro);
+        }
+
+        $modifica = $this->upd_empleado(registro: $registro,registro_emp:  $registro_emp);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
+        }
+
+        return $modifica;
+    }
+
+    private function row_fecha_ini_rel(bool $es_alta, array $registro, array $registro_emp): array
+    {
+        if($es_alta){
+            $keys = array('fecha');
+            $valida = $this->validacion->fechas_in_array(data: $registro_emp,keys:  $keys);
+            if (errores::$error) {
+                return $this->error->error(mensaje: 'Error al validar registro_emp', data: $valida);
+            }
+            $registro['fecha_inicio_rel_laboral'] = $registro_emp['fecha'];
+        }
+        return $registro;
+    }
+
+    private function row_upd_empleado(array $registro_emp): array
+    {
+        $registro = $this->maqueta_row_upd_empleado(registro_emp: $registro_emp);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al maquetar registro', data: $registro);
+        }
+
+        $es_alta = (new im_tipo_movimiento($this->link))->es_alta(
+            im_tipo_movimiento_id: $registro_emp['im_tipo_movimiento_id']);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener tipo de movto', data: $es_alta);
+        }
+
+        $registro = $this->row_fecha_ini_rel(es_alta: $es_alta,registro:  $registro,registro_emp:  $registro_emp);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al integrar fecha', data: $registro);
+        }
+
+        return $registro;
+    }
+
+    private function upd_empleado(array $registro, array $registro_emp): array|stdClass
+    {
+        $modifica = new stdClass();
+
+        if(count($registro) > 0) {
+
+            $modifica = (new em_empleado($this->link))->modifica_bd(
+                registro: $registro, id: $registro_emp['em_empleado_id']);
+            if (errores::$error) {
+                return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
+            }
         }
         return $modifica;
     }
