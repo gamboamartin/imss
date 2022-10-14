@@ -5,6 +5,7 @@ use gamboamartin\errores\errores;
 use models\im_movimiento;
 use models\im_registro_patronal;
 use models\im_tipo_movimiento;
+use models\im_uma;
 use PDO;
 
 class base_test{
@@ -104,6 +105,28 @@ class base_test{
         return $alta;
     }
 
+    public function alta_im_uma(PDO $link, string $codigo = '1', string $codigo_bis = '1', string $descripcion = '1',
+                                string $fecha_fin = '2020-12-31', string $fecha_inicio ='2020-01-01',
+                                int $id = 1): array|\stdClass
+    {
+        $registro = array();
+        $registro['id'] = $id;
+        $registro['codigo'] = $codigo;
+        $registro['codigo_bis'] = $codigo_bis;
+        $registro['descripcion'] = $descripcion;
+        $registro['fecha_inicio'] = $fecha_inicio;
+        $registro['fecha_fin'] = $fecha_fin;
+
+        $alta = (new im_uma($link))->alta_registro($registro);
+        if(errores::$error){
+            return (new errores())->error('Error al dar de alta ', $alta);
+
+        }
+        return $alta;
+    }
+
+
+
     public function alta_org_puesto(PDO $link): array|\stdClass
     {
 
@@ -165,6 +188,15 @@ class base_test{
         }
 
         $del = $this->del($link, 'im_tipo_movimiento');
+        if(errores::$error){
+            return (new errores())->error('Error al eliminar', $del);
+        }
+        return $del;
+    }
+
+    public function del_im_uma(PDO $link): array
+    {
+        $del = $this->del($link, 'im_uma');
         if(errores::$error){
             return (new errores())->error('Error al eliminar', $del);
         }

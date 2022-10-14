@@ -31,7 +31,7 @@ class im_uma extends modelo{
 
         $r_alta_bd = parent::alta_bd();
         if(errores::$error){
-            return $this->error->error(mensaje: 'Error al dar de alta tipo salario minimo',data: $r_alta_bd);
+            return $this->error->error(mensaje: 'Error al dar de alta uma',data: $r_alta_bd);
         }
         return $r_alta_bd;
     }
