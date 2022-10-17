@@ -21,8 +21,8 @@ class im_salario_minimo extends modelo{
         $campos_view['im_tipo_salario_minimo_id']['type'] = 'selects';
         $campos_view['im_tipo_salario_minimo_id']['model'] = (new im_tipo_salario_minimo($link));
 
-        $campos_view['fecha_inicio']['type'] = 'inputs';
-        $campos_view['fecha_fin']['type'] = 'inputs';
+        $campos_view['fecha_inicio']['type'] = 'dates';
+        $campos_view['fecha_fin']['type'] = 'dates';
         $campos_view['monto']['type'] = 'inputs';
 
 

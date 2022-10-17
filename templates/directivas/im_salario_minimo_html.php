@@ -25,8 +25,8 @@ class im_salario_minimo_html extends html_controler {
         $controler->inputs->select->im_tipo_salario_minimo_id = $inputs['selects']->im_tipo_salario_minimo_id;
         $controler->inputs->select->dp_cp_id = $inputs['selects']->dp_cp_id;
 
-        $controler->inputs->fecha_inicio = $inputs['inputs']->fecha_inicio;
-        $controler->inputs->fecha_fin = $inputs['inputs']->fecha_fin;
+        $controler->inputs->fecha_inicio = $inputs['dates']->fecha_inicio;
+        $controler->inputs->fecha_fin = $inputs['dates']->fecha_fin;
         $controler->inputs->monto = $inputs['inputs']->monto;
 
         return $controler->inputs;
