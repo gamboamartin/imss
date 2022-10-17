@@ -38,6 +38,20 @@ class controlador_im_registro_patronal extends system {
         parent::__construct(html:$html_, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
 
 
+        $this->asignar_propiedad(identificador:'fc_csd_id', propiedades: ["label" => "CSD Sucursal"]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador:'im_clase_riesgo_id', propiedades: ["label" => "Clase de Riesgo."]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
         $this->titulo_lista = 'Registro Patronal';
     }
 
@@ -48,15 +62,8 @@ class controlador_im_registro_patronal extends system {
             return $this->retorno_error(mensaje: 'Error al generar template',data:  $r_alta, header: $header,ws:$ws);
         }
 
-        $keys_selects = array();
-        $keys_selects['fc_csd'] = new stdClass();
-        $keys_selects['fc_csd']->label = 'CSD';
-
-        $keys_selects['im_clase_riesgo'] = new stdClass();
-        $keys_selects['im_clase_riesgo']->label = 'Clase de Riesgo IMSS';
-
         $inputs = (new im_registro_patronal_html(html: $this->html_base))->genera_inputs_alta(controler: $this,
-            keys_selects: $keys_selects, link: $this->link);
+            keys_selects: $this->keys_selects, link: $this->link);
         if(errores::$error){
             $error = $this->errores->error(mensaje: 'Error al generar inputs',data:  $inputs);
             print_r($error);
