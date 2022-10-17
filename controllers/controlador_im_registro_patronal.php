@@ -228,6 +228,22 @@ class controlador_im_registro_patronal extends system {
             print_r($error);
             die('Error');
         }
+        
+        $this->asignar_propiedad(identificador:'fc_csd_id',
+            propiedades: ["id_selected"=> $this->row_upd->fc_csd_id]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador:'im_clase_riesgo_id',
+            propiedades: ["id_selected"=>$this->row_upd->im_clase_riesgo_id]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
 
         return $r_modifica;
     }
