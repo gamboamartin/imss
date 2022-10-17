@@ -23,6 +23,10 @@ class im_registro_patronal extends modelo{
         $campos_view['im_clase_riesgo_id']['type'] = 'selects';
         $campos_view['im_clase_riesgo_id']['model'] = (new im_clase_riesgo($link));
 
+        $campos_view['descripcion']['type'] = "inputs";
+        $campos_view['descripcion']['cols'] = 6;
+        $campos_view['descripcion']['place_holder'] = "Descripcion";
+
         //$campos_view = array('fc_csd_id'=>array("type" => "selects","model"=>(new fc_csd($link))));
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
