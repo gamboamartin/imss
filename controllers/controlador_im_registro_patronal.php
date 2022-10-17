@@ -25,7 +25,7 @@ use PDO;
 use stdClass;
 
 class controlador_im_registro_patronal extends system {
-
+    public array $keys_selects = array();
     public function __construct(PDO $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass()){
         $modelo = new im_registro_patronal(link: $link);
