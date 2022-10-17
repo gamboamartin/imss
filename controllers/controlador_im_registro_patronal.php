@@ -66,6 +66,17 @@ class controlador_im_registro_patronal extends system {
         return $r_alta;
     }
 
+    public function asignar_propiedad(string $identificador, mixed $propiedades)
+    {
+        if (!array_key_exists($identificador,$this->keys_selects)){
+            $this->keys_selects[$identificador] = new stdClass();
+        }
+
+        foreach ($propiedades as $key => $value){
+            $this->keys_selects[$identificador]->$key = $value;
+        }
+    }
+
     private function cat_sat_regimen_fiscal_descripcion_row(stdClass $row): array|stdClass
     {
         $keys = array('im_registro_patronal_id');
