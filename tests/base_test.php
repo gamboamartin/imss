@@ -60,7 +60,7 @@ class base_test{
         return $alta;
     }
 
-    public function alta_im_registro_patronal(PDO $link, int $fc_csd_id = 1): array|\stdClass
+    public function alta_im_registro_patronal(PDO $link, int $id = 1, int $fc_csd_id = 1): array|\stdClass
     {
 
         $existe = (new fc_csd($link))->existe_by_id(registro_id: $fc_csd_id);
@@ -81,7 +81,7 @@ class base_test{
 
 
         $org_puesto = array();
-        $org_puesto['id'] = 1;
+        $org_puesto['id'] = $id;
         $org_puesto['codigo'] = 1;
         $org_puesto['descripcion'] = 1;
         $org_puesto['im_clase_riesgo_id'] = 1;
