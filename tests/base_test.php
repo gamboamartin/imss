@@ -2,6 +2,7 @@
 namespace gamboamartin\im_registro_patronal\test;
 use base\orm\modelo_base;
 use gamboamartin\errores\errores;
+use gamboamartin\facturacion\models\fc_csd;
 use models\im_movimiento;
 use models\im_registro_patronal;
 use models\im_tipo_movimiento;
@@ -21,10 +22,10 @@ class base_test{
         return $alta;
     }
 
-    public function alta_fc_csd(PDO $link): array|\stdClass
+    public function alta_fc_csd(PDO $link, int $id = 1): array|\stdClass
     {
 
-        $alta = (new \gamboamartin\facturacion\tests\base_test())->alta_fc_csd($link);
+        $alta = (new \gamboamartin\facturacion\tests\base_test())->alta_fc_csd(link: $link, id: $id);
         if(errores::$error){
             return (new errores())->error('Error al dar de alta ', $alta);
 
@@ -59,21 +60,32 @@ class base_test{
         return $alta;
     }
 
-    public function alta_im_registro_patronal(PDO $link): array|\stdClass
+    public function alta_im_registro_patronal(PDO $link, int $fc_csd_id = 1): array|\stdClass
     {
 
-        $alta = (new base_test())->alta_fc_csd($link);
-        if(errores::$error){
-            return (new errores())->error('Error al dar de alta ', $alta);
+        $existe = (new fc_csd($link))->existe_by_id(registro_id: $fc_csd_id);
+        if (errores::$error) {
+            return (new errores())->error('Error al validar si existe', $existe);
 
         }
+
+        if(!$existe) {
+            $alta = (new base_test())->alta_fc_csd(link: $link, id: $fc_csd_id);
+            if(errores::$error){
+                return (new errores())->error('Error al dar de alta ', $alta);
+
+            }
+
+        }
+
+
 
         $org_puesto = array();
         $org_puesto['id'] = 1;
         $org_puesto['codigo'] = 1;
         $org_puesto['descripcion'] = 1;
         $org_puesto['im_clase_riesgo_id'] = 1;
-        $org_puesto['fc_csd_id'] = 1;
+        $org_puesto['fc_csd_id'] = $fc_csd_id;
         $org_puesto['descripcion_select'] = 1;
 
 

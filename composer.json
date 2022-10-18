@@ -63,7 +63,9 @@
     "gamboa.martin/banco": "dev-main",
     "gamboa.martin/facturacion": "dev-main",
     "gamboa.martin/xml_cfdi_4": "dev-master",
-    "gamboa.martin/empleado": "dev-main"
+    "gamboa.martin/empleado": "dev-main",
+    "gamboa.martin/nomina": "dev-master",
+    "gamboa.martin/proceso": "dev-main"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5"
