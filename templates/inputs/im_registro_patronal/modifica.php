@@ -1,6 +1,6 @@
-<?php /** @var controllers\controlador_org_empresa $controlador  controlador en ejecucion */ ?>
+<?php /** @var \gamboamartin\im_registro_patronal\controllers\controlador_im_registro_patronal $controlador  controlador en ejecucion */ ?>
 <?php use config\views; ?>
+<?php echo $controlador->inputs->fc_csd_id; ?>
+<?php echo $controlador->inputs->im_clase_riesgo_id; ?>
 <?php echo $controlador->inputs->descripcion;?>
-<?php echo $controlador->inputs->select->fc_csd_id; ?>
-<?php echo $controlador->inputs->select->im_clase_riesgo_id; ?>
 <?php include (new views())->ruta_templates.'botons/submit/modifica_bd.php';?>

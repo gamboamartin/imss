@@ -19,15 +19,9 @@ class im_registro_patronal extends modelo{
         $campos_view = array();
         $campos_view['fc_csd_id']['type'] = 'selects';
         $campos_view['fc_csd_id']['model'] = (new fc_csd($link));
-
         $campos_view['im_clase_riesgo_id']['type'] = 'selects';
         $campos_view['im_clase_riesgo_id']['model'] = (new im_clase_riesgo($link));
-
         $campos_view['descripcion']['type'] = "inputs";
-        $campos_view['descripcion']['cols'] = 6;
-        $campos_view['descripcion']['place_holder'] = "Descripcion";
-
-        //$campos_view = array('fc_csd_id'=>array("type" => "selects","model"=>(new fc_csd($link))));
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas,campos_view:  $campos_view );
@@ -47,12 +41,7 @@ class im_registro_patronal extends modelo{
             return $this->error->error(mensaje: 'Error al obtener el registro',data:  $r_fc_csd);
         }
 
-
-        $dp_colonia_postal = new dp_colonia_postal($this->link);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al genera modelo',data:  $dp_colonia_postal);
-        }
-        $r_dp_colonia_postal = $dp_colonia_postal->registro(registro_id: $r_fc_csd['dp_calle_pertenece_dp_colonia_postal_id']);
+        $r_dp_colonia_postal = (new dp_colonia_postal($this->link))->registro(registro_id: $r_fc_csd['dp_calle_pertenece_dp_colonia_postal_id']);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al obtener el registro',data:  $r_dp_colonia_postal);
         }
@@ -79,6 +68,7 @@ class im_registro_patronal extends modelo{
             $this->registro['descripcion_select'] = $this->registro['descripcion']. ' ' .
                 $r_im_clase_riesgo['im_clase_riesgo_factor']. ' ' . $r_fc_csd['org_empresa_rfc']. ' '.
                 $r_dp_colonia_postal['dp_estado_descripcion'];
+
 
         $r_alta_bd = parent::alta_bd();
         if(errores::$error){
