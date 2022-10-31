@@ -155,7 +155,7 @@ class im_movimiento_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->fecha_required(disable: $disabled,name: 'fecha',place_holder: 'Fecha',
+        $html =$this->directivas->fecha_required(disabled: $disabled,name: 'fecha',place_holder: 'Fecha',
             row_upd: $row_upd, value_vacio: $value_vacio);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar input', data: $html);
@@ -176,7 +176,7 @@ class im_movimiento_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text(disable: $disabled, name: 'salario_diario', place_holder: 'Salario diario',
+        $html =$this->directivas->input_text(disabled: $disabled, name: 'salario_diario', place_holder: 'Salario diario',
             required: $required, row_upd: $row_upd, value_vacio: $value_vacio);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar input', data: $html);
@@ -197,7 +197,7 @@ class im_movimiento_html extends html_controler {
             return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
         }
 
-        $html =$this->directivas->input_text(disable: $disabled, name: 'salario_diario_integrado',
+        $html =$this->directivas->input_text(disabled: $disabled, name: 'salario_diario_integrado',
             place_holder: 'Salario Diario Integrado', required: $required, row_upd: $row_upd,
             value_vacio: $value_vacio);
         if(errores::$error){
