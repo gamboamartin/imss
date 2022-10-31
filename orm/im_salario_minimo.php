@@ -9,7 +9,7 @@ use stdClass;
 class im_salario_minimo extends modelo{
     public function __construct(PDO $link){
         $tabla = __CLASS__;
-        $columnas = array($tabla=>false);
+        $columnas = array($tabla=>false,'im_tipo_salario_minimo'=>$tabla);
         $campos_obligatorios = array("im_tipo_salario_minimo_id","dp_cp_id","fecha_inicio","fecha_fin","monto");
         $campos_view = array("im_tipo_salario_minimo_id" => array("type" => "selects", "model" => new im_tipo_salario_minimo(link: $link)),
             "dp_cp_id" => array("type" => "selects", "model" => new dp_cp(link: $link)));
