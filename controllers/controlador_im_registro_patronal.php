@@ -32,7 +32,7 @@ class controlador_im_registro_patronal extends system {
                                 stdClass $paths_conf = new stdClass()){
         $modelo = new im_registro_patronal(link: $link);
         $html_ = new im_registro_patronal_html(html: $html);
-        $obj_link = new links_menu($this->registro_id);
+        $obj_link = new links_menu(link: $link, registro_id:$this->registro_id);
 
         $this->rows_lista[] = 'im_clase_riesgo_id';
         $this->rows_lista[] = 'fc_csd_id';
