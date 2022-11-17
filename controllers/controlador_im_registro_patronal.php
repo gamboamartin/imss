@@ -247,8 +247,7 @@ class controlador_im_registro_patronal extends system {
         return $registros;
     }
 
-    public function modifica(bool $header, bool $ws = false, string $breadcrumbs = '', bool $aplica_form = true,
-                             bool $muestra_btn = true): array|string
+    public function modifica(bool $header, bool $ws = false): array|stdClass
     {
         $base = $this->base();
         if(errores::$error){
@@ -258,6 +257,7 @@ class controlador_im_registro_patronal extends system {
 
         return $base->template;
     }
+
     private function org_empresa_descripcion_row(stdClass $row): array|stdClass
     {
         $keys = array('im_registro_patronal_id');
