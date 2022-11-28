@@ -3,6 +3,7 @@ namespace models;
 use base\orm\modelo;
 use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\errores\errores;
+use gamboamartin\facturacion\models\fc_csd;
 use gamboamartin\xml_cfdi_4\validacion;
 use PDO;
 use stdClass;
@@ -14,8 +15,20 @@ class im_movimiento extends modelo{
             'im_tipo_movimiento'=>$tabla);
         $campos_obligatorios = array('im_registro_patronal_id','im_tipo_movimiento_id','em_empleado_id','fecha');
 
+        $campos_view = array();
+        $campos_view['im_tipo_movimiento_id']['type'] = 'selects';
+        $campos_view['im_tipo_movimiento_id']['model'] = (new im_tipo_movimiento($link));
+        $campos_view['im_registro_patronal_id']['type'] = 'selects';
+        $campos_view['im_registro_patronal_id']['model'] = (new im_registro_patronal($link));
+        $campos_view['em_empleado_id']['type'] = 'selects';
+        $campos_view['em_empleado_id']['model'] = (new em_empleado($link));
+        $campos_view['fecha']['type'] = "dates";
+        $campos_view['salario_diario']['type'] = "inputs";
+        $campos_view['salario_diario_integrado']['type'] = "inputs";
+        $campos_view['observaciones']['type'] = "inputs";
+
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
-            columnas: $columnas);
+            columnas: $columnas,campos_view: $campos_view);
 
         $this->NAMESPACE = __NAMESPACE__;
     }

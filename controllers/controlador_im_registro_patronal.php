@@ -11,13 +11,9 @@ namespace gamboamartin\im_registro_patronal\controllers;
 use gamboamartin\direccion_postal\models\dp_colonia_postal;
 use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
-use gamboamartin\organigrama\models\org_empresa;
-use gamboamartin\organigrama\models\org_sucursal;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use html\im_registro_patronal_html;
-use html\org_empresa_html;
-use links\secciones\link_org_empresa;
 use models\im_clase_riesgo;
 use models\im_registro_patronal;
 use gamboamartin\template\html;
@@ -97,7 +93,7 @@ class controlador_im_registro_patronal extends system {
 
     private function base(): array|stdClass
     {
-        $r_modifica =  parent::modifica(header: false,aplica_form:  false);
+        $r_modifica =  parent::modifica(header: false);
         if(errores::$error){
             return $this->errores->error(mensaje: 'Error al generar template',data:  $r_modifica);
         }
