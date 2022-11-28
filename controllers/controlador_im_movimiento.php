@@ -49,28 +49,38 @@ class controlador_im_movimiento extends system {
             die('Error');
         }
 
-        $this->asignar_propiedad(identificador: 'fecha', propiedades: ['place_holder'=> 'Fecha', 'cols'=>4]);
+        $this->asignar_propiedad(identificador: 'fecha', propiedades: ['place_holder'=> 'Fecha', 'cols'=>6]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);
             die('Error');
         }
 
-        $this->asignar_propiedad(identificador: 'salario_diario', propiedades: ['place_holder'=> 'Salario Diario', 'cols'=>4]);
+        $this->asignar_propiedad(identificador: 'salario_diario', propiedades: ['place_holder'=> 'Salario Diario', 'cols'=>6]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);
             die('Error');
         }
 
-        $this->asignar_propiedad(identificador: 'salario_diario_integrado', propiedades: ['place_holder'=> 'Salario Diario Integrado', 'cols'=>4]);
+        $this->asignar_propiedad(identificador: 'salario_diario_integrado', propiedades: [
+            'place_holder'=> 'Salario Diario Integrado', 'cols'=>6]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);
             die('Error');
         }
 
-        $this->asignar_propiedad(identificador: 'observaciones', propiedades: ['place_holder'=> 'Observaciones', 'cols'=>12,'required'=>false]);
+        $this->asignar_propiedad(identificador: 'observaciones', propiedades: ['place_holder'=> 'Observaciones',
+            'cols'=>12,'required'=>false]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'factor_integracion', propiedades: [
+            'place_holder'=> 'Factor de Integracion', 'cols'=>6,'required'=>false]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);

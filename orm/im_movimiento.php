@@ -26,6 +26,7 @@ class im_movimiento extends modelo{
         $campos_view['salario_diario']['type'] = "inputs";
         $campos_view['salario_diario_integrado']['type'] = "inputs";
         $campos_view['observaciones']['type'] = "inputs";
+        $campos_view['factor_integracion']['type'] = "inputs";
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas,campos_view: $campos_view);

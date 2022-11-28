@@ -4,6 +4,7 @@
 <?php echo $controlador->inputs->im_registro_patronal_id; ?>
 <?php echo $controlador->inputs->em_empleado_id; ?>
 <?php echo $controlador->inputs->fecha; ?>
+<?php echo $controlador->inputs->factor_integracion; ?>
 <?php echo $controlador->inputs->salario_diario; ?>
 <?php echo $controlador->inputs->salario_diario_integrado; ?>
 <?php echo $controlador->inputs->observaciones; ?>
