@@ -33,49 +33,33 @@ class im_registro_patronal extends modelo{
     {
 
 
-        $fc_csd = new fc_csd(link: $this->link);
+        $fc_csd = (new fc_csd(link: $this->link))->registro(registro_id: $this->registro['fc_csd_id']);
         if(errores::$error){
-            return $this->error->error(mensaje: 'Error al genera modelo',data:  $fc_csd);
-        }
-        $r_fc_csd = $fc_csd->registro(registro_id: $this->registro['fc_csd_id']);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al obtener el registro',data:  $r_fc_csd);
+            return $this->error->error(mensaje: 'Error al obtener el registro',data:  $fc_csd);
         }
 
-        $r_dp_colonia_postal = (new dp_colonia_postal($this->link))->registro(registro_id: 1);
+
+        $im_clase_riesgo = (new im_clase_riesgo(link: $this->link))->registro(registro_id: $this->registro['im_clase_riesgo_id']);
         if(errores::$error){
-            return $this->error->error(mensaje: 'Error al obtener el registro',data:  $r_dp_colonia_postal);
+            return $this->error->error(mensaje: 'Error al obtener el registro',data:  $im_clase_riesgo);
         }
 
-        $im_clase_riesgo = new im_clase_riesgo($this->link);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al genera modelo',data:  $im_clase_riesgo);
-        }
-        $r_im_clase_riesgo = $im_clase_riesgo->registro(registro_id: $this->registro['im_clase_riesgo_id']);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al obtener el registro',data:  $r_im_clase_riesgo);
-        }
 
-        $org_empresa = new org_empresa($this->link);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al genera modelo',data: $org_empresa);
-        }
-        $r_org_empresa = $org_empresa->registro(registro_id: $this->registro['fc_csd_id']);
-        if(errores::$error){
-            return $this->error->error(mensaje: 'Error al obtener el registro',data:  $r_org_empresa);
-        }
-
-        if(!isset($this->registro['codigo']))
+        if(!isset($this->registro['codigo'])){
             $this->registro['codigo'] = $this->registro['descripcion'];
+        }
 
-        if(!isset($this->registro['codigo_bis']))
-            $this->registro['codigo_bis'] = $this->registro['codigo']. ' ' .$r_fc_csd['org_empresa_rfc'];
+        if(!isset($this->registro['codigo_bis'])) {
+            $this->registro['codigo_bis'] = $this->registro['codigo'] . ' ' . $fc_csd['org_empresa_rfc'];
+        }
 
-        if(!isset($this->registro['alias']))
-            $this->registro['alias'] =  $this->registro['codigo_bis'];
+        if(!isset($this->registro['alias'])) {
+            $this->registro['alias'] = $this->registro['codigo_bis'];
+        }
 
-        if(!isset($this->registro['descripcion_select']))
-            $registro['descripcion_select'] = $r_org_empresa['razon_social']. ' ' .$this->registro['descripcion'];
+        if(!isset($this->registro['descripcion_select'])) {
+            $this->registro['descripcion_select'] = $fc_csd['org_empresa_razon_social'] . ' ' . $this->registro['descripcion'];
+        }
 
 
         $r_alta_bd = parent::alta_bd();
