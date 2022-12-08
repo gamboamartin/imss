@@ -34,8 +34,10 @@ class controlador_im_registro_patronal extends system {
         $this->rows_lista[] = 'fc_csd_id';
 
         $columns["im_registro_patronal_id"]["titulo"] = "Id";
-        $columns["im_registro_patronal_codigo"]["titulo"] = "Cogido";
-        $columns["im_registro_patronal_descripcion"]["titulo"] = "Descripcion";
+        $columns["im_registro_patronal_codigo"]["titulo"] = "Código";
+        $columns["im_registro_patronal_descripcion"]["titulo"] = "Registro Patronal";
+        $columns["org_empresa_razon_social"]["titulo"] = "Razón Social";
+        $columns["im_clase_riesgo_descripcion"]["titulo"] = "Prima de Riesgo";
 
         $datatables = new stdClass();
         $datatables->columns = $columns;
