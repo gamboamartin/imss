@@ -56,7 +56,8 @@ class controlador_im_movimiento extends system {
             die('Error');
         }
 
-        $this->asignar_propiedad(identificador: 'salario_diario', propiedades: ['place_holder'=> 'Salario Diario', 'cols'=>6]);
+        $this->asignar_propiedad(identificador: 'salario_diario', propiedades: ['place_holder'=> 'Salario Diario',
+            'cols'=>6,'required'=>false]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);
@@ -64,7 +65,7 @@ class controlador_im_movimiento extends system {
         }
 
         $this->asignar_propiedad(identificador: 'salario_diario_integrado', propiedades: [
-            'place_holder'=> 'Salario Diario Integrado', 'cols'=>6]);
+            'place_holder'=> 'Salario Diario Integrado', 'cols'=>6,'required'=>false]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);
