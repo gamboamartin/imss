@@ -13,7 +13,7 @@ txt_salario_diario.change(function (){
     let factor = txt_factor_integracion.val();
 
     let res = salario_diario * factor;
-    txt_salario_diario_integrado.val(res);
+    txt_salario_diario_integrado.val(res.toFixed(2));
 });
 
 let getData = async (url, acciones) => {

@@ -26,7 +26,22 @@ class controlador_im_movimiento extends system {
         $modelo = new im_movimiento(link: $link);
         $html_ = new im_movimiento_html(html: $html);
         $obj_link = new links_menu(link: $link, registro_id:$this->registro_id);
-        parent::__construct(html:$html_, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
+
+        $columns["im_movimiento_id"]["titulo"] = "Id";
+        $columns["im_movimiento_codigo"]["titulo"] = "Código";
+        $columns["im_tipo_movimiento_descripcion"]["titulo"] = "Tipo Movimiento";
+        $columns["im_registro_patronal_descripcion"]["titulo"] = "Registro Patronal";
+        $columns["em_empleado_nss"]["titulo"] = "NSS";
+        $columns["em_empleado_nombre"]["titulo"] = "Nombre";
+        $columns["em_empleado_ap"]["titulo"] = "Ap. Paterno";
+        $columns["em_empleado_am"]["titulo"] = "Ap. Materno";
+        $columns["im_movimiento_fecha"]["titulo"] = "Fecha";
+
+        $datatables = new stdClass();
+        $datatables->columns = $columns;
+
+        parent::__construct(html:$html_, link: $link,modelo:  $modelo, obj_link: $obj_link, datatables: $datatables,
+            paths_conf: $paths_conf);
 
         $this->asignar_propiedad(identificador:'im_tipo_movimiento_id', propiedades: ["label" => "Tipo de Movimiento IMSS", 'cols'=>12]);
         if (errores::$error) {
