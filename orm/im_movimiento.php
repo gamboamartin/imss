@@ -16,7 +16,6 @@ class im_movimiento extends modelo{
             'org_empresa' => 'org_sucursal','im_tipo_movimiento'=>$tabla,);
         $campos_obligatorios = array('im_registro_patronal_id','im_tipo_movimiento_id','em_empleado_id','fecha');
 
-        
         $campos_view = array();
         $campos_view['im_tipo_movimiento_id']['type'] = 'selects';
         $campos_view['im_tipo_movimiento_id']['model'] = (new im_tipo_movimiento($link));
