@@ -105,7 +105,7 @@ class im_salario_minimo_html extends html_controler {
         return $inputs;
     }
 
-    public function input_monto(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false):
+    public function input_monto(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false, string $place_holder = 'Monto'):
     array|string
     {
         $valida = $this->directivas->valida_cols(cols: $cols);
