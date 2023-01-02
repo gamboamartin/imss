@@ -12,9 +12,11 @@ use gamboamartin\errores\errores;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use html\im_movimiento_html;
+use models\doc_documento;
 use models\im_movimiento;
 use gamboamartin\template\html;
 use PDO;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use stdClass;
 
 class controlador_im_movimiento extends system {
@@ -117,18 +119,9 @@ class controlador_im_movimiento extends system {
 
     public function lee_archivo(bool $header, bool $ws = false)
     {
-        $tg_manifiesto = (new tg_manifiesto($this->link))->registro(registro_id: $this->registro_id);
-        if (errores::$error) {
-            $error =  $this->errores->error(mensaje: 'Error al obtener manifiesto', data: $tg_manifiesto);
-            if(!$header){
-                return $error;
-            }
-            print_r($error);
-            die('Error');
-        }
         $doc_documento_modelo = new doc_documento($this->link);
-        $doc_documento_modelo->registro['descripcion'] = $tg_manifiesto['tg_manifiesto_descripcion'];
-        $doc_documento_modelo->registro['descripcion_select'] = $tg_manifiesto['tg_manifiesto_descripcion'];
+        $doc_documento_modelo->registro['descripcion'] = rand();
+        $doc_documento_modelo->registro['descripcion_select'] = rand();
         $doc_documento_modelo->registro['doc_tipo_documento_id'] = 1;
         $doc_documento = $doc_documento_modelo->alta_bd(file: $_FILES['archivo']);
         if (errores::$error) {
@@ -140,7 +133,7 @@ class controlador_im_movimiento extends system {
             die('Error');
         }
 
-        $empleados_excel = $this->obten_empleados_excel(ruta_absoluta: $doc_documento->registro['doc_documento_ruta_absoluta']);
+        $empleados_excel = $this->obten_movimientos_excel(ruta_absoluta: $doc_documento->registro['doc_documento_ruta_absoluta']);
         if (errores::$error) {
             $error =  $this->errores->error(mensaje: 'Error obtener empleados',data:  $empleados_excel);
             if(!$header){
@@ -150,335 +143,48 @@ class controlador_im_movimiento extends system {
             die('Error');
         }
 
-        $im_registro_patronal = $this->obten_registro_patronal(tg_manifiesto_id: $this->registro_id);
-        if (errores::$error) {
-            $error =  $this->errores->error(mensaje: 'Error obtener registro patronal',data:  $im_registro_patronal);
-            if(!$header){
-                return $error;
-            }
-            print_r($error);
-            die('Error');
-        }
-
-        $im_registro_patronal_id = $im_registro_patronal['im_registro_patronal_id'];
-        $empleados = array();
-        foreach ($empleados_excel as $empleado_excel){
-            $filtro['im_registro_patronal.id'] = $im_registro_patronal_id;
-            $filtro['em_empleado.nombre'] = $empleado_excel->nombre;
-            $filtro['em_empleado.ap'] = $empleado_excel->ap;
-            $filtro['em_empleado.am'] = $empleado_excel->am;
-
-            $registro = (new em_empleado($this->link))->filtro_and(filtro: $filtro);
-            if (errores::$error) {
-                $error =  $this->errores->error(mensaje: 'Error al al obtener registro de empleado', data: $registro);
-                if(!$header){
-                    return $error;
-                }
-                print_r($error);
-                die('Error');
-            }
-            if ($registro->n_registros === 0) {
-                $error =  $this->errores->error(mensaje: 'Error se encontro el empleado '.$empleado_excel->nombre.' '.
-                    $empleado_excel->ap.' '.$empleado_excel->am, data: $registro);
-                if(!$header){
-                    return $error;
-                }
-                print_r($error);
-                die('Error');
-            }
-            if($registro->n_registros > 0){
-                $empleados[] = $registro->registros[0];
-            }
-        }
-
-        $filtro_per['tg_manifiesto.id'] = $this->registro_id;
-        $nom_periodos = (new tg_manifiesto_periodo($this->link))->filtro_and(filtro: $filtro_per);
-        if (errores::$error) {
-            $error =  $this->errores->error(mensaje: 'Error al al obtener periodos', data: $nom_periodos);
-            if(!$header){
-                return $error;
-            }
-            print_r($error);
-            die('Error');
-        }
-
-        foreach ($nom_periodos->registros  as $nom_periodo) {
-            $empleados_res = array();
-            foreach ($empleados as $empleado) {
-                $filtro_em['em_empleado.id'] = $empleado['em_empleado_id'];
-                $filtro_em['cat_sat_periodicidad_pago_nom.id'] = $nom_periodo['nom_periodo_cat_sat_periodicidad_pago_nom_id'];
-                $conf_empleado = (new nom_conf_empleado($this->link))->filtro_and(filtro: $filtro_em);
-                if (errores::$error) {
-                    $error =  $this->errores->error(mensaje: 'Error al obtener configuracion de empleado',
-                        data: $conf_empleado);
-                    if(!$header){
-                        return $error;
-                    }
-                    print_r($error);
-                    die('Error');
-                }
-
-                if (isset($conf_empleado->registros[0])) {
-                    $empleados_res[] = $conf_empleado->registros[0];
-                }
-            }
-
-            foreach ($empleados_res as $empleado) {
-                foreach ($empleados_excel as $empleado_excel) {
-                    if(trim($empleado_excel->nombre) === trim($empleado['em_empleado_nombre']) &&
-                        trim($empleado_excel->ap) === trim($empleado['em_empleado_ap']) &&
-                        trim($empleado_excel->am) === trim($empleado['em_empleado_am'])) {
-
-                        if ((int)$empleado_excel->faltas > 0) {
-                            $registro_inc['nom_tipo_incidencia_id'] = 1;
-                            $registro_inc['em_empleado_id'] = $empleado['em_empleado_id'];
-                            $registro_inc['n_dias'] = $empleado_excel->faltas;
-                            $registro_inc['fecha_incidencia'] = $nom_periodo['nom_periodo_fecha_inicial_pago'];
-
-                            $nom_incidencia = (new nom_incidencia($this->link))->alta_registro(registro: $registro_inc);
-                            if (errores::$error) {
-                                $error = $this->errores->error(mensaje: 'Error al dar de alta incidencias',
-                                    data: $nom_incidencia);
-                                if (!$header) {
-                                    return $error;
-                                }
-                                print_r($error);
-                                die('Error');
-                            }
-                        }
-                        if ((int)$empleado_excel->prima_dominical > 0) {
-                            $registro_inc['nom_tipo_incidencia_id'] = 2;
-                            $registro_inc['em_empleado_id'] = $empleado['em_empleado_id'];
-                            $registro_inc['n_dias'] = $empleado_excel->prima_dominical;
-                            $registro_inc['fecha_incidencia'] = $nom_periodo['nom_periodo_fecha_inicial_pago'];
-
-                            $nom_incidencia = (new nom_incidencia($this->link))->alta_registro(registro: $registro_inc);
-                            if (errores::$error) {
-                                $error = $this->errores->error(mensaje: 'Error al dar de alta incidencias',
-                                    data: $nom_incidencia);
-                                if (!$header) {
-                                    return $error;
-                                }
-                                print_r($error);
-                                die('Error');
-                            }
-                        }
-                        if ((int)$empleado_excel->dias_festivos_laborados > 0) {
-                            $registro_inc['nom_tipo_incidencia_id'] = 3;
-                            $registro_inc['em_empleado_id'] = $empleado['em_empleado_id'];
-                            $registro_inc['n_dias'] = $empleado_excel->dias_festivos_laborados;
-                            $registro_inc['fecha_incidencia'] = $nom_periodo['nom_periodo_fecha_inicial_pago'];
-
-                            $nom_incidencia = (new nom_incidencia($this->link))->alta_registro(registro: $registro_inc);
-                            if (errores::$error) {
-                                $error = $this->errores->error(mensaje: 'Error al dar de alta incidencias',
-                                    data: $nom_incidencia);
-                                if (!$header) {
-                                    return $error;
-                                }
-                                print_r($error);
-                                die('Error');
-                            }
-                        }
-                        if ((int)$empleado_excel->incapacidades > 0) {
-                            $registro_inc['nom_tipo_incidencia_id'] = 4;
-                            $registro_inc['em_empleado_id'] = $empleado['em_empleado_id'];
-                            $registro_inc['n_dias'] = $empleado_excel->incapacidades;
-                            $registro_inc['fecha_incidencia'] = $nom_periodo['nom_periodo_fecha_inicial_pago'];
-
-                            $nom_incidencia = (new nom_incidencia($this->link))->alta_registro(registro: $registro_inc);
-                            if (errores::$error) {
-                                $error = $this->errores->error(mensaje: 'Error al dar de alta incidencias',
-                                    data: $nom_incidencia);
-                                if (!$header) {
-                                    return $error;
-                                }
-                                print_r($error);
-                                die('Error');
-                            }
-                        }
-                        if ((int)$empleado_excel->vacaciones > 0) {
-                            $registro_inc['nom_tipo_incidencia_id'] = 5;
-                            $registro_inc['em_empleado_id'] = $empleado['em_empleado_id'];
-                            $registro_inc['n_dias'] = $empleado_excel->vacaciones;
-                            $registro_inc['fecha_incidencia'] = $nom_periodo['nom_periodo_fecha_inicial_pago'];
-
-                            $nom_incidencia = (new nom_incidencia($this->link))->alta_registro(registro: $registro_inc);
-                            if (errores::$error) {
-                                $error = $this->errores->error(mensaje: 'Error al dar de alta incidencias',
-                                    data: $nom_incidencia);
-                                if (!$header) {
-                                    return $error;
-                                }
-                                print_r($error);
-                                die('Error');
-                            }
-                        }
-                        if ((int)$empleado_excel->dias_descanso_laborado > 0) {
-                            $registro_inc['nom_tipo_incidencia_id'] = 6;
-                            $registro_inc['em_empleado_id'] = $empleado['em_empleado_id'];
-                            $registro_inc['n_dias'] = $empleado_excel->dias_descanso_laborado;
-                            $registro_inc['fecha_incidencia'] = $nom_periodo['nom_periodo_fecha_inicial_pago'];
-
-                            $nom_incidencia = (new nom_incidencia($this->link))->alta_registro(registro: $registro_inc);
-                            if (errores::$error) {
-                                $error = $this->errores->error(mensaje: 'Error al dar de alta incidencias',
-                                    data: $nom_incidencia);
-                                if (!$header) {
-                                    return $error;
-                                }
-                                print_r($error);
-                                die('Error');
-                            }
-                        }
-                    }
-                }
-
-                $alta_empleado = (new nom_periodo($this->link))->alta_empleado_periodo(empleado: $empleado,
-                    nom_periodo: $nom_periodo);
-                if (errores::$error) {
-                    $error =  $this->errores->error(mensaje: 'Error al dar de alta la nomina del empleado',
-                        data: $alta_empleado);
-                    if(!$header){
-                        return $error;
-                    }
-                    print_r($error);
-                    die('Error');
-                }
-
-                foreach ($empleados_excel as $empleado_excel) {
-                    if (trim($empleado_excel->nombre) === trim($empleado['em_empleado_nombre']) &&
-                        trim($empleado_excel->ap) === trim($empleado['em_empleado_ap']) &&
-                        trim($empleado_excel->am) === trim($empleado['em_empleado_am'])) {
-                        if ($empleado_excel->compensacion > 0) {
-                            $nom_percepcion = (new nom_percepcion($this->link))->get_aplica_compensacion();
-                            if (errores::$error) {
-                                return $this->errores->error(mensaje: 'Error insertar conceptos', data: $nom_percepcion);
-                            }
-
-                            $nom_par_percepcion_sep = array();
-                            $nom_par_percepcion_sep['nom_nomina_id'] = $alta_empleado->registro_id;
-                            $nom_par_percepcion_sep['nom_percepcion_id'] = $nom_percepcion['nom_percepcion_id'];
-                            $nom_par_percepcion_sep['importe_gravado'] = $empleado_excel->compensacion;
-
-                            $r_alta_nom_par_percepcion = (new nom_par_percepcion($this->link))->alta_registro(registro: $nom_par_percepcion_sep);
-                            if (errores::$error) {
-                                return $this->errores->error(mensaje: 'Error al insertar percepcion default', data: $r_alta_nom_par_percepcion);
-                            }
-                        }
-
-                        if ($empleado_excel->prima_vacacional > 0) {
-                            $nom_par_percepcion_sep = array();
-                            $nom_par_percepcion_sep['nom_nomina_id'] = $alta_empleado->registro_id;
-                            $nom_par_percepcion_sep['nom_percepcion_id'] = 12;
-                            $nom_par_percepcion_sep['importe_gravado'] = $empleado_excel->prima_vacacional;
-
-                            $r_alta_nom_par_percepcion = (new nom_par_percepcion($this->link))->alta_registro(registro: $nom_par_percepcion_sep);
-                            if (errores::$error) {
-                                return $this->errores->error(mensaje: 'Error al insertar percepcion default', data: $r_alta_nom_par_percepcion);
-                            }
-                        }
-
-                        if ($empleado_excel->despensa > 0) {
-                            $nom_par_percepcion_sep = array();
-                            $nom_par_percepcion_sep['nom_nomina_id'] = $alta_empleado->registro_id;
-                            $nom_par_percepcion_sep['nom_percepcion_id'] = 4;
-                            $nom_par_percepcion_sep['importe_gravado'] = $empleado_excel->despensa;
-
-                            $r_alta_nom_par_percepcion = (new nom_par_percepcion($this->link))->alta_registro(registro: $nom_par_percepcion_sep);
-                            if (errores::$error) {
-                                return $this->errores->error(mensaje: 'Error al insertar percepcion default', data: $r_alta_nom_par_percepcion);
-                            }
-                        }
-                        if ($empleado_excel->horas_extras_dobles > 0) {
-                            $nom_par_percepcion_sep = array();
-                            $nom_par_percepcion_sep['nom_nomina_id'] = $alta_empleado->registro_id;
-                            $nom_par_percepcion_sep['nom_percepcion_id'] = 13;
-                            $nom_par_percepcion_sep['importe_gravado'] = $empleado_excel->horas_extras_dobles;
-
-                            $r_alta_nom_par_percepcion = (new nom_par_percepcion($this->link))->alta_registro(registro: $nom_par_percepcion_sep);
-                            if (errores::$error) {
-                                return $this->errores->error(mensaje: 'Error al insertar percepcion default', data: $r_alta_nom_par_percepcion);
-                            }
-                        }
-                        if ($empleado_excel->gratificacion_especial > 0) {
-                            $nom_par_percepcion_sep = array();
-                            $nom_par_percepcion_sep['nom_nomina_id'] = $alta_empleado->registro_id;
-                            $nom_par_percepcion_sep['nom_percepcion_id'] = 14;
-                            $nom_par_percepcion_sep['importe_gravado'] = $empleado_excel->gratificacion_especial;
-
-                            $r_alta_nom_par_percepcion = (new nom_par_percepcion($this->link))->alta_registro(registro: $nom_par_percepcion_sep);
-                            if (errores::$error) {
-                                return $this->errores->error(mensaje: 'Error al insertar percepcion default', data: $r_alta_nom_par_percepcion);
-                            }
-                        }
-                        if ($empleado_excel->premio_puntualidad > 0) {
-                            $nom_par_percepcion_sep = array();
-                            $nom_par_percepcion_sep['nom_nomina_id'] = $alta_empleado->registro_id;
-                            $nom_par_percepcion_sep['nom_percepcion_id'] = 15;
-                            $nom_par_percepcion_sep['importe_gravado'] = $empleado_excel->premio_puntualidad;
-
-                            $r_alta_nom_par_percepcion = (new nom_par_percepcion($this->link))->alta_registro(registro: $nom_par_percepcion_sep);
-                            if (errores::$error) {
-                                return $this->errores->error(mensaje: 'Error al insertar percepcion default', data: $r_alta_nom_par_percepcion);
-                            }
-                        }
-                        if ($empleado_excel->premio_asistencia > 0) {
-                            $nom_par_percepcion_sep = array();
-                            $nom_par_percepcion_sep['nom_nomina_id'] = $alta_empleado->registro_id;
-                            $nom_par_percepcion_sep['nom_percepcion_id'] = 16;
-                            $nom_par_percepcion_sep['importe_gravado'] = $empleado_excel->premio_asistencia;
-
-                            $r_alta_nom_par_percepcion = (new nom_par_percepcion($this->link))->alta_registro(registro: $nom_par_percepcion_sep);
-                            if (errores::$error) {
-                                return $this->errores->error(mensaje: 'Error al insertar percepcion default', data: $r_alta_nom_par_percepcion);
-                            }
-                        }
-                        if ($empleado_excel->ayuda_transporte > 0) {
-                            $nom_par_percepcion_sep = array();
-                            $nom_par_percepcion_sep['nom_nomina_id'] = $alta_empleado->registro_id;
-                            $nom_par_percepcion_sep['nom_percepcion_id'] = 17;
-                            $nom_par_percepcion_sep['importe_gravado'] = $empleado_excel->ayuda_transporte;
-
-                            $r_alta_nom_par_percepcion = (new nom_par_percepcion($this->link))->alta_registro(registro: $nom_par_percepcion_sep);
-                            if (errores::$error) {
-                                return $this->errores->error(mensaje: 'Error al insertar percepcion default', data: $r_alta_nom_par_percepcion);
-                            }
-                        }
-                        if ($empleado_excel->gratificacion > 0) {
-                            $nom_par_percepcion_sep = array();
-                            $nom_par_percepcion_sep['nom_nomina_id'] = $alta_empleado->registro_id;
-                            $nom_par_percepcion_sep['nom_percepcion_id'] = 18;
-                            $nom_par_percepcion_sep['importe_gravado'] = $empleado_excel->gratificacion;
-
-                            $r_alta_nom_par_percepcion = (new nom_par_percepcion($this->link))->alta_registro(registro: $nom_par_percepcion_sep);
-                            if (errores::$error) {
-                                return $this->errores->error(mensaje: 'Error al insertar percepcion default', data: $r_alta_nom_par_percepcion);
-                            }
-                        }
-                        if ($empleado_excel->seguro_vida > 0) {
-                            $nom_par_deduccion_sep = array();
-                            $nom_par_deduccion_sep['nom_nomina_id'] = $alta_empleado->registro_id;
-                            $nom_par_deduccion_sep['nom_deduccion_id'] = 5;
-                            $nom_par_deduccion_sep['importe_gravado'] = $empleado_excel->seguro_vida;
-
-                            $r_alta_nom_par_deduccion = (new nom_par_deduccion($this->link))->alta_registro(registro: $nom_par_deduccion_sep);
-                            if (errores::$error) {
-                                return $this->errores->error(mensaje: 'Error al insertar deduccion default', data: $r_alta_nom_par_deduccion);
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
-
         $link = "./index.php?seccion=im_movimiento&accion=lista&registro_id=".$this->registro_id;
         $link.="&session_id=$this->session_id";
         header('Location:' . $link);
         exit;
     }
 
+    public function obten_movimientos_excel(string $ruta_absoluta){
+        $documento = IOFactory::load($ruta_absoluta);
+        $totalDeHojas = $documento->getSheetCount();
+
+        $empleados = array();
+        for ($indiceHoja = 0; $indiceHoja < $totalDeHojas; $indiceHoja++) {
+            $hojaActual = $documento->getSheet($indiceHoja);
+            $registros = array();
+            foreach ($hojaActual->getRowIterator() as $fila) {
+                foreach ($fila->getCellIterator() as $celda) {
+                    $fila = $celda->getRow();
+                    $valorRaw = $celda->getValue();
+                    $columna = $celda->getColumn();
+
+                    if($fila >= 7){
+                        if($columna === "A" && is_numeric($valorRaw)){
+                            $reg = new stdClass();
+                            $reg->fila = $fila;
+                            $registros[] = $reg;
+                        }
+                    }
+                }
+            }
+
+            foreach ($registros as $registro){
+                $reg = new stdClass();
+                $reg->codigo = $hojaActual->getCell('A'.$registro->fila)->getValue();
+                $reg->nombre = $hojaActual->getCell('B'.$registro->fila)->getValue();
+                $reg->ap = $hojaActual->getCell('C'.$registro->fila)->getValue();
+                $reg->am = $hojaActual->getCell('D'.$registro->fila)->getValue();
+                $empleados[] = $reg;
+            }
+        }
+
+        return $empleados;
+    }
     public function alta(bool $header, bool $ws = false): array|string
     {
         $r_alta =  parent::alta(header: false); // TODO: Change the autogenerated stub

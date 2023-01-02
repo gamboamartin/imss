@@ -37,7 +37,8 @@ class controlador_im_registro_patronal extends system {
         $columns["im_registro_patronal_codigo"]["titulo"] = "Código";
         $columns["im_registro_patronal_descripcion"]["titulo"] = "Registro Patronal";
         $columns["org_empresa_razon_social"]["titulo"] = "Razón Social";
-        $columns["im_clase_riesgo_descripcion"]["titulo"] = "Prima de Riesgo";
+        $columns["im_clase_riesgo_factor"]["titulo"] = "Prima de Riesgo";
+        $columns["cat_sat_isn_descripcion"]["titulo"] = "ISN";
 
         $datatables = new stdClass();
         $datatables->columns = $columns;
@@ -60,7 +61,14 @@ class controlador_im_registro_patronal extends system {
             die('Error');
         }
 
-        $this->asignar_propiedad(identificador: 'descripcion', propiedades: ['place_holder'=> 'Descripcion', 'cols'=>12]);
+        $this->asignar_propiedad(identificador:'cat_sat_isn_id', propiedades: ["label" => "ISN"]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'descripcion', propiedades: ['place_holder'=> 'Descripcion']);
 
         $this->titulo_lista = 'Registro Patronal';
     }

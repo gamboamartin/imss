@@ -1,6 +1,7 @@
 <?php
 namespace models;
 use base\orm\modelo;
+use gamboamartin\cat_sat\models\cat_sat_isn;
 use gamboamartin\direccion_postal\models\dp_colonia_postal;
 use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
@@ -11,7 +12,7 @@ use stdClass;
 class im_registro_patronal extends modelo{
     public function __construct(PDO $link){
         $tabla = __CLASS__;
-        $columnas = array($tabla=>false, 'fc_csd' => $tabla, 'org_sucursal' => 'fc_csd',
+        $columnas = array($tabla=>false, 'fc_csd' => $tabla, 'cat_sat_isn'=>$tabla,'org_sucursal' => 'fc_csd',
             'org_empresa' => 'org_sucursal','im_clase_riesgo' => $tabla,'dp_calle_pertenece'=>'org_sucursal',
             'dp_colonia_postal'=>'dp_calle_pertenece','dp_cp'=>'dp_colonia_postal',
             'cat_sat_regimen_fiscal'=>'org_empresa');
@@ -23,6 +24,8 @@ class im_registro_patronal extends modelo{
         $campos_view['im_clase_riesgo_id']['type'] = 'selects';
         $campos_view['im_clase_riesgo_id']['model'] = (new im_clase_riesgo($link));
         $campos_view['descripcion']['type'] = "inputs";
+        $campos_view['cat_sat_isn_id']['type'] = 'selects';
+        $campos_view['cat_sat_isn_id']['model'] = (new cat_sat_isn($link));
 
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
             columnas: $columnas,campos_view:  $campos_view );
