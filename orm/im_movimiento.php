@@ -41,6 +41,7 @@ class im_movimiento extends modelo{
             $this->registro['codigo'] = $this->registro['em_empleado_id'];
             $this->registro['codigo'] .= $this->registro['im_registro_patronal_id'];
             $this->registro['codigo'] .= $this->registro['im_tipo_movimiento_id'];
+            $this->registro['codigo'] .= rand();
         }
 
         if(!isset($this->registro['codigo_bis'])){
