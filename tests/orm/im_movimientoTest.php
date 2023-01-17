@@ -236,34 +236,6 @@ class im_movimientoTest extends test {
             exit;
         }
 
-        /*
-        $alta = (new \gamboamartin\organigrama\tests\base_test())->alta_org_sucursal($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al dar de alta', $alta);
-            print_r($error);
-            exit;
-        }
-
-        $alta = (new \gamboamartin\facturacion\tests\base_test())->alta_fc_csd($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al dar de alta', $alta);
-            print_r($error);
-            exit;
-        }
-
-        $alta = (new base_test())->alta_org_puesto($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al dar de alta', $alta);
-            print_r($error);
-            exit;
-        }
-
-        $alta = (new base_test())->alta_im_registro_patronal($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al dar de alta', $alta);
-            print_r($error);
-            exit;
-        }*/
 
 
 

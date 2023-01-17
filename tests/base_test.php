@@ -1,6 +1,7 @@
 <?php
 namespace gamboamartin\im_registro_patronal\test;
 use base\orm\modelo_base;
+use gamboamartin\cat_sat\models\cat_sat_isn;
 use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
 use models\im_movimiento;
@@ -10,6 +11,17 @@ use models\im_uma;
 use PDO;
 
 class base_test{
+
+    public function alta_cat_sat_isn(PDO $link, int $id = 1): array|\stdClass
+    {
+
+        $alta = (new \gamboamartin\cat_sat\tests\base_test())->alta_cat_sat_isn(link: $link, id: $id);
+        if(errores::$error){
+            return (new errores())->error('Error al dar de alta ', $alta);
+
+        }
+        return $alta;
+    }
 
     public function alta_em_empleado(PDO $link): array|\stdClass
     {
@@ -60,7 +72,7 @@ class base_test{
         return $alta;
     }
 
-    public function alta_im_registro_patronal(PDO $link, int $id = 1, int $fc_csd_id = 1): array|\stdClass
+    public function alta_im_registro_patronal(PDO $link, int $cat_sat_isn_id = 1, int $id = 1, int $fc_csd_id = 1): array|\stdClass
     {
 
         $existe = (new fc_csd($link))->existe_by_id(registro_id: $fc_csd_id);
@@ -78,6 +90,21 @@ class base_test{
 
         }
 
+        $existe = (new cat_sat_isn($link))->existe_by_id(registro_id: $cat_sat_isn_id);
+        if (errores::$error) {
+            return (new errores())->error('Error al validar si existe', $existe);
+
+        }
+
+        if(!$existe) {
+            $alta = (new base_test())->alta_cat_sat_isn(link: $link, id: $cat_sat_isn_id);
+            if(errores::$error){
+                return (new errores())->error('Error al dar de alta ', $alta);
+
+            }
+
+        }
+
 
 
         $org_puesto = array();
@@ -85,6 +112,7 @@ class base_test{
         $org_puesto['codigo'] = 1;
         $org_puesto['descripcion'] = 1;
         $org_puesto['im_clase_riesgo_id'] = 1;
+        $org_puesto['cat_sat_isn_id'] = $cat_sat_isn_id;
         $org_puesto['fc_csd_id'] = $fc_csd_id;
         $org_puesto['descripcion_select'] = 1;
 
