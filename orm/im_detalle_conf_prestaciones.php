@@ -1,12 +1,12 @@
 <?php
-namespace models;
+namespace gamboamartin\im_registro_patronal\models;
 use base\orm\modelo;
 use gamboamartin\errores\errores;
 use PDO;
 
 class im_detalle_conf_prestaciones extends modelo{
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
+        $tabla = "im_detalle_conf_prestaciones";
         $columnas = array($tabla=>false, 'im_conf_prestaciones'=>$tabla);
         $campos_obligatorios = array('im_conf_prestaciones_id','n_year','n_dias','n_dias_vacaciones','n_dias_aguinaldo');
 

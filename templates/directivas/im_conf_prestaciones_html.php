@@ -3,7 +3,7 @@ namespace html;
 
 use gamboamartin\errores\errores;
 use gamboamartin\system\html_controler;
-use models\im_conf_prestaciones;
+use gamboamartin\im_registro_patronal\models\im_conf_prestaciones;
 use PDO;
 use stdClass;
 

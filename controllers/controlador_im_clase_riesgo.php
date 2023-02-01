@@ -12,7 +12,7 @@ use gamboamartin\errores\errores;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use html\im_clase_riesgo_html;
-use models\im_clase_riesgo;
+use gamboamartin\im_registro_patronal\models\im_clase_riesgo;
 use gamboamartin\template\html;
 use PDO;
 use stdClass;

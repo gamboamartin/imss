@@ -7,10 +7,10 @@ use gamboamartin\im_registro_patronal\controllers\controlador_im_uma;
 use gamboamartin\nomina\controllers\controlador_nom_conf_nomina;
 
 use gamboamartin\system\html_controler;
-use models\im_tipo_salario_minimo;
-use models\im_uma;
-use models\nom_conf_nomina;
-use models\nom_conf_percepcion;
+use gamboamartin\im_registro_patronal\models\im_tipo_salario_minimo;
+use gamboamartin\im_registro_patronal\models\im_uma;
+use gamboamartin\im_registro_patronal\models\nom_conf_nomina;
+use gamboamartin\im_registro_patronal\models\nom_conf_percepcion;
 use PDO;
 use stdClass;
 

@@ -9,11 +9,11 @@ use gamboamartin\nomina\controllers\controlador_nom_conf_nomina;
 
 use gamboamartin\nomina\controllers\controlador_nom_conf_percepcion;
 use gamboamartin\system\html_controler;
-use models\im_salario_minimo;
-use models\nom_conf_deduccion;
-use models\nom_conf_nomina;
-use models\nom_conf_percepcion;
-use models\nom_percepcion;
+use gamboamartin\im_registro_patronal\models\im_salario_minimo;
+use gamboamartin\im_registro_patronal\models\nom_conf_deduccion;
+use gamboamartin\im_registro_patronal\models\nom_conf_nomina;
+use gamboamartin\im_registro_patronal\models\nom_conf_percepcion;
+use gamboamartin\im_registro_patronal\models\nom_percepcion;
 use PDO;
 use stdClass;
 

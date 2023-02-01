@@ -12,7 +12,7 @@ use gamboamartin\system\_ctl_parent;
 use gamboamartin\system\links_menu;
 use gamboamartin\template\html;
 use html\im_codigo_clase_html;
-use models\im_codigo_clase;
+use gamboamartin\im_registro_patronal\models\im_codigo_clase;
 use PDO;
 use stdClass;
 

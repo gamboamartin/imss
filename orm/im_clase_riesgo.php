@@ -1,11 +1,11 @@
 <?php
-namespace models;
+namespace gamboamartin\im_registro_patronal\models;
 use base\orm\modelo;
 use PDO;
 
 class im_clase_riesgo extends modelo{
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
+        $tabla = "im_clase_riesgo";
         $columnas = array($tabla=>false);
         $campos_obligatorios = array();
 

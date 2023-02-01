@@ -1,5 +1,5 @@
 <?php
-namespace models;
+namespace gamboamartin\im_registro_patronal\models;
 use base\orm\modelo;
 use gamboamartin\errores\errores;
 use PDO;
@@ -8,7 +8,7 @@ use stdClass;
 class im_tipo_salario_minimo extends modelo{
 
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
+        $tabla = "im_tipo_salario_minimo";
         $columnas = array($tabla=>false, );
         $campos_obligatorios = array('descripcion_select');
 

@@ -8,16 +8,16 @@
  */
 namespace gamboamartin\im_registro_patronal\controllers;
 
+use gamboamartin\documento\models\doc_documento;
 use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\errores\errores;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use html\im_movimiento_html;
-use models\doc_documento;
-use models\im_movimiento;
+use gamboamartin\im_registro_patronal\models\im_movimiento;
 use gamboamartin\template\html;
-use models\im_registro_patronal;
-use models\im_tipo_movimiento;
+use gamboamartin\im_registro_patronal\models\im_registro_patronal;
+use gamboamartin\im_registro_patronal\models\im_tipo_movimiento;
 use PDO;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTime;
 use PhpOffice\PhpSpreadsheet\IOFactory;

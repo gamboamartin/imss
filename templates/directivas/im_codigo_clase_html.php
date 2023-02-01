@@ -4,7 +4,7 @@ namespace html;
 use gamboamartin\errores\errores;
 use gamboamartin\system\html_controler;
 
-use models\im_clase_riesgo;
+use gamboamartin\im_registro_patronal\models\im_clase_riesgo;
 
 use PDO;
 

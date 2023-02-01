@@ -8,8 +8,8 @@ use gamboamartin\test\liberator;
 use gamboamartin\test\test;
 
 
-use models\im_movimiento;
-use models\im_uma;
+use gamboamartin\im_registro_patronal\models\im_movimiento;
+use gamboamartin\im_registro_patronal\models\im_uma;
 use stdClass;
 
 

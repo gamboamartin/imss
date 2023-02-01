@@ -12,7 +12,7 @@ use gamboamartin\errores\errores;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use html\im_detalle_conf_prestaciones_html;
-use models\im_detalle_conf_prestaciones;
+use gamboamartin\im_registro_patronal\models\im_detalle_conf_prestaciones;
 use gamboamartin\template\html;
 use PDO;
 use stdClass;

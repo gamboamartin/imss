@@ -6,7 +6,7 @@ use gamboamartin\im_registro_patronal\controllers\controlador_im_movimiento;
 use gamboamartin\system\html_controler;
 use gamboamartin\system\system;
 use gamboamartin\template\directivas;
-use models\im_movimiento;
+use gamboamartin\im_registro_patronal\models\im_movimiento;
 use PDO;
 use stdClass;
 

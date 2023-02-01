@@ -5,7 +5,7 @@ use gamboamartin\errores\errores;
 use gamboamartin\validacion\validacion;
 use PDO;
 use stdClass;
-use models\im_uma;
+use gamboamartin\im_registro_patronal\models\im_uma;
 
 class calcula_cuota_obrero_patronal{
 

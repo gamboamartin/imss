@@ -4,10 +4,10 @@ use base\orm\modelo_base;
 use gamboamartin\cat_sat\models\cat_sat_isn;
 use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
-use models\im_movimiento;
-use models\im_registro_patronal;
-use models\im_tipo_movimiento;
-use models\im_uma;
+use gamboamartin\im_registro_patronal\models\im_movimiento;
+use gamboamartin\im_registro_patronal\models\im_registro_patronal;
+use gamboamartin\im_registro_patronal\models\im_tipo_movimiento;
+use gamboamartin\im_registro_patronal\models\im_uma;
 use PDO;
 
 class base_test{

@@ -1,5 +1,5 @@
 <?php
-namespace models;
+namespace gamboamartin\im_registro_patronal\models;
 use base\orm\modelo;
 use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\errores\errores;
@@ -10,7 +10,7 @@ use stdClass;
 
 class im_movimiento extends modelo{
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
+        $tabla = "im_movimiento";
         $columnas = array($tabla=>false,'em_empleado' => $tabla, 'im_registro_patronal'=>$tabla,
             'fc_csd'=>'im_registro_patronal', 'org_sucursal' => 'fc_csd',
             'org_empresa' => 'org_sucursal','im_tipo_movimiento'=>$tabla,);

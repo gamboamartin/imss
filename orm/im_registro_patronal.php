@@ -1,5 +1,5 @@
 <?php
-namespace models;
+namespace gamboamartin\im_registro_patronal\models;
 use base\orm\modelo;
 use gamboamartin\cat_sat\models\cat_sat_isn;
 use gamboamartin\direccion_postal\models\dp_colonia_postal;
@@ -11,7 +11,7 @@ use stdClass;
 
 class im_registro_patronal extends modelo{
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
+        $tabla = "im_registro_patronal";
         $columnas = array($tabla=>false, 'fc_csd' => $tabla, 'cat_sat_isn'=>$tabla,'org_sucursal' => 'fc_csd',
             'org_empresa' => 'org_sucursal','im_clase_riesgo' => $tabla,'dp_calle_pertenece'=>'org_sucursal',
             'dp_colonia_postal'=>'dp_calle_pertenece','dp_cp'=>'dp_colonia_postal',

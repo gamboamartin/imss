@@ -6,9 +6,9 @@ use gamboamartin\im_registro_patronal\controllers\controlador_im_clase_riesgo;
 use gamboamartin\im_registro_patronal\controllers\controlador_im_registro_patronal;
 use gamboamartin\system\html_controler;
 use gamboamartin\system\system;
-use models\im_clase_riesgo;
-use models\im_registro_patronal;
-use models\im_tipo_concepto_imss;
+use gamboamartin\im_registro_patronal\models\im_clase_riesgo;
+use gamboamartin\im_registro_patronal\models\im_registro_patronal;
+use gamboamartin\im_registro_patronal\models\im_tipo_concepto_imss;
 use PDO;
 use stdClass;
 

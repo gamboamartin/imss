@@ -1,5 +1,5 @@
 <?php
-namespace models;
+namespace gamboamartin\im_registro_patronal\models;
 use base\orm\modelo;
 use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\errores\errores;
@@ -7,7 +7,7 @@ use PDO;
 
 class im_conf_pres_empresa extends modelo{
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
+        $tabla = "im_conf_pres_empresa";
         $columnas = array($tabla=>false, 'org_empresa'=>$tabla, 'im_conf_prestaciones'=>$tabla);
         $campos_obligatorios = array();
 

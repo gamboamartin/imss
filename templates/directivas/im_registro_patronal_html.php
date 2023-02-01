@@ -6,7 +6,7 @@ use gamboamartin\im_registro_patronal\controllers\controlador_im_registro_patron
 use gamboamartin\system\html_controler;
 use gamboamartin\system\system;
 use gamboamartin\template\directivas;
-use models\im_registro_patronal;
+use gamboamartin\im_registro_patronal\models\im_registro_patronal;
 use PDO;
 use stdClass;
 

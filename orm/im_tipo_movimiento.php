@@ -1,12 +1,11 @@
 <?php
-namespace models;
+namespace gamboamartin\im_registro_patronal\models;
 use base\orm\modelo;
 use gamboamartin\errores\errores;
 use PDO;
-
 class im_tipo_movimiento extends modelo{
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
+        $tabla = "im_tipo_movimiento";
         $columnas = array($tabla=>false);
         $campos_obligatorios = array();
 

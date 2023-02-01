@@ -13,7 +13,7 @@ use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use html\im_tipo_concepto_imss_html;
 use gamboamartin\template\html;
-use models\im_tipo_concepto_imss;
+use gamboamartin\im_registro_patronal\models\im_tipo_concepto_imss;
 use PDO;
 use stdClass;
 

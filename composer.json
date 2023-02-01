@@ -14,7 +14,7 @@
     "psr-4": {
       "gamboamartin\\im_registro_patronal\\controllers\\": "controllers",
       "config\\": "config/",
-      "models\\": "orm",
+      "gamboamartin\\im_registro_patronal\\models\\": "orm",
       "gamboamartin\\im_registro_patronal\\test\\": "tests",
       "links\\": "links/",
       "html\\": "templates/directivas/"

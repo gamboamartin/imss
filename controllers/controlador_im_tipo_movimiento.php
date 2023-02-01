@@ -14,7 +14,7 @@ use gamboamartin\system\system;
 use html\im_tipo_movimiento_html;
 use html\org_empresa_html;
 use links\secciones\link_org_empresa;
-use models\im_tipo_movimiento;
+use gamboamartin\im_registro_patronal\models\im_tipo_movimiento;
 use gamboamartin\template\html;
 use PDO;
 use stdClass;

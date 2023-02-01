@@ -1,5 +1,5 @@
 <?php
-namespace models;
+namespace gamboamartin\im_registro_patronal\models;
 use base\orm\modelo;
 use gamboamartin\errores\errores;
 use PDO;
@@ -7,7 +7,7 @@ use stdClass;
 
 class im_uma extends modelo{
     public function __construct(PDO $link){
-        $tabla = __CLASS__;
+        $tabla = "im_uma";
         $columnas = array($tabla=>false);
         $campos_obligatorios = array("fecha_inicio","fecha_fin",'monto');
 
