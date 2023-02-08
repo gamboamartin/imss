@@ -1,6 +1,6 @@
 <?php
 
-namespace models;
+namespace gamboamartin\im_registro_patronal\models;
 use gamboamartin\errores\errores;
 use gamboamartin\validacion\validacion;
 use PDO;
