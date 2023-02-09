@@ -94,6 +94,14 @@ class im_clase_riesgo_html extends html_controler {
         return $alta_inputs;
     }
 
+    /**
+     * Genera un input de tipo factor
+     * @param int $cols cols css
+     * @param stdClass $row_upd Registro en proceso
+     * @param bool $value_vacio Si vacio no asigna value
+     * @param bool $disabled si disabled integra atributo disabled
+     * @return array|string
+     */
     public function input_factor(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false): array|string
     {
         $valida = $this->directivas->valida_cols(cols: $cols);
