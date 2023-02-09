@@ -33,6 +33,8 @@ class im_clase_riesgo extends modelo{
             return $this->error->error(mensaje: 'Error al insertar clase riesgo', data: $alta_bd);
         }
 
+        
+
         return $alta_bd;
     }
 }

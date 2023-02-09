@@ -90,181 +90,34 @@ class im_movimientoTest extends test {
         errores::$error = false;
 
 
-
-        $del = (new base_test())->del($this->link, 'gamboamartin\\empleado\\models\\em_cuenta_bancaria');
+        $del = (new base_test())->del_em_empleado(link: $this->link);
         if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
+            $error = (new errores())->error('Error al ELIMINAR', $del);
             print_r($error);
             exit;
         }
 
-        $del = (new base_test())->del($this->link, 'models\\im_movimiento');
+        $del = (new base_test())->del_com_cliente(link: $this->link);
         if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new base_test())->del($this->link, 'gamboamartin\\empleado\\models\\em_empleado');
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new \gamboamartin\organigrama\tests\base_test())->del_org_puesto($this->link);
-
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new \gamboamartin\organigrama\tests\base_test())->del_org_porcentaje_act_economica($this->link);
-
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new base_test())->del($this->link, 'gamboamartin\\facturacion\\models\fc_partida');
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new base_test())->del($this->link, 'gamboamartin\\facturacion\\models\\fc_factura');
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new base_test())->del($this->link, 'models\\im_registro_patronal');
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new base_test())->del($this->link, 'gamboamartin\\facturacion\\models\\fc_csd');
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new \gamboamartin\organigrama\tests\base_test())->del_org_departamento($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new \gamboamartin\organigrama\tests\base_test())->del_org_sucursal($this->link);
-
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new \gamboamartin\organigrama\tests\base_test())->del_org_empresa($this->link);
-
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new \gamboamartin\organigrama\tests\base_test())->del_org_tipo_sucursal($this->link);
-
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new \gamboamartin\cat_sat\tests\base_test())->del_cat_sat_tipo_nomina($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $alta = (new \gamboamartin\organigrama\tests\base_test())->alta_org_tipo_sucursal($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al dar de alta', $alta);
-            print_r($error);
-            exit;
-        }
-
-        $alta = (new \gamboamartin\organigrama\tests\base_test())->alta_org_empresa($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al dar de alta', $alta);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new \gamboamartin\organigrama\tests\base_test())->del_org_sucursal($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new \gamboamartin\organigrama\tests\base_test())->del_org_empresa($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new base_test())->del($this->link, 'im_tipo_movimiento');
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
-            print_r($error);
-            exit;
-        }
-
-        $del = (new base_test())->del_org_clasificacion_dep($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al eliminar', $del);
+            $error = (new errores())->error('Error al insertar', $del);
             print_r($error);
             exit;
         }
 
 
 
-
-        $alta = (new base_test())->alta_em_empleado($this->link);
+        $alta = (new base_test())->alta_im_movimiento(link: $this->link);
         if(errores::$error){
-            $error = (new errores())->error('Error al dar de alta', $alta);
+            $error = (new errores())->error('Error al insertar', $alta);
             print_r($error);
             exit;
         }
-
-        $alta = (new base_test())->alta_im_tipo_movimiento($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al dar de alta', $alta);
-            print_r($error);
-            exit;
-        }
-
-        $alta = (new base_test())->alta_im_movimiento($this->link);
-        if(errores::$error){
-            $error = (new errores())->error('Error al dar de alta', $alta);
-            print_r($error);
-            exit;
-        }
-
 
 
         $em_empleado_id = 1;
         $fecha = "2022-09-13";
         $resultado = $html->filtro_movimiento_fecha(em_empleado_id: $em_empleado_id,fecha: $fecha);
+
 
 
         $this->assertIsArray($resultado);

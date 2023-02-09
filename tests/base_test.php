@@ -2,6 +2,7 @@
 namespace gamboamartin\im_registro_patronal\test;
 use base\orm\modelo_base;
 use gamboamartin\cat_sat\models\cat_sat_isn;
+use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
 use gamboamartin\im_registro_patronal\models\im_movimiento;
@@ -23,10 +24,10 @@ class base_test{
         return $alta;
     }
 
-    public function alta_em_empleado(PDO $link): array|\stdClass
+    public function alta_em_empleado(PDO $link, int $id = 1): array|\stdClass
     {
 
-        $alta = (new \gamboamartin\empleado\test\base_test())->alta_em_empleado($link);
+        $alta = (new \gamboamartin\empleado\test\base_test())->alta_em_empleado(link: $link, id: $id);
         if(errores::$error){
             return (new errores())->error('Error al dar de alta ', $alta);
 
@@ -45,22 +46,54 @@ class base_test{
         return $alta;
     }
 
-    public function alta_im_movimiento(PDO $link): array|\stdClass
+    public function alta_im_movimiento(PDO $link, int $em_empleado_id = 1, int $im_registro_patronal_id = 1,
+                                       int $im_tipo_movimiento_id = 1): array|\stdClass
     {
 
-        $alta = (new base_test())->alta_im_registro_patronal($link);
+        $existe = (new im_registro_patronal($link))->existe_by_id(registro_id: $im_registro_patronal_id);
         if(errores::$error){
-            return (new errores())->error('Error al dar de alta ', $alta);
-
+            return (new errores())->error('Error al verificar modelo', $existe);
         }
+        if(!$existe){
+            $alta = (new base_test())->alta_im_registro_patronal(link: $link, id: $im_registro_patronal_id);
+            if(errores::$error){
+                return (new errores())->error('Error al dar de alta ', $alta);
+
+            }
+        }
+
+        $existe = (new im_tipo_movimiento($link))->existe_by_id(registro_id: $im_tipo_movimiento_id);
+        if(errores::$error){
+            return (new errores())->error('Error al verificar modelo', $existe);
+        }
+        if(!$existe){
+            $alta = (new base_test())->alta_im_tipo_movimiento(link: $link, id: $im_tipo_movimiento_id);
+            if(errores::$error){
+                return (new errores())->error('Error al dar de alta ', $alta);
+
+            }
+        }
+
+        $existe = (new em_empleado($link))->existe_by_id(registro_id: $em_empleado_id);
+        if(errores::$error){
+            return (new errores())->error('Error al verificar modelo', $existe);
+        }
+        if(!$existe){
+            $alta = (new base_test())->alta_em_empleado(link: $link, id: $em_empleado_id);
+            if(errores::$error){
+                return (new errores())->error('Error al dar de alta ', $alta);
+
+            }
+        }
+
 
         $org_puesto = array();
         $org_puesto['id'] = 1;
         $org_puesto['codigo'] = 1;
         $org_puesto['descripcion'] = 1;
-        $org_puesto['im_registro_patronal_id'] = 1;
-        $org_puesto['im_tipo_movimiento_id'] = 1;
-        $org_puesto['em_empleado_id'] = 1;
+        $org_puesto['im_registro_patronal_id'] = $im_registro_patronal_id;
+        $org_puesto['im_tipo_movimiento_id'] = $im_tipo_movimiento_id;
+        $org_puesto['em_empleado_id'] = $em_empleado_id;
         $org_puesto['fecha'] = '2022-09-13';
 
 
@@ -192,6 +225,32 @@ class base_test{
         return $del;
     }
 
+    public function del_com_cliente(PDO $link): array
+    {
+        $del = (new \gamboamartin\comercial\test\base_test())->del_com_cliente(link: $link);
+        if(errores::$error){
+            return (new errores())->error('Error al eliminar', $del);
+        }
+        return $del;
+    }
+
+    public function del_em_empleado(PDO $link): array
+    {
+        $alta = (new base_test())->del_im_movimiento($link);
+        if(errores::$error){
+            return (new errores())->error('Error al dar de alta ', $alta);
+
+        }
+
+        $del = (new \gamboamartin\empleado\test\base_test())->del_em_empleado(link: $link);
+        if(errores::$error){
+            return (new errores())->error('Error al eliminar', $del);
+        }
+        return $del;
+    }
+
+
+
     public function del_im_conf_pres_empresa(PDO $link): array
     {
         $del = $this->del($link, 'im_conf_pres_empresa');
@@ -203,7 +262,7 @@ class base_test{
 
     public function del_im_movimiento(PDO $link): array
     {
-        $del = $this->del($link, 'im_movimiento');
+        $del = $this->del($link, 'gamboamartin\\im_registro_patronal\\models\\im_movimiento');
         if(errores::$error){
             return (new errores())->error('Error al eliminar', $del);
         }
@@ -228,7 +287,7 @@ class base_test{
 
         }
 
-        $del = $this->del($link, 'im_tipo_movimiento');
+        $del = $this->del($link, 'gamboamartin\im_registro_patronal\models\im_tipo_movimiento');
         if(errores::$error){
             return (new errores())->error('Error al eliminar', $del);
         }
@@ -237,7 +296,7 @@ class base_test{
 
     public function del_im_uma(PDO $link): array
     {
-        $del = $this->del($link, 'im_uma');
+        $del = $this->del($link, 'gamboamartin\im_registro_patronal\models\im_uma');
         if(errores::$error){
             return (new errores())->error('Error al eliminar', $del);
         }
