@@ -9,12 +9,12 @@
 namespace gamboamartin\im_registro_patronal\controllers;
 
 use gamboamartin\direccion_postal\models\dp_colonia_postal;
+use gamboamartin\empleado\models\em_clase_riesgo;
 use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use html\im_registro_patronal_html;
-use gamboamartin\im_registro_patronal\models\im_clase_riesgo;
 use gamboamartin\im_registro_patronal\models\im_registro_patronal;
 use gamboamartin\template\html;
 use PDO;
@@ -30,14 +30,14 @@ class controlador_im_registro_patronal extends system {
         $html_ = new im_registro_patronal_html(html: $html);
         $obj_link = new links_menu(link: $link, registro_id:$this->registro_id);
 
-        $this->rows_lista[] = 'im_clase_riesgo_id';
+        $this->rows_lista[] = 'em_clase_riesgo_id';
         $this->rows_lista[] = 'fc_csd_id';
 
         $columns["im_registro_patronal_id"]["titulo"] = "Id";
         $columns["im_registro_patronal_codigo"]["titulo"] = "Código";
         $columns["im_registro_patronal_descripcion"]["titulo"] = "Registro Patronal";
         $columns["org_empresa_razon_social"]["titulo"] = "Razón Social";
-        $columns["im_clase_riesgo_factor"]["titulo"] = "Prima de Riesgo";
+        $columns["em_clase_riesgo_factor"]["titulo"] = "Prima de Riesgo";
         $columns["cat_sat_isn_descripcion"]["titulo"] = "ISN";
 
         $datatables = new stdClass();
@@ -54,7 +54,7 @@ class controlador_im_registro_patronal extends system {
             die('Error');
         }
 
-        $this->asignar_propiedad(identificador:'im_clase_riesgo_id', propiedades: ["label" => "Clase de Riesgo."]);
+        $this->asignar_propiedad(identificador:'em_clase_riesgo_id', propiedades: ["label" => "Clase de Riesgo."]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);
@@ -116,8 +116,8 @@ class controlador_im_registro_patronal extends system {
             die('Error');
         }
 
-        $this->asignar_propiedad(identificador:'im_clase_riesgo_id',
-            propiedades: ["id_selected"=>$this->row_upd->im_clase_riesgo_id]);
+        $this->asignar_propiedad(identificador:'em_clase_riesgo_id',
+            propiedades: ["id_selected"=>$this->row_upd->em_clase_riesgo_id]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);
@@ -192,7 +192,7 @@ class controlador_im_registro_patronal extends system {
         return $row;
     }
 
-    private function im_clase_riesgo_factor_row(stdClass $row): array|stdClass
+    private function em_clase_riesgo_factor_row(stdClass $row): array|stdClass
     {
         $keys = array('im_registro_patronal_id');
         $valida = $this->validacion->valida_ids(keys: $keys,registro:  $row);
@@ -200,16 +200,16 @@ class controlador_im_registro_patronal extends system {
             return $this->errores->error(mensaje: 'Error al validar row',data:  $valida);
         }
 
-        $im_clase_riesgo = new im_clase_riesgo($this->link);
+        $em_clase_riesgo = new em_clase_riesgo($this->link);
         if(errores::$error){
-            return $this->errores->error(mensaje: 'Error al genera modelo',data:  $im_clase_riesgo);
+            return $this->errores->error(mensaje: 'Error al genera modelo',data:  $em_clase_riesgo);
         }
-        $r_im_clase_riesgo = $im_clase_riesgo->registro(registro_id: $row->im_registro_patronal_im_clase_riesgo_id);
+        $r_em_clase_riesgo = $em_clase_riesgo->registro(registro_id: $row->im_registro_patronal_em_clase_riesgo_id);
         if(errores::$error){
-            return $this->errores->error(mensaje: 'Error al obtener el registro',data:  $r_im_clase_riesgo);
+            return $this->errores->error(mensaje: 'Error al obtener el registro',data:  $r_em_clase_riesgo);
         }
 
-        $row->im_clase_riesgo_factor = $r_im_clase_riesgo['im_clase_riesgo_factor'];
+        $row->em_clase_riesgo_factor = $r_em_clase_riesgo['em_clase_riesgo_factor'];
 
         return $row;
     }
@@ -235,7 +235,7 @@ class controlador_im_registro_patronal extends system {
             }
             $registros[$indice] = $row;
 
-            $row = $this->im_clase_riesgo_factor_row(row: $row);
+            $row = $this->em_clase_riesgo_factor_row(row: $row);
             if(errores::$error){
                 return $this->errores->error(mensaje: 'Error al maquetar row',data:  $row);
             }

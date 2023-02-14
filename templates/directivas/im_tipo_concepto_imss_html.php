@@ -2,15 +2,9 @@
 namespace html;
 
 use gamboamartin\errores\errores;
-use gamboamartin\im_registro_patronal\controllers\controlador_im_clase_riesgo;
-use gamboamartin\im_registro_patronal\controllers\controlador_im_registro_patronal;
 use gamboamartin\system\html_controler;
-use gamboamartin\system\system;
-use gamboamartin\im_registro_patronal\models\im_clase_riesgo;
-use gamboamartin\im_registro_patronal\models\im_registro_patronal;
 use gamboamartin\im_registro_patronal\models\im_tipo_concepto_imss;
 use PDO;
-use stdClass;
 
 
 class im_tipo_concepto_imss_html extends html_controler {

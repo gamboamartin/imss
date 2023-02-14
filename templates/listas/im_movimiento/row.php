@@ -6,7 +6,7 @@
     <td><?php echo $row->org_empresa_rfc; ?></td>
     <td><?php echo $row->im_registro_patronal_descripcion; ?></td>
     <!-- Dynamic generated -->
-    <td><?php echo $row->im_clase_riesgo_factor; ?></td>
+    <td><?php echo $row->em_clase_riesgo_factor; ?></td>
     <td><?php echo $row->dp_estado_descripcion; ?></td>
 
 

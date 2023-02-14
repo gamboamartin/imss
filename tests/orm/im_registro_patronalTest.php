@@ -47,7 +47,7 @@ class im_registro_patronalTest extends test {
 
 
         $modelo->registro['fc_csd_id'] = 1;
-        $modelo->registro['im_clase_riesgo_id'] = 1;
+        $modelo->registro['em_clase_riesgo_id'] = 1;
         $modelo->registro['descripcion'] = 1;
         $modelo->registro['cat_sat_isn_id'] = 1;
         $resultado = $modelo->alta_bd();

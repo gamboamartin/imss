@@ -3,7 +3,6 @@ namespace gamboamartin\im_registro_patronal\models;
 use base\orm\modelo;
 use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\errores\errores;
-use gamboamartin\facturacion\models\fc_csd;
 use gamboamartin\xml_cfdi_4\validacion;
 use PDO;
 use stdClass;
@@ -169,11 +168,11 @@ class im_movimiento extends modelo{
         return $im_movimiento;
     }
 
-    public function calcula_riesgo_de_trabajo(float $im_clase_riesgo_factor, float $n_dias_trabajados,
+    public function calcula_riesgo_de_trabajo(float $em_clase_riesgo_factor, float $n_dias_trabajados,
                                               float $salario_base_cotizacion): float|array
     {
-        if($im_clase_riesgo_factor <= 0.0){
-            return $this->error->error("Error el factor debe ser menor a 0", $im_clase_riesgo_factor);
+        if($em_clase_riesgo_factor <= 0.0){
+            return $this->error->error("Error el factor debe ser menor a 0", $em_clase_riesgo_factor);
         }
         if($salario_base_cotizacion <= 0.0){
             return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
@@ -185,7 +184,7 @@ class im_movimiento extends modelo{
         }
 
         $cuota_diaria = $salario_base_cotizacion * $n_dias_trabajados;
-        $res = $cuota_diaria * $im_clase_riesgo_factor;
+        $res = $cuota_diaria * $em_clase_riesgo_factor;
         $total_cuota = $res/100;
 
         return round($total_cuota,2);

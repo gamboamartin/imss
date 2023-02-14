@@ -126,8 +126,8 @@ class base_test{
         return $alta;
     }
 
-    public function alta_im_registro_patronal(PDO $link, int $cat_sat_isn_id = 1, int $id = 1, int $fc_csd_id = 1,
-                                              int $im_clase_riesgo_id = 1): array|\stdClass
+    public function alta_im_registro_patronal(PDO $link, int $cat_sat_isn_id = 1, int $em_clase_riesgo_id = 1,
+                                              int $id = 1, int $fc_csd_id = 1): array|\stdClass
     {
 
         $existe = (new fc_csd($link))->existe_by_id(registro_id: $fc_csd_id);
@@ -160,14 +160,14 @@ class base_test{
 
         }
 
-        $existe = (new im_clase_riesgo($link))->existe_by_id(registro_id: $im_clase_riesgo_id);
+        $existe = (new im_clase_riesgo($link))->existe_by_id(registro_id: $em_clase_riesgo_id);
         if (errores::$error) {
             return (new errores())->error('Error al validar si existe', $existe);
 
         }
 
         if(!$existe) {
-            $alta = (new base_test())->alta_im_clase_riesgo(link: $link, id: $im_clase_riesgo_id);
+            $alta = (new base_test())->alta_im_clase_riesgo(link: $link, id: $em_clase_riesgo_id);
             if(errores::$error){
                 return (new errores())->error('Error al dar de alta ', $alta);
 
@@ -181,7 +181,7 @@ class base_test{
         $org_puesto['id'] = $id;
         $org_puesto['codigo'] = 1;
         $org_puesto['descripcion'] = 1;
-        $org_puesto['im_clase_riesgo_id'] = $im_clase_riesgo_id;
+        $org_puesto['em_clase_riesgo_id'] = $em_clase_riesgo_id;
         $org_puesto['cat_sat_isn_id'] = $cat_sat_isn_id;
         $org_puesto['fc_csd_id'] = $fc_csd_id;
         $org_puesto['descripcion_select'] = 1;

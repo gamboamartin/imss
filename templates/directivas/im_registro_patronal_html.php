@@ -1,6 +1,7 @@
 <?php
 namespace html;
 
+use gamboamartin\empleado\html\em_clase_riesgo_html;
 use gamboamartin\errores\errores;
 use gamboamartin\im_registro_patronal\controllers\controlador_im_registro_patronal;
 use gamboamartin\system\html_controler;
@@ -50,7 +51,7 @@ class im_registro_patronal_html extends html_controler {
         $controler->inputs->select = new stdClass();
 
         $controler->inputs->select->fc_csd_id = $inputs['selects']->fc_csd_id;
-        $controler->inputs->select->im_clase_riesgo_id = $inputs['selects']->im_clase_riesgo_id;
+        $controler->inputs->select->em_clase_riesgo_id = $inputs['selects']->em_clase_riesgo_id;
 
         return $controler->inputs;
     }
@@ -60,7 +61,7 @@ class im_registro_patronal_html extends html_controler {
         $controler->inputs->select = new stdClass();
 
         $controler->inputs->select->fc_csd_id = $inputs->selects->fc_csd_id;
-        $controler->inputs->select->im_clase_riesgo_id = $inputs->selects->im_clase_riesgo_id;
+        $controler->inputs->select->em_clase_riesgo_id = $inputs->selects->em_clase_riesgo_id;
 
         return $controler->inputs;
     }
@@ -125,13 +126,13 @@ class im_registro_patronal_html extends html_controler {
         }
         $selects->fc_csd_id = $select;
 
-        $select = (new im_clase_riesgo_html($this->html_base))->select_im_clase_riesgo_id(cols: 12, con_registros:true,
-            id_selected: $row_upd->im_clase_riesgo_id,link: $link);
+        $select = (new em_clase_riesgo_html($this->html_base))->select_em_clase_riesgo_id(cols: 12, con_registros:true,
+            id_selected: $row_upd->em_clase_riesgo_id,link: $link);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select',data:  $select);
         }
 
-        $selects->im_clase_riesgo_id = $select;
+        $selects->em_clase_riesgo_id = $select;
 
         return $selects;
     }
