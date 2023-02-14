@@ -45,6 +45,13 @@ class im_registro_patronalTest extends test {
             exit;
         }
 
+        $del = (new base_test())->del_em_registro_patronal(link: $this->link);
+        if(errores::$error){
+            $error = (new errores())->error(mensaje: 'Error al eliminar',data: $del);
+            print_r($error);
+            exit;
+        }
+
 
         $modelo->registro['fc_csd_id'] = 1;
         $modelo->registro['em_clase_riesgo_id'] = 1;

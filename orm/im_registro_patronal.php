@@ -3,6 +3,7 @@ namespace gamboamartin\im_registro_patronal\models;
 use base\orm\modelo;
 use gamboamartin\cat_sat\models\cat_sat_isn;
 use gamboamartin\empleado\models\em_clase_riesgo;
+use gamboamartin\empleado\models\em_registro_patronal;
 use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
 use PDO;
@@ -79,6 +80,29 @@ class im_registro_patronal extends modelo{
         $r_alta_bd = parent::alta_bd();
         if(errores::$error){
             return $this->error->error('Error al dar de alta registro',$r_alta_bd);
+        }
+
+
+        $em_registro_patronal_ins = $this->registro(registro_id: $r_alta_bd->registro_id,columnas_en_bruto: true);
+        if(errores::$error){
+            return $this->error->error('Error al obtener registro',$r_alta_bd);
+        }
+
+
+        if(array_key_exists('im_clase_riesgo_id',$em_registro_patronal_ins)){
+            unset($em_registro_patronal_ins['im_clase_riesgo_id']);
+        }
+        if(array_key_exists('usuario_alta_id',$em_registro_patronal_ins)){
+            unset($em_registro_patronal_ins['usuario_alta_id']);
+        }
+        if(array_key_exists('usuario_update_id',$em_registro_patronal_ins)){
+            unset($em_registro_patronal_ins['usuario_update_id']);
+        }
+
+        $r_alta_em_registro_patronal = (new em_registro_patronal(link: $this->link))->alta_registro(
+            registro: $em_registro_patronal_ins);
+        if(errores::$error){
+            return $this->error->error('Error al dar de alta registro desde emp',$r_alta_em_registro_patronal);
         }
 
         return $r_alta_bd;

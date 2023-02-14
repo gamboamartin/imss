@@ -323,6 +323,15 @@ class base_test{
         return $del;
     }
 
+    public function del_em_registro_patronal(PDO $link): array
+    {
+        $del = (new \gamboamartin\empleado\test\base_test())->del_em_registro_patronal(link: $link);
+        if(errores::$error){
+            return (new errores())->error('Error al eliminar', $del);
+        }
+        return $del;
+    }
+
     public function del_im_clase_riesgo(PDO $link): array
     {
 
