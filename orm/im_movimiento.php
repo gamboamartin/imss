@@ -397,6 +397,11 @@ class im_movimiento extends modelo{
         return round($total_cuota,2);
     }
 
+    /**
+     * Maqueta un registro de tip empleado dependiendo el movimiento
+     * @param array $registro_emp Registro de empleaod a modificar
+     * @return array
+     */
     private function maqueta_row_upd_empleado(array $registro_emp): array
     {
         $registro = array();
