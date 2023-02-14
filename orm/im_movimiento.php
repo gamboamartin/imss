@@ -69,6 +69,10 @@ class im_movimiento extends modelo{
             $this->registro['salario_diario_integrado'] = 0.0;
         }
 
+        if(!isset($this->registro['em_registro_patronal_id'])){
+            $this->registro['em_registro_patronal_id'] = $this->registro['im_registro_patronal_id'];
+        }
+
         $alta_bd = parent::alta_bd();
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al insertar movimiento', data: $alta_bd);
@@ -428,6 +432,12 @@ class im_movimiento extends modelo{
             $modifica = $this->modifica_empleado(registro_emp: $registro);
             if (errores::$error) {
                 return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
+            }
+        }
+
+        if(!isset($registro['em_registro_patronal_id'])){
+            if(isset($registro['im_registro_patronal_id'])){
+                $registro['em_registro_patronal_id'] = $registro['im_registro_patronal_id'];
             }
         }
 
