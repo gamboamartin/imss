@@ -2,6 +2,7 @@
 namespace gamboamartin\im_registro_patronal\test;
 use base\orm\modelo_base;
 use gamboamartin\cat_sat\models\cat_sat_isn;
+use gamboamartin\empleado\models\em_clase_riesgo;
 use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
@@ -18,6 +19,17 @@ class base_test{
     {
 
         $alta = (new \gamboamartin\cat_sat\tests\base_test())->alta_cat_sat_isn(link: $link, id: $id);
+        if(errores::$error){
+            return (new errores())->error('Error al dar de alta ', $alta);
+
+        }
+        return $alta;
+    }
+
+    public function alta_em_clase_riesgo(PDO $link, int $id = 1): array|\stdClass
+    {
+
+        $alta = ((new \gamboamartin\empleado\test\base_test()))->alta_em_clase_riesgo(link: $link, id: $id);
         if(errores::$error){
             return (new errores())->error('Error al dar de alta ', $alta);
 
@@ -46,6 +58,7 @@ class base_test{
         }
         return $alta;
     }
+
 
     public function alta_im_clase_riesgo(PDO $link, string $codigo = '1', string $codigo_bis = '1',
                                             string $descripcion = '1', float $factor = .01, int $id = 1): array|\stdClass
@@ -168,6 +181,21 @@ class base_test{
 
         if(!$existe) {
             $alta = (new base_test())->alta_im_clase_riesgo(link: $link, id: $em_clase_riesgo_id);
+            if(errores::$error){
+                return (new errores())->error('Error al dar de alta ', $alta);
+
+            }
+
+        }
+
+        $existe = (new em_clase_riesgo($link))->existe_by_id(registro_id: $em_clase_riesgo_id);
+        if (errores::$error) {
+            return (new errores())->error('Error al validar si existe', $existe);
+
+        }
+
+        if(!$existe) {
+            $alta = (new base_test())->alta_em_clase_riesgo(link: $link, id: $em_clase_riesgo_id);
             if(errores::$error){
                 return (new errores())->error('Error al dar de alta ', $alta);
 
