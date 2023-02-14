@@ -173,14 +173,14 @@ class base_test{
 
         }
 
-        $existe = (new im_clase_riesgo($link))->existe_by_id(registro_id: $em_clase_riesgo_id);
+        $existe = (new em_clase_riesgo($link))->existe_by_id(registro_id: $em_clase_riesgo_id);
         if (errores::$error) {
             return (new errores())->error('Error al validar si existe', $existe);
 
         }
 
         if(!$existe) {
-            $alta = (new base_test())->alta_im_clase_riesgo(link: $link, id: $em_clase_riesgo_id);
+            $alta = (new base_test())->alta_em_clase_riesgo(link: $link, id: $em_clase_riesgo_id);
             if(errores::$error){
                 return (new errores())->error('Error al dar de alta ', $alta);
 
