@@ -14,7 +14,7 @@ class im_registro_patronal extends modelo{
         $columnas = array($tabla=>false, 'fc_csd' => $tabla, 'cat_sat_isn'=>$tabla,'org_sucursal' => 'fc_csd',
             'org_empresa' => 'org_sucursal','em_clase_riesgo' => $tabla,'dp_calle_pertenece'=>'org_sucursal',
             'dp_colonia_postal'=>'dp_calle_pertenece','dp_cp'=>'dp_colonia_postal',
-            'cat_sat_regimen_fiscal'=>'org_empresa', 'im_clase_riesgo'=>$tabla);
+            'cat_sat_regimen_fiscal'=>'org_empresa');
         $campos_obligatorios = array('em_clase_riesgo_id','fc_csd_id','descripcion_select');
 
         $campos_view = array();
@@ -75,11 +75,6 @@ class im_registro_patronal extends modelo{
             $this->registro['descripcion_select'] = $fc_csd['org_empresa_razon_social'] . ' ' . $this->registro['descripcion'];
         }
 
-        if(!isset($this->registro['im_clase_riesgo_id'])){
-            $this->registro['im_clase_riesgo_id'] = $this->registro['em_clase_riesgo_id'];
-        }
-
-
 
         $r_alta_bd = parent::alta_bd();
         if(errores::$error){
@@ -119,9 +114,6 @@ class im_registro_patronal extends modelo{
             $registro['descripcion_select'] = $fc_csd['org_empresa_razon_social'] . ' ' . $registro['descripcion'];
         }
 
-        if(!isset($registro['im_clase_riesgo_id'])){
-            $registro['im_clase_riesgo_id'] = $registro['em_clase_riesgo_id'];
-        }
 
 
 

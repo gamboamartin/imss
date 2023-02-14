@@ -56,7 +56,7 @@ class im_registro_patronalTest extends test {
         $this->assertIsObject($resultado);
         $this->assertNotTrue(errores::$error);
 
-        $im_clase_riesgo = (new im_clase_riesgo(link: $this->link))->registro(registro_id:$resultado->registro['im_clase_riesgo_id'] );
+        $im_clase_riesgo = (new im_clase_riesgo(link: $this->link))->registro(registro_id:$resultado->registro['em_clase_riesgo_id'] );
         if(errores::$error){
             $error = (new errores())->error('Error al obtener registro', $im_clase_riesgo);
             print_r($error);
