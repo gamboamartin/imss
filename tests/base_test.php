@@ -4,6 +4,7 @@ use base\orm\modelo_base;
 use gamboamartin\cat_sat\models\cat_sat_isn;
 use gamboamartin\empleado\models\em_clase_riesgo;
 use gamboamartin\empleado\models\em_empleado;
+use gamboamartin\empleado\models\em_registro_patronal;
 use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
 use gamboamartin\im_registro_patronal\models\im_clase_riesgo;
@@ -48,6 +49,17 @@ class base_test{
         return $alta;
     }
 
+    public function alta_em_registro_patronal(PDO $link, int $id = 1): array|\stdClass
+    {
+
+        $alta = ((new \gamboamartin\empleado\test\base_test()))->alta_em_registro_patronal(link: $link, id: $id);
+        if(errores::$error){
+            return (new errores())->error('Error al dar de alta ', $alta);
+
+        }
+        return $alta;
+    }
+
     public function alta_fc_csd(PDO $link, int $id = 1): array|\stdClass
     {
 
@@ -80,16 +92,16 @@ class base_test{
         return $alta;
     }
 
-    public function alta_im_movimiento(PDO $link, int $em_empleado_id = 1, int $im_registro_patronal_id = 1,
+    public function alta_im_movimiento(PDO $link, int $em_empleado_id = 1, int $em_registro_patronal_id = 1,
                                        int $im_tipo_movimiento_id = 1): array|\stdClass
     {
 
-        $existe = (new im_registro_patronal($link))->existe_by_id(registro_id: $im_registro_patronal_id);
+        $existe = (new em_registro_patronal($link))->existe_by_id(registro_id: $em_registro_patronal_id);
         if(errores::$error){
             return (new errores())->error('Error al verificar modelo', $existe);
         }
         if(!$existe){
-            $alta = (new base_test())->alta_im_registro_patronal(link: $link, id: $im_registro_patronal_id);
+            $alta = (new base_test())->alta_em_registro_patronal(link: $link, id: $em_registro_patronal_id);
             if(errores::$error){
                 return (new errores())->error('Error al dar de alta ', $alta);
 
@@ -125,7 +137,7 @@ class base_test{
         $org_puesto['id'] = 1;
         $org_puesto['codigo'] = 1;
         $org_puesto['descripcion'] = 1;
-        $org_puesto['im_registro_patronal_id'] = $im_registro_patronal_id;
+        $org_puesto['em_registro_patronal_id'] = $em_registro_patronal_id;
         $org_puesto['im_tipo_movimiento_id'] = $im_tipo_movimiento_id;
         $org_puesto['em_empleado_id'] = $em_empleado_id;
         $org_puesto['fecha'] = '2022-09-13';

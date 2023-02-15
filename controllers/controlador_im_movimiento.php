@@ -10,16 +10,15 @@ namespace gamboamartin\im_registro_patronal\controllers;
 
 use gamboamartin\documento\models\doc_documento;
 use gamboamartin\empleado\models\em_empleado;
+use gamboamartin\empleado\models\em_registro_patronal;
 use gamboamartin\errores\errores;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use html\im_movimiento_html;
 use gamboamartin\im_registro_patronal\models\im_movimiento;
 use gamboamartin\template\html;
-use gamboamartin\im_registro_patronal\models\im_registro_patronal;
 use gamboamartin\im_registro_patronal\models\im_tipo_movimiento;
 use PDO;
-use PhpOffice\PhpSpreadsheet\Calculation\DateTime;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use stdClass;
@@ -37,7 +36,7 @@ class controlador_im_movimiento extends system {
         $columns["im_movimiento_id"]["titulo"] = "Id";
         $columns["im_movimiento_codigo"]["titulo"] = "Código";
         $columns["im_tipo_movimiento_descripcion"]["titulo"] = "Tipo Movimiento";
-        $columns["im_registro_patronal_descripcion"]["titulo"] = "Registro Patronal";
+        $columns["em_registro_patronal_descripcion"]["titulo"] = "Registro Patronal";
         $columns["em_empleado_nss"]["titulo"] = "NSS";
         $columns["em_empleado_nombre"]["titulo"] = "Nombre";
         $columns["em_empleado_ap"]["titulo"] = "Ap. Paterno";
@@ -57,7 +56,7 @@ class controlador_im_movimiento extends system {
             die('Error');
         }
 
-        $this->asignar_propiedad(identificador:'im_registro_patronal_id', propiedades: ["label" => "Registro Patronal", 'cols'=>12]);
+        $this->asignar_propiedad(identificador:'em_registro_patronal_id', propiedades: ["label" => "Registro Patronal", 'cols'=>12]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);
@@ -149,10 +148,10 @@ class controlador_im_movimiento extends system {
         }
 
         foreach ($movimientos_excel as $movimiento){
-            $filtro_rp['im_registro_patronal.descripcion'] = $movimiento->registro_patronal;
-            $im_registro_patronal = (new im_registro_patronal($this->link))->filtro_and(filtro: $filtro_rp);
+            $filtro_rp['em_registro_patronal.descripcion'] = $movimiento->registro_patronal;
+            $em_registro_patronal = (new em_registro_patronal($this->link))->filtro_and(filtro: $filtro_rp);
             if (errores::$error) {
-                $error =  $this->errores->error(mensaje: 'Error obtener registros patronales',data:  $im_registro_patronal);
+                $error =  $this->errores->error(mensaje: 'Error obtener registros patronales',data:  $em_registro_patronal);
                 if(!$header){
                     return $error;
                 }
@@ -188,7 +187,7 @@ class controlador_im_movimiento extends system {
             }
 
             $registro['im_tipo_movimiento_id'] = $im_tipo_movimiento->registros[0]['im_tipo_movimiento_id'];
-            $registro['im_registro_patronal_id'] = $im_registro_patronal->registros[0]['im_registro_patronal_id'];
+            $registro['em_registro_patronal_id'] = $em_registro_patronal->registros[0]['em_registro_patronal_id'];
             $registro['em_empleado_id'] = $em_empleado->registros[0]['em_empleado_id'];
             $registro['salario_diario'] = $movimiento->sd;
             $registro['salario_diario_integrado'] = $movimiento->sdi;
@@ -298,8 +297,8 @@ class controlador_im_movimiento extends system {
             die('Error');
         }
 
-        $this->asignar_propiedad(identificador:'im_registro_patronal_id',
-            propiedades: ["id_selected"=>$this->row_upd->im_registro_patronal_id]);
+        $this->asignar_propiedad(identificador:'em_registro_patronal_id',
+            propiedades: ["id_selected"=>$this->row_upd->em_registro_patronal_id]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);

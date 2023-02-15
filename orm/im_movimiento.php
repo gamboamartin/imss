@@ -2,6 +2,7 @@
 namespace gamboamartin\im_registro_patronal\models;
 use base\orm\modelo;
 use gamboamartin\empleado\models\em_empleado;
+use gamboamartin\empleado\models\em_registro_patronal;
 use gamboamartin\errores\errores;
 use gamboamartin\xml_cfdi_4\validacion;
 use PDO;
@@ -10,16 +11,16 @@ use stdClass;
 class im_movimiento extends modelo{
     public function __construct(PDO $link){
         $tabla = "im_movimiento";
-        $columnas = array($tabla=>false,'em_empleado' => $tabla, 'im_registro_patronal'=>$tabla,
-            'fc_csd'=>'im_registro_patronal', 'org_sucursal' => 'fc_csd',
+        $columnas = array($tabla=>false,'em_empleado' => $tabla, 'em_registro_patronal'=>$tabla,
+            'fc_csd'=>'em_registro_patronal', 'org_sucursal' => 'fc_csd',
             'org_empresa' => 'org_sucursal','im_tipo_movimiento'=>$tabla,);
-        $campos_obligatorios = array('im_registro_patronal_id','im_tipo_movimiento_id','em_empleado_id','fecha');
+        $campos_obligatorios = array('em_registro_patronal_id','im_tipo_movimiento_id','em_empleado_id','fecha');
 
         $campos_view = array();
         $campos_view['im_tipo_movimiento_id']['type'] = 'selects';
         $campos_view['im_tipo_movimiento_id']['model'] = (new im_tipo_movimiento($link));
-        $campos_view['im_registro_patronal_id']['type'] = 'selects';
-        $campos_view['im_registro_patronal_id']['model'] = (new im_registro_patronal($link));
+        $campos_view['em_registro_patronal_id']['type'] = 'selects';
+        $campos_view['em_registro_patronal_id']['model'] = (new em_registro_patronal($link));
         $campos_view['em_empleado_id']['type'] = 'selects';
         $campos_view['em_empleado_id']['model'] = (new em_empleado($link));
         $campos_view['fecha']['type'] = "dates";
@@ -38,7 +39,7 @@ class im_movimiento extends modelo{
     {
         if(!isset($this->registro['codigo'])){
             $this->registro['codigo'] = $this->registro['em_empleado_id'];
-            $this->registro['codigo'] .= $this->registro['im_registro_patronal_id'];
+            $this->registro['codigo'] .= $this->registro['em_registro_patronal_id'];
             $this->registro['codigo'] .= $this->registro['im_tipo_movimiento_id'];
             $this->registro['codigo'] .= rand();
         }
@@ -49,7 +50,7 @@ class im_movimiento extends modelo{
 
         if(!isset($this->registro['descripcion'])){
             $this->registro['descripcion'] = $this->registro['em_empleado_id'];
-            $this->registro['descripcion'] .= $this->registro['im_registro_patronal_id'];
+            $this->registro['descripcion'] .= $this->registro['em_registro_patronal_id'];
             $this->registro['descripcion'] .= $this->registro['im_tipo_movimiento_id'];
         }
 
@@ -69,9 +70,7 @@ class im_movimiento extends modelo{
             $this->registro['salario_diario_integrado'] = 0.0;
         }
 
-        if(!isset($this->registro['em_registro_patronal_id'])){
-            $this->registro['em_registro_patronal_id'] = $this->registro['im_registro_patronal_id'];
-        }
+
 
         $alta_bd = parent::alta_bd();
         if (errores::$error) {
@@ -435,11 +434,6 @@ class im_movimiento extends modelo{
             }
         }
 
-        if(!isset($registro['em_registro_patronal_id'])){
-            if(isset($registro['im_registro_patronal_id'])){
-                $registro['em_registro_patronal_id'] = $registro['im_registro_patronal_id'];
-            }
-        }
 
         $modifica_bd = parent::modifica_bd($registro, $id, $reactiva);
         if (errores::$error) {

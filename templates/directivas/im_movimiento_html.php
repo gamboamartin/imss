@@ -41,7 +41,7 @@ class im_movimiento_html extends html_controler {
         $controler->inputs->select = new stdClass();
 
         $controler->inputs->select->im_tipo_movimiento_id = $inputs->selects->im_tipo_movimiento_id;
-        $controler->inputs->select->im_registro_patronal_id = $inputs->selects->im_registro_patronal_id;
+        $controler->inputs->select->em_registro_patronal_id = $inputs->selects->em_registro_patronal_id;
         $controler->inputs->select->em_empleado_id = $inputs->selects->em_empleado_id;
         $controler->inputs->fecha = $inputs->texts->fecha;
         $controler->inputs->salario_diario = $inputs->texts->salario_diario;
@@ -226,13 +226,13 @@ class im_movimiento_html extends html_controler {
 
         $selects->im_tipo_movimiento_id = $select;
 
-        $select = (new im_registro_patronal_html($this->html_base))->select_im_registro_patronal_id(cols: 12, con_registros:true,
-            id_selected: $row_upd->im_registro_patronal_id,link: $link);
+        $select = (new em_registro_patronal_html($this->html_base))->select_em_registro_patronal_id(cols: 12, con_registros:true,
+            id_selected: $row_upd->em_registro_patronal_id,link: $link);
         if(errores::$error){
             return $this->error->error(mensaje: 'Error al generar select',data:  $select);
         }
 
-        $selects->im_registro_patronal_id = $select;
+        $selects->em_registro_patronal_id = $select;
 
         $select = (new em_empleado_html($this->html_base))->select_em_empleado_id(cols: 12, con_registros:true,
             id_selected: $row_upd->em_empleado_id,link: $link);
