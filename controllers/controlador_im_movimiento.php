@@ -56,7 +56,7 @@ class controlador_im_movimiento extends system {
             die('Error');
         }
 
-        $this->asignar_propiedad(identificador:'em_registro_patronal_id', propiedades: ["label" => "Registro Patronal", 'cols'=>12]);
+        $this->asignar_propiedad(identificador:'im_registro_patronal_id', propiedades: ["label" => "Registro Patronal", 'cols'=>12]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);
@@ -327,7 +327,13 @@ class controlador_im_movimiento extends system {
             die('Error');
         }
 
-     
+        $this->asignar_propiedad(identificador:'em_empleado_id',
+            propiedades: ["id_selected"=>$this->row_upd->em_empleado_id]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
 
 
         $inputs = $this->genera_inputs(keys_selects:  $this->keys_selects);
