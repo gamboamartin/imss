@@ -25,7 +25,7 @@ use stdClass;
 
 class controlador_im_movimiento extends system {
 
-    public array $keys_selects = array();
+    public stdClass|array $keys_selects = array();
 
     public function __construct(PDO $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass()){
@@ -87,6 +87,22 @@ class controlador_im_movimiento extends system {
 
         $this->asignar_propiedad(identificador: 'salario_diario_integrado', propiedades: [
             'place_holder'=> 'Salario Diario Integrado', 'cols'=>6,'required'=>false]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'salario_mixto', propiedades: [
+            'place_holder'=> 'Salario Mixto', 'cols'=>6,'required'=>false]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'salario_variable', propiedades: [
+            'place_holder'=> 'Salario Variable', 'cols'=>6,'required'=>false]);
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
             print_r($error);
@@ -271,8 +287,13 @@ class controlador_im_movimiento extends system {
         return $r_alta;
     }
 
-    public function asignar_propiedad(string $identificador, mixed $propiedades)
+    public function asignar_propiedad(string $identificador, array $propiedades): array|stdClass
     {
+        $identificador = trim($identificador);
+        if($identificador === ''){
+            return $this->errores->error(mensaje: 'Error identificador esta vacio',data:  $identificador);
+        }
+
         if (!array_key_exists($identificador,$this->keys_selects)){
             $this->keys_selects[$identificador] = new stdClass();
         }
@@ -280,6 +301,7 @@ class controlador_im_movimiento extends system {
         foreach ($propiedades as $key => $value){
             $this->keys_selects[$identificador]->$key = $value;
         }
+        return $this->keys_selects;
     }
 
     private function base(): array|stdClass

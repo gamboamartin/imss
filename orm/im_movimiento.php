@@ -26,6 +26,8 @@ class im_movimiento extends modelo{
         $campos_view['fecha']['type'] = "dates";
         $campos_view['salario_diario']['type'] = "inputs";
         $campos_view['salario_diario_integrado']['type'] = "inputs";
+        $campos_view['salario_mixto']['type'] = "inputs";
+        $campos_view['salario_variable']['type'] = "inputs";
         $campos_view['observaciones']['type'] = "inputs";
         $campos_view['factor_integracion']['type'] = "inputs";
 
@@ -68,6 +70,10 @@ class im_movimiento extends modelo{
         }
         if(!isset($this->registro['salario_diario_integrado'])){
             $this->registro['salario_diario_integrado'] = 0.0;
+        }if(!isset($this->registro['salario_mixto'])){
+            $this->registro['salario_mixto'] = 0.0;
+        }if(!isset($this->registro['salario_variable'])){
+            $this->registro['salario_variable'] = 0.0;
         }
 
 
