@@ -9,6 +9,19 @@ let txt_factor_integracion = $('#factor_integracion');
 let txt_salario_diario_integrado = $('#salario_diario_integrado');
 let txt_fecha_inicio_rel_laboral = $('#fecha');
 
+sl_im_tipo_movimiento.change(function (event) {
+    let tipo_mov = $("#im_tipo_movimiento_id option:selected").text();
+
+    if (tipo_mov === 'BAJA' || tipo_mov === 'REINGRESO') {
+        txt_salario_diario.prop('disabled', true);
+        txt_salario_diario_integrado.prop('disabled', true);
+    }
+    else{
+        txt_salario_diario.prop('disabled', false);
+        txt_salario_diario_integrado.prop('disabled', false);
+    }
+});
+
 txt_salario_diario.change(function (){
     let salario_diario = $(this).val();
     let factor = txt_factor_integracion.val();
