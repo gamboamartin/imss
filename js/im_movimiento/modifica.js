@@ -3,7 +3,9 @@ let url = getAbsolutePath();
 let session_id = getParameterByName('session_id');
 
 let sl_em_empleado = $("#em_empleado_id");
+let sl_im_tipo_movimiento = $('#im_tipo_movimiento_id');
 let txt_salario_diario = $('#salario_diario');
+let txt_factor_integracion = $('#factor_integracion');
 let txt_salario_diario_integrado = $('#salario_diario_integrado');
 let txt_fecha_inicio_rel_laboral = $('#fecha');
 
