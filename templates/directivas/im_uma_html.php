@@ -101,27 +101,27 @@ class im_uma_html extends html_controler {
         return $div;
     }
 
-    public function input_monto(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false, string $place_holder = 'Monto'):
-    array|string
-    {
-        $valida = $this->directivas->valida_cols(cols: $cols);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
-        }
+   public function input_monto(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false,
+                               string $name = 'monto', string $place_holder = 'Monto', mixed $value = null): array|string
+   {
+       $valida = $this->directivas->valida_cols(cols: $cols);
+       if (errores::$error) {
+           return $this->error->error(mensaje: 'Error al validar columnas', data: $valida);
+       }
 
-        $html = $this->directivas->input_text_required(disabled: $disabled, name: 'monto',
-            place_holder: 'Monto', row_upd: $row_upd, value_vacio: $value_vacio);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al generar input', data: $html);
-        }
+       $html = $this->directivas->input_text_required(disabled: $disabled, name: 'monto',
+           place_holder: 'Monto', row_upd: $row_upd, value_vacio: $value_vacio);
+       if (errores::$error) {
+           return $this->error->error(mensaje: 'Error al generar input', data: $html);
+       }
 
-        $div = $this->directivas->html->div_group(cols: $cols, html: $html);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al integrar div', data: $div);
-        }
+       $div = parent::input_monto($cols, $row_upd, $value_vacio, $disabled, $name, $place_holder, $value);;
+       if (errores::$error) {
+           return $this->error->error(mensaje: 'Error al integrar div', data: $div);
+       }
 
-        return $div;
-    }
+       return $div;
+   }
 
     private function init_modifica(PDO $link, stdClass $row_upd, stdClass $params = new stdClass()): array|stdClass
     {
