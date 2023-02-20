@@ -48,4 +48,18 @@ class im_rcv extends modelo{
 
         return $alta_bd;
     }
+
+    /** Por Revisar */
+    public function filtro_por_montos(float $monto): array|stdClass
+    {
+        $filtro['im_rcv.monto_incial'] = $this->registro['monto_inicial'];
+        $filtro['im_rcv.monto_final'] = $this->registro['monto_final'];
+
+        $r_filtro_monto = $this->filtro_and(filtro: $filtro);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener registro configuracion', data: $r_filtro_monto);
+        }
+
+        return $r_filtro_monto->registros;
+    }
 }
