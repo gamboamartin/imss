@@ -105,8 +105,7 @@ class im_salario_minimo_html extends html_controler {
         return $inputs;
     }
 
-    public function input_monto(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false, string $place_holder = 'Monto'):
-    array|string
+    public function input_monto(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false, string $name = 'monto', string $place_holder = 'Monto', mixed $value = null): array|string
     {
         $valida = $this->directivas->valida_cols(cols: $cols);
         if (errores::$error) {
@@ -119,7 +118,7 @@ class im_salario_minimo_html extends html_controler {
             return $this->error->error(mensaje: 'Error al generar input', data: $html);
         }
 
-        $div = $this->directivas->html->div_group(cols: $cols, html: $html);
+        $div = parent::input_monto($cols, $row_upd, $value_vacio, $disabled, $name, $place_holder, $value);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al integrar div', data: $div);
         }
