@@ -49,17 +49,29 @@ class im_rcv extends modelo{
         return $alta_bd;
     }
 
-    /** Por Revisar */
-    public function filtro_por_montos(float $monto): array|stdClass
+    public function filtro_por_montos(float $monto): array
     {
-        $filtro['im_rcv.monto_incial'] = $this->registro['monto_inicial'];
-        $filtro['im_rcv.monto_final'] = $this->registro['monto_final'];
 
-        $r_filtro_monto = $this->filtro_and(filtro: $filtro);
-        if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al obtener registro configuracion', data: $r_filtro_monto);
+            $monto_inicial = $monto;
+            $monto_final = $monto;
+
+            $filtro_especial[0][$monto_final]['operador'] = '>=';
+            $filtro_especial[0][$monto_final]['valor'] = 'im_rcv.monto_inicial';
+            $filtro_especial[0][$monto_final]['comparacion'] = 'AND';
+            $filtro_especial[0][$monto_final]['valor_es_campo'] = true;
+
+            $filtro_especial[1][$monto_inicial]['operador'] = '<=';
+            $filtro_especial[1][$monto_inicial]['valor'] = 'im_rcv.monto_final';
+            $filtro_especial[1][$monto_inicial]['comparacion'] = 'AND';
+            $filtro_especial[1][$monto_inicial]['valor_es_campo'] = true;
+
+        $rcvs = (new im_rcv($this->link))->filtro_and(columnas: array('im_rcv_id'),
+            filtro_especial: $filtro_especial);
+        if(errores::$error){
+            $error = $this->error->error(mensaje: 'Error al obtener registros',data:  $rcvs);
+            print_r($error);
+            die('Error');
         }
-
-        return $r_filtro_monto->registros;
+        return $rcvs;
     }
 }
