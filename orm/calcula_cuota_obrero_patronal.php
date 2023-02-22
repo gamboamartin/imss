@@ -69,6 +69,11 @@ class calcula_cuota_obrero_patronal{
             return $this->error->error('Error no exsite registro de UMA', $im_uma);
         }
 
+        $im_rcv = (new im_rcv($link))->filtro_por_montos(monto: $this->sbc);
+        if(errores::$error){
+            return $this->error->error('Error al obtener registros por monto', $im_rcv);
+        }
+
         if(!isset($im_uma->registros[0]['im_uma_monto'])){
             return $this->error->error('Error el uma no tiene monto asignado', $im_uma);
         }
