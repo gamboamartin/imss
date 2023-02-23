@@ -175,6 +175,17 @@ class controlador_im_movimiento extends system {
                 die('Error');
             }
 
+            $filtro_rp['em_registro_patronal.id'] = $movimiento->registro_patronal;
+            $em_registro_patronal = (new em_registro_patronal($this->link))->filtro_and(filtro: $filtro_rp);
+            if (errores::$error) {
+                $error =  $this->errores->error(mensaje: 'Error obtener registros patronales',data:  $em_registro_patronal);
+                if(!$header){
+                    return $error;
+                }
+                print_r($error);
+                die('Error');
+            }
+
             $filtro_tipo_movimiento['im_tipo_movimiento.descripcion'] = $movimiento->tipo_movimiento;
             $im_tipo_movimiento = (new im_tipo_movimiento($this->link))->filtro_and(filtro: $filtro_tipo_movimiento);
             if (errores::$error) {
