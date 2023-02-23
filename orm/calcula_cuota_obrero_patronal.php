@@ -178,7 +178,7 @@ class calcula_cuota_obrero_patronal{
         return $calculo;
     }
 
-    private function ceav($porcentaje_ceav){
+    private function ceav(int|float $porcentaje_ceav){
 
         $this->porc_ceav = $porcentaje_ceav;
 
