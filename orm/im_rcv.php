@@ -49,7 +49,7 @@ class im_rcv extends modelo{
         return $alta_bd;
     }
 
-    public function filtro_por_montos(float $monto): array
+    public function filtro_por_montos(float $monto): array|stdClass
     {
 
             $monto_inicial = $monto;
