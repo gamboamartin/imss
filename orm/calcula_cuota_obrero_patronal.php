@@ -2,7 +2,9 @@
 
 namespace gamboamartin\im_registro_patronal\models;
 use gamboamartin\errores\errores;
+use gamboamartin\template\html;
 use gamboamartin\validacion\validacion;
+use html\im_rcv_html;
 use PDO;
 use stdClass;
 use gamboamartin\im_registro_patronal\models\im_uma;
@@ -176,7 +178,10 @@ class calcula_cuota_obrero_patronal{
         return $calculo;
     }
 
-    private function ceav(){
+    private function ceav($porcentaje_ceav){
+
+        $this->porc_ceav = $porcentaje_ceav;
+
         $valida = $this->valida_parametros();
         if(errores::$error){
             return $this->error->error('Error al validar exedente', $valida);
