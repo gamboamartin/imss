@@ -49,23 +49,24 @@ class im_rcv extends modelo{
         return $alta_bd;
     }
 
-    public function filtro_por_montos(float $monto): array|stdClass
+    public function filtro_por_montos(int|float $monto): array|stdClass
     {
 
-            $monto_inicial = $monto;
-            $monto_final = $monto;
+        if($monto<=0.0){
+            return $this->error->error(mensaje: 'Error monto debe ser mayor o igual a 0', data: $monto);
+        }
 
-            $filtro_especial[0][$monto_final]['operador'] = '>=';
-            $filtro_especial[0][$monto_final]['valor'] = 'im_rcv.monto_inicial';
-            $filtro_especial[0][$monto_final]['comparacion'] = 'AND';
-            $filtro_especial[0][$monto_final]['valor_es_campo'] = true;
+            $filtro_especial[0][(string)$monto]['operador'] = '>=';
+            $filtro_especial[0][(string)$monto]['valor'] = 'im_rcv.monto_inicial';
+            $filtro_especial[0][(string)$monto]['comparacion'] = 'AND';
+            $filtro_especial[0][(string)$monto]['valor_es_campo'] = true;
 
-            $filtro_especial[1][$monto_inicial]['operador'] = '<=';
-            $filtro_especial[1][$monto_inicial]['valor'] = 'im_rcv.monto_final';
-            $filtro_especial[1][$monto_inicial]['comparacion'] = 'AND';
-            $filtro_especial[1][$monto_inicial]['valor_es_campo'] = true;
+            $filtro_especial[1][(string)$monto]['operador'] = '<=';
+            $filtro_especial[1][(string)$monto]['valor'] = 'im_rcv.monto_final';
+            $filtro_especial[1][(string)$monto]['comparacion'] = 'AND';
+            $filtro_especial[1][(string)$monto]['valor_es_campo'] = true;
 
-        $rcvs = (new im_rcv($this->link))->filtro_and(columnas: array('im_rcv_id'),
+        $rcvs = ($this)->filtro_and(columnas: array('im_rcv_id'),
             filtro_especial: $filtro_especial);
         if(errores::$error){
             $error = $this->error->error(mensaje: 'Error al obtener registros',data:  $rcvs);
