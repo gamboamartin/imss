@@ -137,7 +137,7 @@ class calcula_cuota_obrero_patronal{
         }
         $this->cuotas->retiro = $retiro;
 
-        $ceav = $this->ceav();
+        $ceav = $this->ceav(porcentaje_ceav: $im_rcv->registros[0]['im_rcv_factor']);
         if(errores::$error){
             return $this->error->error('Error al obtener ceav', $ceav);
         }
