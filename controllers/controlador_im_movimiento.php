@@ -304,6 +304,12 @@ class controlador_im_movimiento extends system {
             return $this->retorno_error(mensaje: 'Error al generar template',data:  $r_alta, header: $header,ws:$ws);
         }
 
+        $this->row_upd->fecha = date('Y-m-d');
+        $this->row_upd->salario_diario = 0;
+        $this->row_upd->salario_diario_integrado = 0;
+        $this->row_upd->salario_mixto = 0;
+        $this->row_upd->salario_variable = 0;
+
         $inputs = $this->genera_inputs(keys_selects:  $this->keys_selects);
         if(errores::$error){
             $error = $this->errores->error(mensaje: 'Error al generar inputs',data:  $inputs);
