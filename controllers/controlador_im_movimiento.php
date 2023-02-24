@@ -164,6 +164,7 @@ class controlador_im_movimiento extends system {
         }
 
         foreach ($movimientos_excel as $movimiento){
+
             $filtro_rp['em_registro_patronal.descripcion'] = $movimiento->registro_patronal;
             $em_registro_patronal = (new em_registro_patronal($this->link))->filtro_and(filtro: $filtro_rp);
             if (errores::$error) {
@@ -175,11 +176,10 @@ class controlador_im_movimiento extends system {
                 die('Error');
             }
 
-            $filtro_rp['em_registro_patronal.id'] = $movimiento->registro_patronal;
-            $em_registro_patronal = (new em_registro_patronal($this->link))->filtro_and(filtro: $filtro_rp);
-            if (errores::$error) {
-                $error =  $this->errores->error(mensaje: 'Error obtener registros patronales',data:  $em_registro_patronal);
-                if(!$header){
+            if ($em_registro_patronal->n_registros <= 0 ){
+                $error = $this->errores->error(mensaje: "Error: no existe el registro patronal $movimiento->registro_patronal 
+                en em_registro_patronal", data:  $movimiento);
+                if (!$header) {
                     return $error;
                 }
                 print_r($error);
@@ -191,6 +191,16 @@ class controlador_im_movimiento extends system {
             if (errores::$error) {
                 $error =  $this->errores->error(mensaje: 'Error obtener tipo movimiento',data:  $im_tipo_movimiento);
                 if(!$header){
+                    return $error;
+                }
+                print_r($error);
+                die('Error');
+            }
+
+            if ($im_tipo_movimiento->n_registros <= 0 ){
+                $error = $this->errores->error(mensaje: "Error: no existe el tipo de moviento $movimiento->tipo_movimiento",
+                    data:  $movimiento);
+                if (!$header) {
                     return $error;
                 }
                 print_r($error);
@@ -213,6 +223,17 @@ class controlador_im_movimiento extends system {
                 die('Error');
             }
 
+            if ($em_empleado->n_registros <= 0 ){
+                $error = $this->errores->error(mensaje: "Error: no existe el empleado $movimiento->nombre $movimiento->ap 
+                $movimiento->am con NSS $movimiento->nss",
+                    data:  $movimiento);
+                if (!$header) {
+                    return $error;
+                }
+                print_r($error);
+                die('Error');
+            }
+
             $registro['im_tipo_movimiento_id'] = $im_tipo_movimiento->registros[0]['im_tipo_movimiento_id'];
             $registro['em_registro_patronal_id'] = $em_registro_patronal->registros[0]['em_registro_patronal_id'];
             $registro['em_empleado_id'] = $em_empleado->registros[0]['em_empleado_id'];
@@ -221,11 +242,9 @@ class controlador_im_movimiento extends system {
             $registro['factor_integracion'] = $movimiento->fi;
             $registro['fecha'] = $movimiento->fecha;
 
-            $im_movimiento = new im_movimiento($this->link);
-            $im_movimiento->registro = $registro;
-            $r_alta = $im_movimiento->alta_bd();
+            $alta_im_movimiento = (new im_movimiento($this->link))->alta_registro(registro: $registro);
             if (errores::$error) {
-                $error = $this->errores->error(mensaje: 'Error al dar de alta registro', data: $r_alta);
+                $error = $this->errores->error(mensaje: 'Error al dar de alta registro', data: $alta_im_movimiento);
                 if (!$header) {
                     return $error;
                 }
@@ -234,9 +253,7 @@ class controlador_im_movimiento extends system {
             }
         }
 
-        $link = "./index.php?seccion=im_movimiento&accion=lista&registro_id=".$this->registro_id;
-        $link.="&session_id=$this->session_id";
-        header('Location:' . $link);
+        header('Location:' . $this->link_lista);
         exit;
     }
 
