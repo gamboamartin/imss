@@ -9,6 +9,7 @@ use gamboamartin\errores\errores;
 use gamboamartin\facturacion\models\fc_csd;
 use gamboamartin\im_registro_patronal\models\im_clase_riesgo;
 use gamboamartin\im_registro_patronal\models\im_movimiento;
+use gamboamartin\im_registro_patronal\models\im_rcv;
 use gamboamartin\im_registro_patronal\models\im_registro_patronal;
 use gamboamartin\im_registro_patronal\models\im_tipo_movimiento;
 use gamboamartin\im_registro_patronal\models\im_uma;
@@ -277,7 +278,7 @@ class base_test{
     }
 
    public function alta_im_rcv(PDO $link, string $codigo = '1', string $codigo_bis = '1', string $descripcion = '1',
-                                string $monto_inicial = '0.01', string $monto_final ='999999999',
+                                float $monto_inicial = 0.01, float $monto_final = 999999999,
                                 int $id = 1, float $factor = 0): array|\stdClass
     {
         $registro = array();
@@ -289,7 +290,7 @@ class base_test{
         $registro['monto_final'] = $monto_final;
         $registro['factor'] = $factor;
 
-        $alta = (new im_uma($link))->alta_registro($registro);
+        $alta = (new im_rcv($link))->alta_registro($registro);
         if(errores::$error){
             return (new errores())->error('Error al dar de alta ', $alta);
 
