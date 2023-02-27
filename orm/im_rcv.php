@@ -66,8 +66,7 @@ class im_rcv extends modelo{
             $filtro_especial[1][(string)$monto]['comparacion'] = 'AND';
             $filtro_especial[1][(string)$monto]['valor_es_campo'] = true;
 
-        $rcvs = ($this)->filtro_and(columnas: array('im_rcv_id'),
-            filtro_especial: $filtro_especial);
+        $rcvs = ($this)->filtro_and(filtro_especial: $filtro_especial);
         if(errores::$error){
             $error = $this->error->error(mensaje: 'Error al obtener registros',data:  $rcvs);
             print_r($error);
