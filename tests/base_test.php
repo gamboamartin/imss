@@ -276,6 +276,27 @@ class base_test{
         return $alta;
     }
 
+   public function alta_im_rcv(PDO $link, string $codigo = '1', string $codigo_bis = '1', string $descripcion = '1',
+                                string $monto_inicial = '0.01', string $monto_final ='999999999',
+                                int $id = 1, float $factor = 0): array|\stdClass
+    {
+        $registro = array();
+        $registro['id'] = $id;
+        $registro['codigo'] = $codigo;
+        $registro['codigo_bis'] = $codigo_bis;
+        $registro['descripcion'] = $descripcion;
+        $registro['monto_inicial'] = $monto_inicial;
+        $registro['monto_final'] = $monto_final;
+        $registro['factor'] = $factor;
+
+        $alta = (new im_uma($link))->alta_registro($registro);
+        if(errores::$error){
+            return (new errores())->error('Error al dar de alta ', $alta);
+
+        }
+        return $alta;
+    }
+
 
 
     public function alta_org_puesto(PDO $link): array|\stdClass
