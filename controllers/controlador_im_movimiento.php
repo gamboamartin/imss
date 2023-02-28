@@ -240,6 +240,8 @@ class controlador_im_movimiento extends system {
             $registro['salario_diario'] = $movimiento->sd;
             $registro['salario_diario_integrado'] = $movimiento->sdi;
             $registro['factor_integracion'] = $movimiento->fi;
+            $registro['salario_mixto'] = $movimiento->sm;
+            $registro['salario_variable'] = $movimiento->sv;
             $registro['fecha'] = $movimiento->fecha;
 
             $alta_im_movimiento = (new im_movimiento($this->link))->alta_registro(registro: $registro);
