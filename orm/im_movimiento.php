@@ -1,5 +1,7 @@
 <?php
+
 namespace gamboamartin\im_registro_patronal\models;
+
 use base\orm\modelo;
 use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\empleado\models\em_registro_patronal;
@@ -8,13 +10,15 @@ use gamboamartin\xml_cfdi_4\validacion;
 use PDO;
 use stdClass;
 
-class im_movimiento extends modelo{
-    public function __construct(PDO $link){
+class im_movimiento extends modelo
+{
+    public function __construct(PDO $link)
+    {
         $tabla = "im_movimiento";
-        $columnas = array($tabla=>false,'em_empleado' => $tabla, 'em_registro_patronal'=>$tabla,
-            'fc_csd'=>'em_registro_patronal', 'org_sucursal' => 'fc_csd',
-            'org_empresa' => 'org_sucursal','im_tipo_movimiento'=>$tabla,);
-        $campos_obligatorios = array('em_registro_patronal_id','im_tipo_movimiento_id','em_empleado_id','fecha');
+        $columnas = array($tabla => false, 'em_empleado' => $tabla, 'em_registro_patronal' => $tabla,
+            'fc_csd' => 'em_registro_patronal', 'org_sucursal' => 'fc_csd',
+            'org_empresa' => 'org_sucursal', 'im_tipo_movimiento' => $tabla,);
+        $campos_obligatorios = array('em_registro_patronal_id', 'im_tipo_movimiento_id', 'em_empleado_id', 'fecha');
 
         $campos_view = array();
         $campos_view['im_tipo_movimiento_id']['type'] = 'selects';
@@ -31,51 +35,55 @@ class im_movimiento extends modelo{
         $campos_view['observaciones']['type'] = "inputs";
         $campos_view['factor_integracion']['type'] = "inputs";
 
-        parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
-            columnas: $columnas,campos_view: $campos_view);
+        parent::__construct(link: $link, tabla: $tabla, campos_obligatorios: $campos_obligatorios,
+            columnas: $columnas, campos_view: $campos_view);
 
         $this->NAMESPACE = __NAMESPACE__;
     }
 
     public function alta_bd(): array|stdClass
     {
-        if(!isset($this->registro['codigo'])){
+        if (!isset($this->registro['codigo'])) {
             $this->registro['codigo'] = $this->registro['em_empleado_id'];
             $this->registro['codigo'] .= $this->registro['em_registro_patronal_id'];
             $this->registro['codigo'] .= $this->registro['im_tipo_movimiento_id'];
             $this->registro['codigo'] .= rand();
         }
 
-        if(!isset($this->registro['codigo_bis'])){
+        if (!isset($this->registro['codigo_bis'])) {
             $this->registro['codigo_bis'] = $this->registro['codigo'];
         }
 
-        if(!isset($this->registro['descripcion'])){
+        if (!isset($this->registro['descripcion'])) {
             $this->registro['descripcion'] = $this->registro['em_empleado_id'];
             $this->registro['descripcion'] .= $this->registro['em_registro_patronal_id'];
             $this->registro['descripcion'] .= $this->registro['im_tipo_movimiento_id'];
         }
 
-        if(!isset($this->registro['descripcion_select'])){
+        if (!isset($this->registro['descripcion_select'])) {
             $this->registro['descripcion_select'] = $this->registro['descripcion'];
         }
 
-        if(!isset($this->registro['alias'])){
+        if (!isset($this->registro['alias'])) {
             $this->registro['alias'] = $this->registro['codigo'];
             $this->registro['alias'] .= $this->registro['descripcion'];
         }
 
-        if(!isset($this->registro['salario_diario'])){
+        if (!isset($this->registro['salario_diario'])) {
             $this->registro['salario_diario'] = 0.0;
         }
-        if(!isset($this->registro['salario_diario_integrado'])){
+        if (!isset($this->registro['salario_diario_integrado'])) {
             $this->registro['salario_diario_integrado'] = 0.0;
-        }if(!isset($this->registro['salario_mixto'])){
+        }
+        if (!isset($this->registro['salario_mixto'])) {
             $this->registro['salario_mixto'] = 0.0;
-        }if(!isset($this->registro['salario_variable'])){
+        }
+        if (!isset($this->registro['salario_variable'])) {
             $this->registro['salario_variable'] = 0.0;
         }
-
+        if (!isset($this->registro['factor_integracion'])) {
+            $this->registro['factor_integracion'] = 0.0;
+        }
 
 
         $alta_bd = parent::alta_bd();
@@ -87,7 +95,7 @@ class im_movimiento extends modelo{
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
         }
-        
+
         return $alta_bd;
     }
 
@@ -117,8 +125,8 @@ class im_movimiento extends modelo{
     private function filtro_extra_fecha(string $fecha): array
     {
         $valida = $this->validacion->valida_fecha(fecha: $fecha);
-        if(errores::$error){
-            return $this->error->error(mensaje:'Error al validar fecha',data: $valida);
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al validar fecha', data: $valida);
         }
         $filtro_extra[0]['im_movimiento.fecha']['valor'] = $fecha;
         $filtro_extra[0]['im_movimiento.fecha']['operador'] = '>=';
@@ -127,19 +135,19 @@ class im_movimiento extends modelo{
         return $filtro_extra;
     }
 
-    public function filtro_movimiento_fecha(int $em_empleado_id,string $fecha): stdClass|array
+    public function filtro_movimiento_fecha(int $em_empleado_id, string $fecha): stdClass|array
     {
         if ($em_empleado_id <= -1) {
             return $this->error->error(mensaje: 'Error id del empleado no puede ser menor a uno', data: $em_empleado_id);
         }
 
         $valida = (new validacion())->valida_fecha(fecha: $fecha);
-        if(errores::$error){
+        if (errores::$error) {
             return $this->error->error(mensaje: 'Error: ingrese una fecha valida', data: $valida);
         }
 
 
-        $data = $this->data_filtro_movto(em_empleado_id:  $em_empleado_id,fecha: $fecha);
+        $data = $this->data_filtro_movto(em_empleado_id: $em_empleado_id, fecha: $fecha);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al obtener datos para filtro', data: $data);
         }
@@ -180,230 +188,230 @@ class im_movimiento extends modelo{
     public function calcula_riesgo_de_trabajo(float $em_clase_riesgo_factor, float $n_dias_trabajados,
                                               float $salario_base_cotizacion): float|array
     {
-        if($em_clase_riesgo_factor <= 0.0){
+        if ($em_clase_riesgo_factor <= 0.0) {
             return $this->error->error("Error el factor debe ser menor a 0", $em_clase_riesgo_factor);
         }
-        if($salario_base_cotizacion <= 0.0){
+        if ($salario_base_cotizacion <= 0.0) {
             return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
                 $salario_base_cotizacion);
         }
-        if($n_dias_trabajados <= 0.0){
+        if ($n_dias_trabajados <= 0.0) {
             return $this->error->error("Error los dias trabajados no debe ser menor a 0",
                 $n_dias_trabajados);
         }
 
         $cuota_diaria = $salario_base_cotizacion * $n_dias_trabajados;
         $res = $cuota_diaria * $em_clase_riesgo_factor;
-        $total_cuota = $res/100;
+        $total_cuota = $res / 100;
 
-        return round($total_cuota,2);
+        return round($total_cuota, 2);
     }
 
     public function calcula_enf_mat_cuota_fija(float $factor_cuota_fija, float $n_dias_trabajados,
                                                float $uma): float|array
     {
-        if($factor_cuota_fija <= 0.0){
+        if ($factor_cuota_fija <= 0.0) {
             return $this->error->error("Error el factor debe ser menor a 0", $factor_cuota_fija);
         }
-        if($uma <= 0.0){
+        if ($uma <= 0.0) {
             return $this->error->error("Error uma debe ser menor a 0",
                 $uma);
         }
-        if($n_dias_trabajados <= 0.0){
+        if ($n_dias_trabajados <= 0.0) {
             return $this->error->error("Error los dias trabajados no debe ser menor a 0",
                 $n_dias_trabajados);
         }
 
         $cuota_diaria = $factor_cuota_fija * $uma;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
-        $total_cuota = $total_cuota/100;
+        $total_cuota = $total_cuota / 100;
 
-        return round($total_cuota,2);
+        return round($total_cuota, 2);
     }
 
     public function calcula_enf_mat_cuota_adicional(float $factor_cuota_adicional, float $n_dias_trabajados,
-                                               float $salario_base_cotizacion, float $uma): float|array
+                                                    float $salario_base_cotizacion, float $uma): float|array
     {
 
-        if($salario_base_cotizacion <= 0.0){
+        if ($salario_base_cotizacion <= 0.0) {
             return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
                 $salario_base_cotizacion);
         }
-        if($uma <= 0.0){
+        if ($uma <= 0.0) {
             return $this->error->error("Error uma debe ser menor a 0", $uma);
         }
         if ($factor_cuota_adicional <= 0.0) {
             return $this->error->error("Error el factor debe ser menor a 0", $factor_cuota_adicional);
         }
-        if($n_dias_trabajados <= 0.0){
+        if ($n_dias_trabajados <= 0.0) {
             return $this->error->error("Error los dias trabajados no debe ser menor a 0", $n_dias_trabajados);
         }
 
         $excedente = 0;
         $tres_umas = $uma * 3;
-        if($salario_base_cotizacion > $tres_umas){
+        if ($salario_base_cotizacion > $tres_umas) {
             $excedente = $salario_base_cotizacion - $tres_umas;
         }
 
         $cuota_diaria = $factor_cuota_adicional * $excedente;
-        $cuota_diaria = $cuota_diaria/100;
+        $cuota_diaria = $cuota_diaria / 100;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
-        return round($total_cuota,2);
+        return round($total_cuota, 2);
     }
 
     public function calcula_enf_mat_gastos_medicos(float $factor_gastos_medicos, float $n_dias_trabajados,
-                                               float $salario_base_cotizacion): float|array
+                                                   float $salario_base_cotizacion): float|array
     {
-        if($factor_gastos_medicos <= 0.0){
+        if ($factor_gastos_medicos <= 0.0) {
             return $this->error->error("Error el factor debe ser menor a 0", $factor_gastos_medicos);
         }
-        if($salario_base_cotizacion <= 0.0){
+        if ($salario_base_cotizacion <= 0.0) {
             return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
                 $salario_base_cotizacion);
         }
-        if($n_dias_trabajados <= 0.0){
+        if ($n_dias_trabajados <= 0.0) {
             return $this->error->error("Error los dias trabajados no debe ser menor a 0",
                 $n_dias_trabajados);
         }
 
         $cuota_diaria = $factor_gastos_medicos * $salario_base_cotizacion;
-        $cuota_diaria = $cuota_diaria/100;
+        $cuota_diaria = $cuota_diaria / 100;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
-        return round($total_cuota,2);
+        return round($total_cuota, 2);
     }
 
     public function calcula_enf_mat_pres_dinero(float $factor_pres_dineros, float $n_dias_trabajados,
-                                               float $salario_base_cotizacion): float|array
+                                                float $salario_base_cotizacion): float|array
     {
-        if($factor_pres_dineros <= 0.0){
+        if ($factor_pres_dineros <= 0.0) {
             return $this->error->error("Error el factor debe ser menor a 0", $factor_pres_dineros);
         }
-        if($salario_base_cotizacion <= 0.0){
+        if ($salario_base_cotizacion <= 0.0) {
             return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
                 $salario_base_cotizacion);
         }
-        if($n_dias_trabajados <= 0.0){
+        if ($n_dias_trabajados <= 0.0) {
             return $this->error->error("Error los dias trabajados no debe ser menor a 0",
                 $n_dias_trabajados);
         }
 
         $cuota_diaria = $factor_pres_dineros * $salario_base_cotizacion;
-        $cuota_diaria = $cuota_diaria/100;
+        $cuota_diaria = $cuota_diaria / 100;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
-        return round($total_cuota,2);
+        return round($total_cuota, 2);
     }
 
     public function calcula_invalidez_vida(float $factor_invalidez_vida, float $n_dias_trabajados,
-                                               float $salario_base_cotizacion): float|array
+                                           float $salario_base_cotizacion): float|array
     {
-        if($factor_invalidez_vida <= 0.0){
+        if ($factor_invalidez_vida <= 0.0) {
             return $this->error->error("Error el factor debe ser menor a 0", $factor_invalidez_vida);
         }
-        if($salario_base_cotizacion <= 0.0){
+        if ($salario_base_cotizacion <= 0.0) {
             return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
                 $salario_base_cotizacion);
         }
-        if($n_dias_trabajados <= 0.0){
+        if ($n_dias_trabajados <= 0.0) {
             return $this->error->error("Error los dias trabajados no debe ser menor a 0",
                 $n_dias_trabajados);
         }
 
         $cuota_diaria = $factor_invalidez_vida * $salario_base_cotizacion;
-        $cuota_diaria = $cuota_diaria/100;
+        $cuota_diaria = $cuota_diaria / 100;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
-        return round($total_cuota,2);
+        return round($total_cuota, 2);
     }
 
     public function calcula_guarderia_prestaciones_sociales(float $factor_pres_sociales, float $n_dias_trabajados,
-                                               float $salario_base_cotizacion): float|array
+                                                            float $salario_base_cotizacion): float|array
     {
-        if($factor_pres_sociales <= 0.0){
+        if ($factor_pres_sociales <= 0.0) {
             return $this->error->error("Error el factor debe ser menor a 0", $factor_pres_sociales);
         }
-        if($salario_base_cotizacion <= 0.0){
+        if ($salario_base_cotizacion <= 0.0) {
             return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
                 $salario_base_cotizacion);
         }
-        if($n_dias_trabajados <= 0.0){
+        if ($n_dias_trabajados <= 0.0) {
             return $this->error->error("Error los dias trabajados no debe ser menor a 0",
                 $n_dias_trabajados);
         }
 
         $cuota_diaria = $factor_pres_sociales * $salario_base_cotizacion;
-        $cuota_diaria = $cuota_diaria/100;
+        $cuota_diaria = $cuota_diaria / 100;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
-        return round($total_cuota,2);
+        return round($total_cuota, 2);
     }
 
     public function calcula_retiro(float $factor_retiro, float $n_dias_trabajados,
-                                               float $salario_base_cotizacion): float|array
+                                   float $salario_base_cotizacion): float|array
     {
-        if($factor_retiro <= 0.0){
+        if ($factor_retiro <= 0.0) {
             return $this->error->error("Error el factor debe ser menor a 0", $factor_retiro);
         }
-        if($salario_base_cotizacion <= 0.0){
+        if ($salario_base_cotizacion <= 0.0) {
             return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
                 $salario_base_cotizacion);
         }
-        if($n_dias_trabajados <= 0.0){
+        if ($n_dias_trabajados <= 0.0) {
             return $this->error->error("Error los dias trabajados no debe ser menor a 0",
                 $n_dias_trabajados);
         }
 
         $cuota_diaria = $factor_retiro * $salario_base_cotizacion;
-        $cuota_diaria = $cuota_diaria/100;
+        $cuota_diaria = $cuota_diaria / 100;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
-        return round($total_cuota,2);
+        return round($total_cuota, 2);
     }
 
     public function calcula_ceav(float $factor_ceav, float $n_dias_trabajados,
-                                               float $salario_base_cotizacion): float|array
+                                 float $salario_base_cotizacion): float|array
     {
-        if($factor_ceav <= 0.0){
+        if ($factor_ceav <= 0.0) {
             return $this->error->error("Error el factor debe ser menor a 0", $factor_ceav);
         }
-        if($salario_base_cotizacion <= 0.0){
+        if ($salario_base_cotizacion <= 0.0) {
             return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
                 $salario_base_cotizacion);
         }
-        if($n_dias_trabajados <= 0.0){
+        if ($n_dias_trabajados <= 0.0) {
             return $this->error->error("Error los dias trabajados no debe ser menor a 0",
                 $n_dias_trabajados);
         }
 
         $cuota_diaria = $factor_ceav * $salario_base_cotizacion;
-        $cuota_diaria = $cuota_diaria/100;
+        $cuota_diaria = $cuota_diaria / 100;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
-        return round($total_cuota,2);
+        return round($total_cuota, 2);
     }
 
     public function calcula_credito_vivienda(float $factor_credito_vivienda, float $n_dias_trabajados,
-                                               float $salario_base_aportacion): float|array
+                                             float $salario_base_aportacion): float|array
     {
-        if($factor_credito_vivienda <= 0.0){
+        if ($factor_credito_vivienda <= 0.0) {
             return $this->error->error("Error el factor debe ser menor a 0", $factor_credito_vivienda);
         }
-        if($salario_base_aportacion <= 0.0){
+        if ($salario_base_aportacion <= 0.0) {
             return $this->error->error("Error salario base de cotizacion debe ser menor a 0",
                 $salario_base_aportacion);
         }
-        if($n_dias_trabajados <= 0.0){
+        if ($n_dias_trabajados <= 0.0) {
             return $this->error->error("Error los dias trabajados no debe ser menor a 0",
                 $n_dias_trabajados);
         }
 
         $cuota_diaria = $factor_credito_vivienda * $salario_base_aportacion;
-        $cuota_diaria = $cuota_diaria/100;
+        $cuota_diaria = $cuota_diaria / 100;
         $total_cuota = $cuota_diaria * $n_dias_trabajados;
 
-        return round($total_cuota,2);
+        return round($total_cuota, 2);
     }
 
     /**
@@ -414,9 +422,9 @@ class im_movimiento extends modelo{
     private function maqueta_row_upd_empleado(array $registro_emp): array
     {
         $registro = array();
-        $keys = array('salario_diario_integrado','salario_diario');
-        foreach ($keys as $key){
-            if(isset($registro_emp[$key])){
+        $keys = array('salario_diario_integrado', 'salario_diario');
+        foreach ($keys as $key) {
+            if (isset($registro_emp[$key])) {
                 $registro[$key] = $registro_emp[$key];
             }
         }
@@ -452,18 +460,18 @@ class im_movimiento extends modelo{
     private function modifica_empleado(array $registro_emp): array|stdClass
     {
 
-        $keys = array('im_tipo_movimiento_id','em_empleado_id');
-        $valida = $this->validacion->valida_ids(keys: $keys,registro:  $registro_emp);
-        if(errores::$error){
+        $keys = array('im_tipo_movimiento_id', 'em_empleado_id');
+        $valida = $this->validacion->valida_ids(keys: $keys, registro: $registro_emp);
+        if (errores::$error) {
             return $this->error->error(mensaje: 'Error al validar registro_emp', data: $valida);
         }
 
-        $registro = $this->row_upd_empleado(registro_emp:$registro_emp);
+        $registro = $this->row_upd_empleado(registro_emp: $registro_emp);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al integrar registro', data: $registro);
         }
 
-        $modifica = $this->upd_empleado(registro: $registro,registro_emp:  $registro_emp);
+        $modifica = $this->upd_empleado(registro: $registro, registro_emp: $registro_emp);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
         }
@@ -473,9 +481,9 @@ class im_movimiento extends modelo{
 
     private function row_fecha_ini_rel(bool $es_alta, array $registro, array $registro_emp): array
     {
-        if($es_alta){
+        if ($es_alta) {
             $keys = array('fecha');
-            $valida = $this->validacion->fechas_in_array(data: $registro_emp,keys:  $keys);
+            $valida = $this->validacion->fechas_in_array(data: $registro_emp, keys: $keys);
             if (errores::$error) {
                 return $this->error->error(mensaje: 'Error al validar registro_emp', data: $valida);
             }
@@ -497,7 +505,7 @@ class im_movimiento extends modelo{
             return $this->error->error(mensaje: 'Error al obtener tipo de movto', data: $es_alta);
         }
 
-        $registro = $this->row_fecha_ini_rel(es_alta: $es_alta,registro:  $registro,registro_emp:  $registro_emp);
+        $registro = $this->row_fecha_ini_rel(es_alta: $es_alta, registro: $registro, registro_emp: $registro_emp);
         if (errores::$error) {
             return $this->error->error(mensaje: 'Error al integrar fecha', data: $registro);
         }
@@ -509,7 +517,7 @@ class im_movimiento extends modelo{
     {
         $modifica = new stdClass();
 
-        if(count($registro) > 0) {
+        if (count($registro) > 0) {
 
             $modifica = (new em_empleado($this->link))->modifica_bd(
                 registro: $registro, id: $registro_emp['em_empleado_id']);
