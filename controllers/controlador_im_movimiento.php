@@ -290,7 +290,9 @@ class controlador_im_movimiento extends system {
             $reg->sd = $hojaActual->getCell('H' . $registro->fila)->getValue();
             $reg->fi = $hojaActual->getCell('I' . $registro->fila)->getValue();
             $reg->sdi = $hojaActual->getCell('J' . $registro->fila)->getValue();
-            $fecha = $hojaActual->getCell('K' . $registro->fila)->getCalculatedValue();
+            $reg->sm = $hojaActual->getCell('K' . $registro->fila)->getValue();
+            $reg->sv = $hojaActual->getCell('L' . $registro->fila)->getValue();
+            $fecha = $hojaActual->getCell('M' . $registro->fila)->getCalculatedValue();
             $reg->fecha  = Date::excelToDateTimeObject($fecha)->format('Y-m-d');
             $movimientos[] = $reg;
         }
