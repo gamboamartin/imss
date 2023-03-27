@@ -391,6 +391,14 @@ class im_movimiento extends _modelo_parent
     public function modifica_bd(array $registro, int $id, bool $reactiva = false,
                                 array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
     {
+        if (!isset($registro['codigo'])) {
+            $movimiento = $this->registro(registro_id: $id,columnas: array("im_movimiento_codigo"));
+            if (errores::$error) {
+                return $this->error->error(mensaje: 'Error al obtener movimiento', data: $movimiento);
+            }
+            $registro['codigo'] = $movimiento['im_movimiento_codigo'];
+        }
+
         if (!isset($registro['descripcion'])) {
             $registro['descripcion'] = $registro['em_empleado_id'];
             $registro['descripcion'] .= $registro['em_registro_patronal_id'];
