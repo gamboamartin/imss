@@ -26,6 +26,7 @@ use stdClass;
 
 class controlador_im_movimiento extends _ctl_base
 {
+    public string $link_im_movimiento_sube_archivo = '';
 
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
@@ -47,6 +48,13 @@ class controlador_im_movimiento extends _ctl_base
         $configuraciones = $this->init_configuraciones();
         if (errores::$error) {
             $error = $this->errores->error(mensaje: 'Error al inicializar configuraciones', data: $configuraciones);
+            print_r($error);
+            die('Error');
+        }
+
+        $init_links = $this->init_links();
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al inicializar links', data: $init_links);
             print_r($error);
             die('Error');
         }
@@ -130,6 +138,27 @@ class controlador_im_movimiento extends _ctl_base
         $datatables->menu_active = true;
 
         return $datatables;
+    }
+
+    protected function init_links(): array|string
+    {
+        $links = $this->obj_link->genera_links(controler: $this);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al generar links', data: $links);
+            print_r($error);
+            exit;
+        }
+
+        $link = $this->obj_link->get_link(seccion: "im_movimiento", accion: "sube_archivo");
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al recuperar link sube_archivo', data: $link);
+            print_r($error);
+            exit;
+        }
+
+        $this->link_im_movimiento_sube_archivo = $link;
+
+        return $link;
     }
 
     protected function init_selects(array $keys_selects, string $key, string $label, int $id_selected = -1, int $cols = 6,
