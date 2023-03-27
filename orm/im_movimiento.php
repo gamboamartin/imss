@@ -2,6 +2,7 @@
 
 namespace gamboamartin\im_registro_patronal\models;
 
+use base\orm\_modelo_parent;
 use base\orm\modelo;
 use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\empleado\models\em_registro_patronal;
@@ -10,7 +11,7 @@ use gamboamartin\xml_cfdi_4\validacion;
 use PDO;
 use stdClass;
 
-class im_movimiento extends modelo
+class im_movimiento extends _modelo_parent
 {
     public function __construct(PDO $link)
     {
@@ -20,38 +21,20 @@ class im_movimiento extends modelo
             'org_empresa' => 'org_sucursal', 'im_tipo_movimiento' => $tabla,);
         $campos_obligatorios = array('em_registro_patronal_id', 'im_tipo_movimiento_id', 'em_empleado_id', 'fecha');
 
-        $campos_view = array();
-        $campos_view['im_tipo_movimiento_id']['type'] = 'selects';
-        $campos_view['im_tipo_movimiento_id']['model'] = (new im_tipo_movimiento($link));
-        $campos_view['em_registro_patronal_id']['type'] = 'selects';
-        $campos_view['em_registro_patronal_id']['model'] = (new em_registro_patronal($link));
-        $campos_view['em_empleado_id']['type'] = 'selects';
-        $campos_view['em_empleado_id']['model'] = (new em_empleado($link));
-        $campos_view['fecha']['type'] = "dates";
-        $campos_view['salario_diario']['type'] = "inputs";
-        $campos_view['salario_diario_integrado']['type'] = "inputs";
-        $campos_view['salario_mixto']['type'] = "inputs";
-        $campos_view['salario_variable']['type'] = "inputs";
-        $campos_view['observaciones']['type'] = "inputs";
-        $campos_view['factor_integracion']['type'] = "inputs";
-
         parent::__construct(link: $link, tabla: $tabla, campos_obligatorios: $campos_obligatorios,
-            columnas: $columnas, campos_view: $campos_view);
+            columnas: $columnas);
 
         $this->NAMESPACE = __NAMESPACE__;
     }
 
-    public function alta_bd(): array|stdClass
+    public function alta_bd(array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
     {
         if (!isset($this->registro['codigo'])) {
-            $this->registro['codigo'] = $this->registro['em_empleado_id'];
-            $this->registro['codigo'] .= $this->registro['em_registro_patronal_id'];
-            $this->registro['codigo'] .= $this->registro['im_tipo_movimiento_id'];
-            $this->registro['codigo'] .= rand();
-        }
-
-        if (!isset($this->registro['codigo_bis'])) {
-            $this->registro['codigo_bis'] = $this->registro['codigo'];
+            $codigo = $this->get_codigo_aleatorio();
+            if (errores::$error) {
+                return $this->error->error(mensaje: 'Error al generar codigo', data: $codigo);
+            }
+            $this->registro['codigo'] = $codigo;
         }
 
         if (!isset($this->registro['descripcion'])) {
@@ -60,35 +43,9 @@ class im_movimiento extends modelo
             $this->registro['descripcion'] .= $this->registro['im_tipo_movimiento_id'];
         }
 
-        if (!isset($this->registro['descripcion_select'])) {
-            $this->registro['descripcion_select'] = $this->registro['descripcion'];
-        }
-
-        if (!isset($this->registro['alias'])) {
-            $this->registro['alias'] = $this->registro['codigo'];
-            $this->registro['alias'] .= $this->registro['descripcion'];
-        }
-
-        if (!isset($this->registro['salario_diario'])) {
-            $this->registro['salario_diario'] = 0.0;
-        }
-        if (!isset($this->registro['salario_diario_integrado'])) {
-            $this->registro['salario_diario_integrado'] = 0.0;
-        }
-        if (!isset($this->registro['salario_mixto'])) {
-            $this->registro['salario_mixto'] = 0.0;
-        }
-        if (!isset($this->registro['salario_variable'])) {
-            $this->registro['salario_variable'] = 0.0;
-        }
-        if (!isset($this->registro['factor_integracion'])) {
-            $this->registro['factor_integracion'] = 0.0;
-        }
-
-
-        $alta_bd = parent::alta_bd();
+        $r_alta_bd = parent::alta_bd($keys_integra_ds);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al insertar movimiento', data: $alta_bd);
+            return $this->error->error(mensaje: 'Error al insertar movimiento', data: $r_alta_bd);
         }
 
         $modifica = $this->modifica_empleado(registro_emp: $this->registro);
@@ -96,7 +53,7 @@ class im_movimiento extends modelo
             return $this->error->error(mensaje: 'Error al modificar empleado', data: $modifica);
         }
 
-        return $alta_bd;
+        return $r_alta_bd;
     }
 
     private function data_filtro_movto(int $em_empleado_id, string $fecha): array|stdClass
@@ -431,8 +388,15 @@ class im_movimiento extends modelo
         return $registro;
     }
 
-    public function modifica_bd(array $registro, int $id, bool $reactiva = false): array|stdClass
+    public function modifica_bd(array $registro, int $id, bool $reactiva = false,
+                                array $keys_integra_ds = array('codigo', 'descripcion')): array|stdClass
     {
+        if (!isset($registro['descripcion'])) {
+            $registro['descripcion'] = $registro['em_empleado_id'];
+            $registro['descripcion'] .= $registro['em_registro_patronal_id'];
+            $registro['descripcion'] .= $registro['im_tipo_movimiento_id'];
+        }
+
         $em_empleado = $this->registro_por_id(entidad: new em_empleado($this->link),
             id: $registro['em_empleado_id']);
         if (errores::$error) {
@@ -448,10 +412,9 @@ class im_movimiento extends modelo
             }
         }
 
-
-        $modifica_bd = parent::modifica_bd($registro, $id, $reactiva);
+        $modifica_bd = parent::modifica_bd($registro, $id, $reactiva, $keys_integra_ds);
         if (errores::$error) {
-            return $this->error->error(mensaje: 'Error al insertar movimiento', data: $modifica_bd);
+            return $this->error->error(mensaje: 'Error al modificar movimiento', data: $modifica_bd);
         }
 
         return $modifica_bd;

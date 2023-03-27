@@ -9,26 +9,23 @@
 
 namespace gamboamartin\im_registro_patronal\controllers;
 
+use base\controller\controler;
 use gamboamartin\documento\models\doc_documento;
 use gamboamartin\empleado\models\em_empleado;
 use gamboamartin\empleado\models\em_registro_patronal;
 use gamboamartin\errores\errores;
 use gamboamartin\plugins\Importador;
+use gamboamartin\system\_ctl_base;
 use gamboamartin\system\links_menu;
-use gamboamartin\system\system;
 use html\im_movimiento_html;
 use gamboamartin\im_registro_patronal\models\im_movimiento;
 use gamboamartin\template\html;
 use gamboamartin\im_registro_patronal\models\im_tipo_movimiento;
 use PDO;
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
 use stdClass;
 
-class controlador_im_movimiento extends system
+class controlador_im_movimiento extends _ctl_base
 {
-
-    public stdClass|array $keys_selects = array();
 
     public function __construct(PDO      $link, html $html = new \gamboamartin\template_1\html(),
                                 stdClass $paths_conf = new stdClass())
@@ -37,109 +34,174 @@ class controlador_im_movimiento extends system
         $html_ = new im_movimiento_html(html: $html);
         $obj_link = new links_menu(link: $link, registro_id: $this->registro_id);
 
-        $columns["im_movimiento_id"]["titulo"] = "Id";
-        $columns["im_movimiento_codigo"]["titulo"] = "Código";
-        $columns["im_tipo_movimiento_descripcion"]["titulo"] = "Tipo Movimiento";
-        $columns["em_registro_patronal_descripcion"]["titulo"] = "Registro Patronal";
-        $columns["em_empleado_nss"]["titulo"] = "NSS";
-        $columns["em_empleado_nombre"]["titulo"] = "Nombre";
-        $columns["em_empleado_ap"]["titulo"] = "Ap. Paterno";
-        $columns["em_empleado_am"]["titulo"] = "Ap. Materno";
-        $columns["im_movimiento_fecha"]["titulo"] = "Fecha";
-
-        $datatables = new stdClass();
-        $datatables->columns = $columns;
+        $datatables = $this->init_datatable();
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al inicializar datatable', data: $datatables);
+            print_r($error);
+            die('Error');
+        }
 
         parent::__construct(html: $html_, link: $link, modelo: $modelo, obj_link: $obj_link, datatables: $datatables,
             paths_conf: $paths_conf);
 
-        $this->asignar_propiedad(identificador: 'im_tipo_movimiento_id', propiedades: ["label" => "Tipo de Movimiento IMSS", 'cols' => 12]);
+        $configuraciones = $this->init_configuraciones();
         if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            $error = $this->errores->error(mensaje: 'Error al inicializar configuraciones', data: $configuraciones);
             print_r($error);
             die('Error');
         }
-
-        $this->asignar_propiedad(identificador: 'im_registro_patronal_id', propiedades: ["label" => "Registro Patronal", 'cols' => 12]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-        $this->asignar_propiedad(identificador: 'em_empleado_id', propiedades: ["label" => "Empleados", 'cols' => 12]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-        $this->asignar_propiedad(identificador: 'fecha', propiedades: ['place_holder' => 'Fecha', 'cols' => 6]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-        $this->asignar_propiedad(identificador: 'salario_diario', propiedades: ['place_holder' => 'Salario Diario',
-            'cols' => 6, 'required' => false]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-        $this->asignar_propiedad(identificador: 'salario_diario_integrado', propiedades: [
-            'place_holder' => 'Salario Diario Integrado', 'cols' => 6, 'required' => false]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-        $this->asignar_propiedad(identificador: 'salario_mixto', propiedades: [
-            'place_holder' => 'Salario Mixto', 'cols' => 6, 'required' => false]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-        $this->asignar_propiedad(identificador: 'salario_variable', propiedades: [
-            'place_holder' => 'Salario Variable', 'cols' => 6, 'required' => false]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-        $this->asignar_propiedad(identificador: 'observaciones', propiedades: ['place_holder' => 'Observaciones',
-            'cols' => 12, 'required' => false]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-        $this->asignar_propiedad(identificador: 'factor_integracion', propiedades: [
-            'place_holder' => 'Factor de Integracion', 'cols' => 6, 'required' => false]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-        $this->titulo_lista = 'Movimiento';
     }
 
-    public function sube_archivo(bool $header, bool $ws = false)
+    public function alta(bool $header, bool $ws = false): array|string
     {
-        $r_alta = parent::alta(header: false, ws: false); // TODO: Change the autogenerated stub
+        $r_alta = $this->init_alta();
         if (errores::$error) {
-            return $this->errores->error(mensaje: 'Error al generar template', data: $r_alta);
+            return $this->retorno_error(mensaje: 'Error al inicializar alta', data: $r_alta, header: $header, ws: $ws);
+        }
+
+        $keys_selects = $this->init_selects_inputs();
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
+                ws: $ws);
+        }
+
+        $this->row_upd->fecha = date('Y-m-d');
+        $this->row_upd->salario_diario = 0;
+        $this->row_upd->salario_diario_integrado = 0;
+        $this->row_upd->salario_mixto = 0;
+        $this->row_upd->salario_variable = 0;
+
+        $inputs = $this->inputs(keys_selects: $keys_selects);
+        if (errores::$error) {
+            return $this->retorno_error(
+                mensaje: 'Error al obtener inputs', data: $inputs, header: $header, ws: $ws);
         }
 
         return $r_alta;
+    }
+
+    protected function campos_view(): array
+    {
+        $keys = new stdClass();
+        $keys->inputs = array('codigo', 'descripcion', 'salario_diario', 'salario_diario_integrado', 'observaciones',
+            'factor_integracion', 'salario_mixto', 'salario_variable');
+        $keys->fechas = array('fecha');
+        $keys->selects = array();
+
+        $init_data = array();
+        $init_data['em_empleado'] = "gamboamartin\\empleado";
+        $init_data['im_tipo_movimiento'] = "gamboamartin\\im_registro_patronal";
+        $init_data['em_registro_patronal'] = "gamboamartin\\empleado";
+
+        $campos_view = $this->campos_view_base(init_data: $init_data, keys: $keys);
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al inicializar campo view', data: $campos_view);
+        }
+
+        return $campos_view;
+    }
+
+    protected function init_configuraciones(): controler
+    {
+        $this->seccion_titulo = 'Movimiento';
+        $this->titulo_lista = 'Registro de Movimientos';
+
+        $this->lista_get_data = true;
+
+        return $this;
+    }
+
+    protected function init_datatable(): stdClass
+    {
+        $columns["im_movimiento_id"]["titulo"] = "Id";
+        $columns["em_empleado_nss"]["titulo"] = "NSS";
+        $columns["em_empleado_nombre"]["titulo"] = "Empleado";
+        $columns["em_empleado_nombre"]["campos"] = array("em_empleado_ap", "em_empleado_am");
+        $columns["em_registro_patronal_descripcion"]["titulo"] = "Registro Patronal";
+        $columns["im_tipo_movimiento_descripcion"]["titulo"] = "Tipo Movimiento";
+        $columns["im_movimiento_fecha"]["titulo"] = "Fecha";
+
+        $filtro = array("im_movimiento.id", "em_empleado.nss", "em_empleado.nombre", "em_empleado.ap", "em_empleado.am",
+            "em_registro_patronal.descripcion", "im_tipo_movimiento.descripcion", "im_movimiento.fecha");
+
+        $datatables = new stdClass();
+        $datatables->columns = $columns;
+        $datatables->filtro = $filtro;
+        $datatables->menu_active = true;
+
+        return $datatables;
+    }
+
+    protected function init_selects(array $keys_selects, string $key, string $label, int $id_selected = -1, int $cols = 6,
+                                    bool  $con_registros = true, array $filtro = array()): array
+    {
+        $keys_selects = $this->key_select(cols: $cols, con_registros: $con_registros, filtro: $filtro, key: $key,
+            keys_selects: $keys_selects, id_selected: $id_selected, label: $label);
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        return $keys_selects;
+    }
+
+    public function init_selects_inputs(): array
+    {
+        $keys_selects = $this->init_selects(keys_selects: array(), key: "em_empleado_id", label: "Empleado",cols: 12);
+        $keys_selects = $this->init_selects(keys_selects: $keys_selects, key: "im_tipo_movimiento_id", label: "Tipo Movimiento");
+        return $this->init_selects(keys_selects: $keys_selects, key: "em_registro_patronal_id", label: "Registro Patronal");
+    }
+
+    protected function key_selects_txt(array $keys_selects): array
+    {
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'descripcion',
+            keys_selects: $keys_selects, place_holder: 'Descripción');
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'fecha',
+            keys_selects: $keys_selects, place_holder: 'Fecha');
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'salario_diario',
+            keys_selects: $keys_selects, place_holder: 'Salario Diario');
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'salario_diario_integrado',
+            keys_selects: $keys_selects, place_holder: 'Salario Diario Integrado');
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 12, key: 'observaciones',
+            keys_selects: $keys_selects, place_holder: 'Observaciones', required: false);
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'factor_integracion',
+            keys_selects: $keys_selects, place_holder: 'Factor de Integracion', required: true);
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'salario_mixto',
+            keys_selects: $keys_selects, place_holder: 'Salario Mixto', required: false);
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        $keys_selects = (new \base\controller\init())->key_select_txt(cols: 6, key: 'salario_variable',
+            keys_selects: $keys_selects, place_holder: 'Salario Variable', required: false);
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al maquetar key_selects', data: $keys_selects);
+        }
+
+        return $keys_selects;
     }
 
     public function lee_archivo(bool $header, bool $ws = false)
@@ -271,100 +333,39 @@ class controlador_im_movimiento extends system
         exit;
     }
 
-    public function alta(bool $header, bool $ws = false): array|string
-    {
-        $r_alta = parent::alta(header: false); // TODO: Change the autogenerated stub
-        if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al generar template', data: $r_alta, header: $header, ws: $ws);
-        }
-
-        $this->row_upd->fecha = date('Y-m-d');
-        $this->row_upd->salario_diario = 0;
-        $this->row_upd->salario_diario_integrado = 0;
-        $this->row_upd->salario_mixto = 0;
-        $this->row_upd->salario_variable = 0;
-
-        $inputs = $this->genera_inputs(keys_selects: $this->keys_selects);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al generar inputs', data: $inputs);
-            print_r($error);
-            die('Error');
-        }
-
-
-        return $r_alta;
-    }
-
-    public function asignar_propiedad(string $identificador, array $propiedades): array|stdClass
-    {
-        $identificador = trim($identificador);
-        if ($identificador === '') {
-            return $this->errores->error(mensaje: 'Error identificador esta vacio', data: $identificador);
-        }
-
-        if (!array_key_exists($identificador, $this->keys_selects)) {
-            $this->keys_selects[$identificador] = new stdClass();
-        }
-
-        foreach ($propiedades as $key => $value) {
-            $this->keys_selects[$identificador]->$key = $value;
-        }
-        return $this->keys_selects;
-    }
-
-    private function base(): array|stdClass
-    {
-        $r_modifica = parent::modifica(header: false);
-        if (errores::$error) {
-            return $this->errores->error(mensaje: 'Error al generar template', data: $r_modifica);
-        }
-
-        $this->asignar_propiedad(identificador: 'im_tipo_movimiento_id',
-            propiedades: ["id_selected" => $this->row_upd->im_tipo_movimiento_id]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-        $this->asignar_propiedad(identificador: 'em_registro_patronal_id',
-            propiedades: ["id_selected" => $this->row_upd->em_registro_patronal_id]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-        $this->asignar_propiedad(identificador: 'em_empleado_id',
-            propiedades: ["id_selected" => $this->row_upd->em_empleado_id]);
-        if (errores::$error) {
-            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
-            print_r($error);
-            die('Error');
-        }
-
-
-        $inputs = $this->genera_inputs(keys_selects: $this->keys_selects);
-        if (errores::$error) {
-            return $this->errores->error(mensaje: 'Error al inicializar inputs', data: $inputs);
-        }
-
-
-        $data = new stdClass();
-        $data->template = $r_modifica;
-        $data->inputs = $inputs;
-
-        return $data;
-    }
-
     public function modifica(bool $header, bool $ws = false): array|stdClass
     {
-        $base = $this->base();
+        $r_modifica = $this->init_modifica();
         if (errores::$error) {
-            return $this->retorno_error(mensaje: 'Error al maquetar datos', data: $base,
-                header: $header, ws: $ws);
+            return $this->retorno_error(
+                mensaje: 'Error al generar salida de template', data: $r_modifica, header: $header, ws: $ws);
         }
 
-        return $base->template;
+        $keys_selects = $this->init_selects_inputs();
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al inicializar selects', data: $keys_selects, header: $header,
+                ws: $ws);
+        }
+
+        $keys_selects['em_empleado_id']->id_selected = $this->registro['em_empleado_id'];
+        $keys_selects['im_tipo_movimiento_id']->id_selected = $this->registro['im_tipo_movimiento_id'];
+        $keys_selects['em_registro_patronal_id']->id_selected = $this->registro['em_registro_patronal_id'];
+
+        $base = $this->base_upd(keys_selects: $keys_selects, params: array(), params_ajustados: array());
+        if (errores::$error) {
+            return $this->retorno_error(mensaje: 'Error al integrar base', data: $base, header: $header, ws: $ws);
+        }
+
+        return $r_modifica;
+    }
+
+    public function sube_archivo(bool $header, bool $ws = false)
+    {
+        $r_alta = parent::alta(header: false, ws: false); // TODO: Change the autogenerated stub
+        if (errores::$error) {
+            return $this->errores->error(mensaje: 'Error al generar template', data: $r_alta);
+        }
+
+        return $r_alta;
     }
 }
