@@ -340,11 +340,11 @@ class controlador_im_movimiento extends _ctl_base
             $registro['im_tipo_movimiento_id'] = $im_tipo_movimiento->registros[0]['im_tipo_movimiento_id'];
             $registro['em_registro_patronal_id'] = $em_registro_patronal->registros[0]['em_registro_patronal_id'];
             $registro['em_empleado_id'] = $em_empleado->registros[0]['em_empleado_id'];
-            $registro['salario_diario'] = $movimiento->sd;
-            $registro['salario_diario_integrado'] = $movimiento->sdi;
-            $registro['factor_integracion'] = $movimiento->fi;
-            $registro['salario_mixto'] = $movimiento->sm;
-            $registro['salario_variable'] = $movimiento->sv;
+            $registro['salario_diario'] = $movimiento->sd ?? 0;
+            $registro['salario_diario_integrado'] = $movimiento->sdi ?? 0;
+            $registro['factor_integracion'] = $movimiento->fi ?? 0;
+            $registro['salario_mixto'] = $movimiento->sm ?? 0;
+            $registro['salario_variable'] = $movimiento->sv ?? 0;
             $registro['fecha'] = $movimiento->fecha;
 
             $alta_im_movimiento = (new im_movimiento($this->link))->alta_registro(registro: $registro);
