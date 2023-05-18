@@ -149,7 +149,7 @@ class im_movimiento_html extends html_controler {
     }
 
     public function input_fecha(int $cols, stdClass $row_upd, bool $value_vacio, bool $disabled = false,
-                                string $place_holder = 'Fecha', mixed $value = null): array|string
+                                string $place_holder = 'Fecha', mixed $value = null, bool $value_hora = false): array|string
     {
         $valida = $this->directivas->valida_cols(cols: $cols);
         if(errores::$error){
