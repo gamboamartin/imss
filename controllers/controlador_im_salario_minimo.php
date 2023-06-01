@@ -33,6 +33,42 @@ class controlador_im_salario_minimo extends system {
         $obj_link = new links_menu(link: $link, registro_id:$this->registro_id);
         parent::__construct(html:$html_, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
 
+        $this->asignar_propiedad(identificador:'im_tipo_salario_minimo_id', propiedades: ["label" => "Salario Minimo"]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador:'dp_cp_id', propiedades: ["label" => "CP"]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'monto', propiedades: [
+            'place_holder'=> 'Monto', 'cols'=>6]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'fecha_inicio', propiedades: ['place_holder'=> 'Fecha Inicio']);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'fecha_fin', propiedades: ['place_holder'=> 'Fecha Fin']);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
         $this->titulo_lista = 'Salario Minimo';
     }
 
@@ -43,30 +79,13 @@ class controlador_im_salario_minimo extends system {
             return $this->retorno_error(mensaje: 'Error al generar template',data:  $r_alta, header: $header,ws:$ws);
         }
 
-        $keys_selects = array();
-        $keys_selects['im_tipo_salario_minimo_id'] = new stdClass();
-        $keys_selects['im_tipo_salario_minimo_id']->label = 'Salario Minimo';
-
-        $keys_selects['dp_cp_id'] = new stdClass();
-        $keys_selects['dp_cp_id']->label = 'CP';
-
-        $keys_selects['fecha_inicio'] = new stdClass();
-        $keys_selects['fecha_inicio']->place_holder = 'Fecha Inicio';
-
-        $keys_selects['fecha_fin'] = new stdClass();
-        $keys_selects['fecha_fin']->place_holder = 'Fecha Fin';
-
-        $keys_selects['monto'] = new stdClass();
-        $keys_selects['monto']->place_holder = 'Monto';
-
-
-        $inputs = (new im_salario_minimo_html(html: $this->html_base))->genera_inputs_alta(controler: $this,
-            modelo: $this->modelo, link: $this->link,keys_selects: $keys_selects);
+        $inputs = $this->genera_inputs(keys_selects:  $this->keys_selects);
         if(errores::$error){
             $error = $this->errores->error(mensaje: 'Error al generar inputs',data:  $inputs);
             print_r($error);
             die('Error');
         }
+
         return $r_alta;
     }
 
@@ -88,8 +107,30 @@ class controlador_im_salario_minimo extends system {
             return $this->errores->error(mensaje: 'Error al generar template',data:  $r_modifica);
         }
 
-        $inputs = (new im_salario_minimo_html(html: $this->html_base))->inputs_im_salario_minimo(
-            controlador:$this, params: $params);
+        $this->asignar_propiedad(identificador:'im_tipo_salario_minimo_id',
+            propiedades: ["id_selected"=>$this->row_upd->im_tipo_salario_minimo_id]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador:'dp_cp_id',
+            propiedades: ["id_selected"=>$this->row_upd->dp_cp_id]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'monto', propiedades: ['place_holder'=> 'Monto', 'cols'=>6]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $inputs = $this->genera_inputs(keys_selects:  $this->keys_selects);
         if(errores::$error){
             return $this->errores->error(mensaje: 'Error al inicializar inputs',data:  $inputs);
         }
