@@ -11,8 +11,14 @@ class im_uma extends modelo{
         $columnas = array($tabla=>false);
         $campos_obligatorios = array("fecha_inicio","fecha_fin",'monto');
 
+        $campos_view = array();
+
+        $campos_view['fecha_inicio']['type'] = 'dates';
+        $campos_view['fecha_fin']['type'] = 'dates';
+        $campos_view['monto']['type'] = 'inputs';
+
         parent::__construct(link: $link,tabla:  $tabla, campos_obligatorios: $campos_obligatorios,
-            columnas: $columnas);
+            columnas: $columnas,campos_view: $campos_view);
 
         $this->NAMESPACE = __NAMESPACE__;
 

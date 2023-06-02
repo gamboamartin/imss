@@ -13,14 +13,7 @@ use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
 use html\im_salario_minimo_html;
-use html\nom_conf_deduccion_html;
-use html\nom_conf_nomina_html;
-use html\nom_conf_percepcion_html;
-use html\nom_deduccion_html;
 use gamboamartin\im_registro_patronal\models\im_salario_minimo;
-use gamboamartin\im_registro_patronal\models\nom_conf_deduccion;
-use gamboamartin\im_registro_patronal\models\nom_conf_nomina;
-use gamboamartin\im_registro_patronal\models\nom_conf_percepcion;
 use PDO;
 use stdClass;
 

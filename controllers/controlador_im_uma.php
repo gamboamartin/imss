@@ -12,17 +12,8 @@ use gamboamartin\errores\errores;
 use gamboamartin\system\links_menu;
 use gamboamartin\system\system;
 use gamboamartin\template\html;
-use html\im_tipo_salario_minimo_html;
 use html\im_uma_html;
-use html\nom_conf_deduccion_html;
-use html\nom_conf_nomina_html;
-use html\nom_conf_percepcion_html;
-use html\nom_deduccion_html;
-use gamboamartin\im_registro_patronal\models\im_tipo_salario_minimo;
 use gamboamartin\im_registro_patronal\models\im_uma;
-use gamboamartin\im_registro_patronal\models\nom_conf_deduccion;
-use gamboamartin\im_registro_patronal\models\nom_conf_nomina;
-use gamboamartin\im_registro_patronal\models\nom_conf_percepcion;
 use PDO;
 use stdClass;
 
@@ -35,6 +26,28 @@ class controlador_im_uma extends system {
         $obj_link = new links_menu(link: $link, registro_id:$this->registro_id);
         parent::__construct(html:$html_, link: $link,modelo:  $modelo, obj_link: $obj_link, paths_conf: $paths_conf);
 
+        $this->asignar_propiedad(identificador: 'monto', propiedades: [
+            'place_holder'=> 'Monto', 'cols'=>6]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'fecha_inicio', propiedades: ['place_holder'=> 'Fecha Inicio']);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'fecha_fin', propiedades: ['place_holder'=> 'Fecha Fin']);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
         $this->titulo_lista = 'Uma';
     }
 
@@ -45,13 +58,13 @@ class controlador_im_uma extends system {
             return $this->retorno_error(mensaje: 'Error al generar template',data:  $r_alta, header: $header,ws:$ws);
         }
 
-        $inputs = (new im_uma_html(html: $this->html_base))->genera_inputs_alta(controler: $this,
-          link: $this->link);
+        $inputs = $this->genera_inputs(keys_selects:  $this->keys_selects);
         if(errores::$error){
             $error = $this->errores->error(mensaje: 'Error al generar inputs',data:  $inputs);
             print_r($error);
             die('Error');
         }
+
         return $r_alta;
     }
 
@@ -74,8 +87,28 @@ class controlador_im_uma extends system {
             return $this->errores->error(mensaje: 'Error al generar template',data:  $r_modifica);
         }
 
-        $inputs = (new im_uma_html(html: $this->html_base))->inputs_im_uma(
-            controlador:$this, params: $params);
+        $this->asignar_propiedad(identificador: 'monto', propiedades: ['place_holder'=> 'Monto', 'cols'=>6]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'fecha_inicio', propiedades: ['place_holder'=> 'Fecha Inicio', 'cols'=>6]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $this->asignar_propiedad(identificador: 'fecha_fin', propiedades: ['place_holder'=> 'Fecha Fin', 'cols'=>6]);
+        if (errores::$error) {
+            $error = $this->errores->error(mensaje: 'Error al asignar propiedad', data: $this);
+            print_r($error);
+            die('Error');
+        }
+
+        $inputs = $this->genera_inputs(keys_selects:  $this->keys_selects);
         if(errores::$error){
             return $this->errores->error(mensaje: 'Error al inicializar inputs',data:  $inputs);
         }
