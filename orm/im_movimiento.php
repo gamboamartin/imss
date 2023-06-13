@@ -431,6 +431,17 @@ class im_movimiento extends _modelo_parent
     private function modifica_empleado(array $registro_emp): array|stdClass
     {
 
+        $tipo = (new im_tipo_movimiento($this->link))->registro(registro_id: $registro_emp['im_tipo_movimiento_id'],
+            columnas: array('im_tipo_movimiento_descripcion'));
+        if (errores::$error) {
+            return $this->error->error(mensaje: 'Error al obtener tipo de movto', data: $tipo);
+        }
+
+        if ($tipo['im_tipo_movimiento_descripcion'] === "BAJA"){
+            unset($registro_emp["salario_diario"]);
+            unset($registro_emp["salario_diario_integrado"]);
+        }
+
         $keys = array('im_tipo_movimiento_id', 'em_empleado_id');
         $valida = $this->validacion->valida_ids(keys: $keys, registro: $registro_emp);
         if (errores::$error) {
